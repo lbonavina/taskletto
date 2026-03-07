@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="h-full">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -637,11 +637,11 @@
 {{-- Custom confirm --}}
 <div id="confirm-overlay">
     <div id="confirm-box">
-        <h3 id="confirm-title">Confirmar</h3>
-        <p id="confirm-message">Tem certeza?</p>
+        <h3 id="confirm-title">{{ __("app.layout_confirm_title") }}</h3>
+        <p id="confirm-message">{{ __("app.layout_confirm_msg") }}</p>
         <div class="actions">
-            <button class="btn btn-ghost" id="confirm-cancel">Cancelar</button>
-            <button class="btn btn-danger" id="confirm-ok">Confirmar</button>
+            <button class="btn btn-ghost" id="confirm-cancel">{{ __("app.layout_confirm_cancel") }}</button>
+            <button class="btn btn-danger" id="confirm-ok">{{ __("app.layout_confirm_ok") }}</button>
         </div>
     </div>
 </div>
@@ -722,7 +722,7 @@
 
             <a href="/open-external?url=https://ko-fi.com/lbonavina" class="sidebar-footer-btn" title="Me pague um café ☕">
                 <span class="sfb-icon">☕</span>
-                <span class="sfb-label">Me pague um café</span>
+                <span class="sfb-label">{{ __("app.layout_buy_coffee") }}</span>
                 <svg style="opacity:.3" width="9" height="9" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h7v7M13 3L3 13"/></svg>
             </a>
         </div>
@@ -1049,75 +1049,75 @@ document.querySelectorAll('.nav-item').forEach(link => {
             </div>
             <div class="kbd-header-text">
                 <h2>{{ __('app.nav_shortcuts') }}</h2>
-                <p>Navegue mais rápido com esses atalhos</p>
+                <p>{{ __("app.layout_nav_faster") }}</p>
             </div>
-            <button id="kbd-modal-close" title="Fechar (Esc)">✕</button>
+            <button id="kbd-modal-close" title="{{ __("app.layout_close_esc") }}">✕</button>
         </div>
 
         <div class="kbd-search-wrap">
             <div class="kbd-search-wrap-inner">
                 <span class="kbd-search-icon">🔍</span>
-                <input id="kbd-search" type="text" placeholder="Buscar atalho…" autocomplete="off">
+                <input id="kbd-search" type="text" placeholder="{{ __("app.layout_search_shortcut") }}" autocomplete="off">
             </div>
         </div>
 
         <div class="kbd-tabs" id="kbd-tabs">
-            <button class="kbd-tab active" data-tab="all">Todos</button>
-            <button class="kbd-tab" data-tab="nav">🧭 Navegação</button>
-            <button class="kbd-tab" data-tab="tasks">✅ Tarefas</button>
-            <button class="kbd-tab" data-tab="notes">📝 Notas</button>
-            <button class="kbd-tab" data-tab="editor">✏️ Editor</button>
+            <button class="kbd-tab active" data-tab="all">{{ __("app.layout_tab_all") }}</button>
+            <button class="kbd-tab" data-tab="nav">{{ __("app.layout_tab_nav") }}</button>
+            <button class="kbd-tab" data-tab="tasks">{{ __("app.layout_tab_tasks") }}</button>
+            <button class="kbd-tab" data-tab="notes">{{ __("app.layout_tab_notes") }}</button>
+            <button class="kbd-tab" data-tab="editor">{{ __("app.layout_tab_editor") }}</button>
         </div>
 
         <div id="kbd-modal-body">
             <div class="kbd-section" data-section="nav">
-                <div class="kbd-section-title">Navegação</div>
+                <div class="kbd-section-title">{{ __("app.layout_kbd_navigation") }}</div>
                 <div class="kbd-grid">
-                    <div class="kbd-row"><span class="kbd-desc">Dashboard</span><div class="kbd-keys"><kbd>G</kbd><span class="kbd-plus">→</span><kbd>D</kbd></div></div>
-                    <div class="kbd-row"><span class="kbd-desc">Tarefas</span><div class="kbd-keys"><kbd>G</kbd><span class="kbd-plus">→</span><kbd>T</kbd></div></div>
-                    <div class="kbd-row"><span class="kbd-desc">Notas</span><div class="kbd-keys"><kbd>G</kbd><span class="kbd-plus">→</span><kbd>N</kbd></div></div>
-                    <div class="kbd-row"><span class="kbd-desc">Categorias</span><div class="kbd-keys"><kbd>G</kbd><span class="kbd-plus">→</span><kbd>C</kbd></div></div>
-                    <div class="kbd-row"><span class="kbd-desc">Configurações</span><div class="kbd-keys"><kbd>G</kbd><span class="kbd-plus">→</span><kbd>S</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_dashboard") }}</span><div class="kbd-keys"><kbd>G</kbd><span class="kbd-plus">→</span><kbd>D</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_tasks") }}</span><div class="kbd-keys"><kbd>G</kbd><span class="kbd-plus">→</span><kbd>T</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_notes") }}</span><div class="kbd-keys"><kbd>G</kbd><span class="kbd-plus">→</span><kbd>N</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_categories") }}</span><div class="kbd-keys"><kbd>G</kbd><span class="kbd-plus">→</span><kbd>C</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_settings") }}</span><div class="kbd-keys"><kbd>G</kbd><span class="kbd-plus">→</span><kbd>S</kbd></div></div>
                 </div>
             </div>
 
             <div class="kbd-section" data-section="tasks">
-                <div class="kbd-section-title">Ações globais &amp; Tarefas</div>
+                <div class="kbd-section-title">{{ __("app.layout_kbd_global") }}</div>
                 <div class="kbd-grid">
                     <div class="kbd-row"><span class="kbd-desc">{{ __('app.nav_shortcuts') }}</span><div class="kbd-keys"><kbd>?</kbd></div></div>
-                    <div class="kbd-row"><span class="kbd-desc">Alternar tema</span><div class="kbd-keys"><kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>⇧</kbd><span class="kbd-plus">+</span><kbd>L</kbd></div></div>
-                    <div class="kbd-row"><span class="kbd-desc">Fechar / Cancelar</span><div class="kbd-keys"><kbd>Esc</kbd></div></div>
-                    <div class="kbd-row"><span class="kbd-desc">Nova tarefa</span><div class="kbd-keys"><kbd>C</kbd></div></div>
-                    <div class="kbd-row"><span class="kbd-desc">Buscar tarefas</span><div class="kbd-keys"><kbd>/</kbd></div></div>
-                    <div class="kbd-row"><span class="kbd-desc">Filtrar por status</span><div class="kbd-keys"><kbd>F</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_toggle_theme") }}</span><div class="kbd-keys"><kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>⇧</kbd><span class="kbd-plus">+</span><kbd>L</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_close") }}</span><div class="kbd-keys"><kbd>Esc</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_new_task") }}</span><div class="kbd-keys"><kbd>C</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_search_tasks") }}</span><div class="kbd-keys"><kbd>/</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_filter_status") }}</span><div class="kbd-keys"><kbd>F</kbd></div></div>
                 </div>
             </div>
 
             <div class="kbd-section" data-section="notes">
-                <div class="kbd-section-title">Notas &amp; Busca</div>
+                <div class="kbd-section-title">{{ __("app.layout_kbd_notes_search") }}</div>
                 <div class="kbd-grid">
-                    <div class="kbd-row"><span class="kbd-desc">Nova nota</span><div class="kbd-keys"><kbd>C</kbd></div></div>
-                    <div class="kbd-row"><span class="kbd-desc">Focar busca</span><div class="kbd-keys"><kbd>/</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_new_note") }}</span><div class="kbd-keys"><kbd>C</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_focus_search") }}</span><div class="kbd-keys"><kbd>/</kbd></div></div>
                 </div>
             </div>
 
             <div class="kbd-section" data-section="editor">
-                <div class="kbd-section-title">Editor de notas</div>
+                <div class="kbd-section-title">{{ __("app.layout_kbd_editor") }}</div>
                 <div class="kbd-grid">
-                    <div class="kbd-row"><span class="kbd-desc">Salvar</span><div class="kbd-keys"><kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>S</kbd></div></div>
-                    <div class="kbd-row"><span class="kbd-desc">Negrito</span><div class="kbd-keys"><kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>B</kbd></div></div>
-                    <div class="kbd-row"><span class="kbd-desc">Itálico</span><div class="kbd-keys"><kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>I</kbd></div></div>
-                    <div class="kbd-row"><span class="kbd-desc">Sublinhado</span><div class="kbd-keys"><kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>U</kbd></div></div>
-                    <div class="kbd-row"><span class="kbd-desc">Desfazer</span><div class="kbd-keys"><kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>Z</kbd></div></div>
-                    <div class="kbd-row"><span class="kbd-desc">Refazer</span><div class="kbd-keys"><kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>Y</kbd></div></div>
-                    <div class="kbd-row"><span class="kbd-desc">Comando slash<small>inserir bloco</small></span><div class="kbd-keys"><kbd>/</kbd></div></div>
-                    <div class="kbd-row"><span class="kbd-desc">Link</span><div class="kbd-keys"><kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>K</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_save") }}</span><div class="kbd-keys"><kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>S</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_bold") }}</span><div class="kbd-keys"><kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>B</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_italic") }}</span><div class="kbd-keys"><kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>I</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_underline") }}</span><div class="kbd-keys"><kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>U</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_undo") }}</span><div class="kbd-keys"><kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>Z</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_redo") }}</span><div class="kbd-keys"><kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>Y</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{!! __("app.layout_kbd_slash") !!}</span><div class="kbd-keys"><kbd>/</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __("app.layout_kbd_link") }}</span><div class="kbd-keys"><kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>K</kbd></div></div>
                 </div>
             </div>
 
             <div id="kbd-no-results" class="kbd-empty" style="display:none">
                 <div class="kbd-empty-icon">🔍</div>
-                <p>Nenhum atalho encontrado.</p>
+                <p>{{ __("app.layout_kbd_no_results") }}</p>
             </div>
         </div>
     </div>

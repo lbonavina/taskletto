@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\AppSetting;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -22,10 +23,10 @@ class SettingsController extends Controller
     public function setLocale(Request $request)
     {
         $allowed = ['pt', 'en', 'es'];
-        $locale  = $request->input('locale', 'pt');
+        $locale = $request->input('locale', 'pt');
 
         if (in_array($locale, $allowed)) {
-            session(['locale' => $locale]);
+            AppSetting::set('locale', $locale);
         }
 
         return redirect()->route('settings')->with('locale_saved', true);

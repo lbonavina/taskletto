@@ -5,7 +5,7 @@
 @section('topbar-actions')
     <button class="btn btn-primary" onclick="openModal()">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v12M2 8h12"/></svg>
-        Nova Categoria
+        {{ __('app.cat_new_btn') }}
     </button>
 @endsection
 
@@ -15,7 +15,7 @@
     <div class="card">
         <div class="empty-state">
             <svg width="48" height="48" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 4.5h3a1 1 0 011 1v5a1 1 0 01-1 1h-3a1 1 0 01-1-1v-5a1 1 0 011-1zM8 2.5h3a1 1 0 011 1v9a1 1 0 01-1 1H8a1 1 0 01-1-1v-9a1 1 0 011-1z"/></svg>
-            <p>Nenhuma categoria criada.</p>
+            <p>{{ __('app.cat_none') }}</p>
             <button class="btn btn-primary" onclick="openModal()">Criar categoria</button>
         </div>
     </div>
@@ -28,15 +28,15 @@
                     <span style="font-size:22px">{{ $cat->icon }}</span>
                     <div>
                         <div style="font-weight:600;font-size:14px">{{ $cat->name }}</div>
-                        <div style="font-size:11px;color:var(--muted);font-family:'DM Sans',monospace">{{ $cat->tasks_count }} tarefa(s)</div>
+                        <div style="font-size:11px;color:var(--muted);font-family:'DM Sans',monospace">{{ $cat->tasks_count }} {{ __('app.cat_tasks_count') }}</div>
                     </div>
                 </div>
                 <div style="display:flex;gap:4px">
                     <button class="btn btn-ghost btn-sm"
                         onclick="openEdit({{ $cat->id }}, '{{ addslashes($cat->name) }}', '{{ $cat->color }}', '{{ addslashes($cat->icon) }}', '{{ addslashes($cat->description ?? '') }}')">
-                        Editar
+                        {{ __('app.cat_edit_btn') }}
                     </button>
-                    <form method="POST" action="/categories/{{ $cat->id }}" onsubmit="return confirm('Excluir categoria?')">
+                    <form method="POST" action="/categories/{{ $cat->id }}" onsubmit="return confirm('{{ __('app.cat_delete_confirm') }}')">
                         @csrf @method('DELETE')
                         <button type="submit" class="btn btn-danger btn-sm">✕</button>
                     </form>
@@ -46,7 +46,7 @@
                 <p style="font-size:12px;color:var(--muted);line-height:1.5">{{ $cat->description }}</p>
             @endif
             <a href="/tasks?category={{ $cat->name }}" style="font-size:11px;color:var(--accent);text-decoration:none;display:inline-block;margin-top:10px;font-weight:500">
-                Ver tarefas →
+                {{ __('app.cat_view_tasks') }}
             </a>
         </div>
         @endforeach
@@ -167,18 +167,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // ── Emoji data ────────────────────────────────────────────────────────────────
 const EMOJI_CATS = [
-    { id: 'popular', label: '⭐', name: 'Populares', emojis: ['📁','📂','🗂','💼','🏠','🏢','🎯','✅','📌','🔖','💡','🚀','🎨','🛠','💰','📊','📈','📋','🔔','❤️','⭐','🌟','🔥','💪','🎓','🏆','📝','🔍','💬','🌐'] },
-    { id: 'work',    label: '💼', name: 'Trabalho',  emojis: ['💼','🏢','📊','📈','📉','💹','📋','📌','📍','🗓','📅','⏰','🔔','📧','📨','📩','💡','🔑','🔒','🖥','💻','🖱','⌨️','🖨','📠','📞','☎️','🔧','🔨','⚙️','🛠','📐','📏','✏️','🖊','🖋','📝','📓','📔','📒','📕','📗','📘','📙','📚','🗃','🗄','🗑'] },
-    { id: 'personal',label: '🏠', name: 'Pessoal',   emojis: ['🏠','🏡','🛒','🛍','🍽','🍳','🥗','🏃','🏋','🧘','🚗','✈️','🏖','🎮','🎬','🎵','📚','🎯','🎁','❤️','👨‍👩‍👧','🐶','🐱','🌱','🌺','☀️','⛅','🌙','🌈'] },
-    { id: 'health',  label: '❤️', name: 'Saúde',     emojis: ['❤️','🏥','💊','🩺','🩻','💉','🧬','🦷','👁','🏃','🏋','🧘','🚴','🥗','🥦','🍎','💧','😴','🧠','💪','🫁','🫀','🦴','🩹','🩼','🏊','⚽','🎾','🏓','🧗'] },
-    { id: 'finance', label: '💰', name: 'Finanças',  emojis: ['💰','💵','💴','💶','💷','💳','🏦','📊','📈','📉','💹','🪙','💎','🏠','🚗','✈️','🛒','🧾','📋','💼','🤝','📌','🔐','⚖️','🪙','💱','📦','🎁','🛡','🏆'] },
-    { id: 'study',   label: '🎓', name: 'Estudos',   emojis: ['🎓','📚','📖','📝','✏️','🖊','📐','📏','🔬','🔭','🧪','🧫','🧬','💡','🏫','📓','📔','📒','📕','📗','📘','📙','🗒','📄','🗂','📊','🖥','💻','🎯','🏆','⭐','🌟'] },
-    { id: 'tech',    label: '💻', name: 'Tecnologia',emojis: ['💻','🖥','📱','⌨️','🖱','🖨','📡','🔋','💾','💿','📀','🖲','⌚','📷','🎥','📹','🔭','🛰','🚀','🤖','👾','🕹','🎮','📺','📻','⚙️','🔧','🔨','🛠','🔌','💡','🔦'] },
-    { id: 'creative',label: '🎨', name: 'Criativo',  emojis: ['🎨','🖌','🖍','✏️','📸','🎭','🎬','🎵','🎸','🎹','🎺','🎻','🥁','🎤','🎧','🎼','📻','📺','🎮','🕹','♟','🎲','🎯','🎪','🎠','🎡','🎢','🃏','🀄','🎴','🖼','🗿','🏛'] },
-    { id: 'nature',  label: '🌿', name: 'Natureza',  emojis: ['🌿','🌱','🌲','🌳','🌴','🌵','🌾','🍀','🍁','🍂','🍃','🌺','🌸','🌼','🌻','🌹','🌷','🌿','☘','🪴','🌍','🌊','🏔','⛰','🌋','🏜','🏕','🌅','🌄','☀️','🌙','⭐','🌈','⛅','❄️'] },
-    { id: 'food',    label: '🍕', name: 'Comida',    emojis: ['🍕','🍔','🌮','🍜','🍣','🍱','🥗','🍳','🥘','🫕','🥩','🍗','🥚','🧀','🥓','🥞','🧇','🍞','🥖','🥨','🧁','🎂','🍰','🍩','🍪','🍫','🍬','🍭','☕','🍵','🧋','🥤','🍺','🥂','🍷'] },
-    { id: 'travel',  label: '✈️', name: 'Viagem',    emojis: ['✈️','🚀','🛸','🚁','🛥','🚢','🚂','🚗','🚕','🛻','🚙','🏎','🛵','🚲','🛴','🏍','🚦','🗺','🌍','🏖','🏝','🏔','🗼','🗽','🏰','🏯','⛩','🕌','🕍','🎡','🎢','🎠','🎪','🏟','🎭'] },
-    { id: 'symbols', label: '✨', name: 'Símbolos',  emojis: ['✨','⭐','🌟','💫','⚡','🔥','❄️','🌊','💥','🎯','✅','❌','⚠️','🔔','💬','💭','❓','❗','♾','🔁','🔀','▶️','⏸','⏹','⏺','🔼','🔽','⬆️','⬇️','➡️','⬅️','🔐','🔓','🏆','🥇','🎖','🏅','🎗','🎀','🎁','💝','💖','❤️','🖤','🤍','🤎','💛','💚','💙','💜'] },
+    { id: 'popular', label: '⭐', name: '{{ __('app.cat_popular') }}', emojis: ['📁','📂','🗂','💼','🏠','🏢','🎯','✅','📌','🔖','💡','🚀','🎨','🛠','💰','📊','📈','📋','🔔','❤️','⭐','🌟','🔥','💪','🎓','🏆','📝','🔍','💬','🌐'] },
+    { id: 'work',    label: '💼', name: '{{ __('app.cat_work') }}',  emojis: ['💼','🏢','📊','📈','📉','💹','📋','📌','📍','🗓','📅','⏰','🔔','📧','📨','📩','💡','🔑','🔒','🖥','💻','🖱','⌨️','🖨','📠','📞','☎️','🔧','🔨','⚙️','🛠','📐','📏','✏️','🖊','🖋','📝','📓','📔','📒','📕','📗','📘','📙','📚','🗃','🗄','🗑'] },
+    { id: 'personal',label: '🏠', name: '{{ __('app.cat_personal') }}',   emojis: ['🏠','🏡','🛒','🛍','🍽','🍳','🥗','🏃','🏋','🧘','🚗','✈️','🏖','🎮','🎬','🎵','📚','🎯','🎁','❤️','👨‍👩‍👧','🐶','🐱','🌱','🌺','☀️','⛅','🌙','🌈'] },
+    { id: 'health',  label: '❤️', name: '{{ __('app.cat_health') }}',     emojis: ['❤️','🏥','💊','🩺','🩻','💉','🧬','🦷','👁','🏃','🏋','🧘','🚴','🥗','🥦','🍎','💧','😴','🧠','💪','🫁','🫀','🦴','🩹','🩼','🏊','⚽','🎾','🏓','🧗'] },
+    { id: 'finance', label: '💰', name: '{{ __('app.cat_finance') }}',  emojis: ['💰','💵','💴','💶','💷','💳','🏦','📊','📈','📉','💹','🪙','💎','🏠','🚗','✈️','🛒','🧾','📋','💼','🤝','📌','🔐','⚖️','🪙','💱','📦','🎁','🛡','🏆'] },
+    { id: 'study',   label: '🎓', name: '{{ __('app.cat_study') }}',   emojis: ['🎓','📚','📖','📝','✏️','🖊','📐','📏','🔬','🔭','🧪','🧫','🧬','💡','🏫','📓','📔','📒','📕','📗','📘','📙','🗒','📄','🗂','📊','🖥','💻','🎯','🏆','⭐','🌟'] },
+    { id: 'tech',    label: '💻', name: '{{ __('app.cat_tech') }}',emojis: ['💻','🖥','📱','⌨️','🖱','🖨','📡','🔋','💾','💿','📀','🖲','⌚','📷','🎥','📹','🔭','🛰','🚀','🤖','👾','🕹','🎮','📺','📻','⚙️','🔧','🔨','🛠','🔌','💡','🔦'] },
+    { id: 'creative',label: '🎨', name: '{{ __('app.cat_creative') }}',  emojis: ['🎨','🖌','🖍','✏️','📸','🎭','🎬','🎵','🎸','🎹','🎺','🎻','🥁','🎤','🎧','🎼','📻','📺','🎮','🕹','♟','🎲','🎯','🎪','🎠','🎡','🎢','🃏','🀄','🎴','🖼','🗿','🏛'] },
+    { id: 'nature',  label: '🌿', name: '{{ __('app.cat_nature') }}',  emojis: ['🌿','🌱','🌲','🌳','🌴','🌵','🌾','🍀','🍁','🍂','🍃','🌺','🌸','🌼','🌻','🌹','🌷','🌿','☘','🪴','🌍','🌊','🏔','⛰','🌋','🏜','🏕','🌅','🌄','☀️','🌙','⭐','🌈','⛅','❄️'] },
+    { id: 'food',    label: '🍕', name: '{{ __('app.cat_food') }}',    emojis: ['🍕','🍔','🌮','🍜','🍣','🍱','🥗','🍳','🥘','🫕','🥩','🍗','🥚','🧀','🥓','🥞','🧇','🍞','🥖','🥨','🧁','🎂','🍰','🍩','🍪','🍫','🍬','🍭','☕','🍵','🧋','🥤','🍺','🥂','🍷'] },
+    { id: 'travel',  label: '✈️', name: '{{ __('app.cat_travel') }}',    emojis: ['✈️','🚀','🛸','🚁','🛥','🚢','🚂','🚗','🚕','🛻','🚙','🏎','🛵','🚲','🛴','🏍','🚦','🗺','🌍','🏖','🏝','🏔','🗼','🗽','🏰','🏯','⛩','🕌','🕍','🎡','🎢','🎠','🎪','🏟','🎭'] },
+    { id: 'symbols', label: '✨', name: '{{ __('app.cat_symbols') }}',  emojis: ['✨','⭐','🌟','💫','⚡','🔥','❄️','🌊','💥','🎯','✅','❌','⚠️','🔔','💬','💭','❓','❗','♾','🔁','🔀','▶️','⏸','⏹','⏺','🔼','🔽','⬆️','⬇️','➡️','⬅️','🔐','🔓','🏆','🥇','🎖','🏅','🎗','🎀','🎁','💝','💖','❤️','🖤','🤍','🤎','💛','💚','💙','💜'] },
 ];
 
 // ── Emoji keywords (for search) ──────────────────────────────────────────────
@@ -419,7 +419,7 @@ function buildEmojiPicker(initial) {
         }
 
         if (!emojis.length) {
-            inner.innerHTML = '<div class="emoji-empty">Nenhum emoji encontrado para \"' + query + '\"</div>';
+            inner.innerHTML = '<div class="emoji-empty">{{ __('app.cat_no_emoji') }} "' + query + '"</div>';
             return;
         }
 
@@ -466,7 +466,7 @@ function buildEmojiPicker(initial) {
 
 // ── Modal open/close ──────────────────────────────────────────────────────────
 function openModal() {
-    document.getElementById('modal-cat-title').textContent = 'Nova Categoria';
+    document.getElementById('modal-cat-title').textContent = '{{ __('app.cat_new_title') }}';
     document.getElementById('cat-form').action = '/categories';
     document.getElementById('cat-method').value = 'POST';
     document.getElementById('cat-name').value = '';
@@ -477,7 +477,7 @@ function openModal() {
 }
 
 function openEdit(id, name, color, icon, description) {
-    document.getElementById('modal-cat-title').textContent = 'Editar Categoria';
+    document.getElementById('modal-cat-title').textContent = '{{ __('app.cat_edit_modal_title') }}';
     document.getElementById('cat-form').action = '/categories/' + id;
     document.getElementById('cat-method').value = 'PUT';
     document.getElementById('cat-name').value = name;
@@ -498,7 +498,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
 <div id="modal-cat-portal">
     <div class="modal" style="max-width:500px;width:100%">
         <button class="modal-close" onclick="closeModal()">×</button>
-        <div class="modal-title" id="modal-cat-title">Nova Categoria</div>
+        <div class="modal-title" id="modal-cat-title">{{ __('app.cat_new_title') }}</div>
 
         <form id="cat-form" method="POST" action="/categories">
             @csrf
@@ -506,13 +506,13 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
             <input type="hidden" name="icon"    id="cat-icon"   value="📁">
 
             <div class="form-group">
-                <label>Nome *</label>
-                <input type="text" name="name" id="cat-name" placeholder="Ex: Trabalho" required maxlength="100">
+                <label>{{ __('app.cat_label_name') }}</label>
+                <input type="text" name="name" id="cat-name" placeholder="{{ __('app.cat_name_ph') }}" required maxlength="100">
             </div>
 
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
                 <div class="form-group">
-                    <label>Cor *</label>
+                    <label>{{ __('app.cat_label_color') }}</label>
                     <div class="color-picker-wrap">
                         <div class="color-preview">
                             <div class="color-swatch" style="background:#ff914d"></div>
@@ -524,16 +524,16 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
                 </div>
 
                 <div class="form-group">
-                    <label>Ícone *</label>
+                    <label>{{ __('app.cat_label_icon') }}</label>
                     <div style="position:relative">
                         <div id="emoji-trigger" class="emoji-trigger" tabindex="0">
                             <span id="emoji-preview" class="emoji-trigger-preview">📁</span>
-                            <span class="emoji-trigger-label">Escolher emoji</span>
+                            <span class="emoji-trigger-label">{{ __('app.cat_choose_emoji') }}</span>
                             <svg class="emoji-trigger-arrow" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </div>
                         <div id="emoji-panel" class="emoji-panel">
                             <div class="emoji-search-wrap">
-                                <input type="text" id="emoji-search" class="emoji-search" placeholder="🔍  Buscar emoji...">
+                                <input type="text" id="emoji-search" class="emoji-search" placeholder="{{ __('app.cat_search_emoji_ph') }}">
                             </div>
                             <div id="emoji-tabs" class="emoji-tabs"></div>
                             <div id="emoji-grid" class="emoji-grid-wrap">
@@ -545,13 +545,13 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal()
             </div>
 
             <div class="form-group">
-                <label>Descrição</label>
-                <textarea name="description" id="cat-description" placeholder="Opcional..."></textarea>
+                <label>{{ __('app.cat_label_desc') }}</label>
+                <textarea name="description" id="cat-description" placeholder="{{ __('app.cat_desc_ph') }}"></textarea>
             </div>
 
             <div style="display:flex;gap:8px;justify-content:flex-end">
-                <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
-                <button type="submit" class="btn btn-primary">Salvar</button>
+                <button type="button" class="btn btn-ghost" onclick="closeModal()">{{ __('app.cancel') }}</button>
+                <button type="submit" class="btn btn-primary">{{ __('app.save') }}</button>
             </div>
         </form>
     </div>

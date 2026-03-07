@@ -1,17 +1,17 @@
 @extends('layouts.app')
-@section('page-title', 'Nota')
+@section('page-title', __('app.nav_notes'))
 
 @section('topbar-actions')
     <div style="display:flex;align-items:center;gap:8px">
         <span id="save-status" style="font-size:12px;color:var(--muted);font-family:'DM Sans',monospace;transition:opacity .3s"></span>
-        <button id="btn-pin" class="btn btn-ghost btn-sm" title="{{ $note->pinned ? 'Desafixar' : 'Fixar nota' }}">
-            {{ $note->pinned ? '📌 Fixada' : '📌 Fixar' }}
+        <button id="btn-pin" class="btn btn-ghost btn-sm" title="{{ $note->pinned ? __('app.note_unpin_title') : __('app.note_pin_title') }}">
+            {{ $note->pinned ? __('app.note_pinned') : __('app.note_pin') }}
         </button>
-        <a href="{{ route('notes.export', $note) }}" class="btn btn-ghost btn-sm" title="Exportar como Markdown" download>
-            ⬇ Exportar .md
+        <a href="{{ route('notes.export', $note) }}" class="btn btn-ghost btn-sm" title="{{ __('app.note_export_title') }}" download>
+            {{ __('app.note_export_md') }}
         </a>
-        <button id="btn-delete" class="btn btn-danger btn-sm">Excluir</button>
-        <a href="/notes" class="btn btn-ghost btn-sm">← Voltar</a>
+        <button id="btn-delete" class="btn btn-danger btn-sm">{{ __('app.note_delete') }}</button>
+        <a href="/notes" class="btn btn-ghost btn-sm">{{ __('app.note_back') }}</a>
     </div>
 @endsection
 
@@ -467,18 +467,18 @@ html[data-theme=light] #link-popover input[type=text]:focus {
 
     {{-- Left sidebar: metadata --}}
     <div class="note-sidebar">
-        <div class="note-sidebar-section">Informações</div>
+        <div class="note-sidebar-section">{{ __('app.note_section_info') }}</div>
 
         <div class="note-meta-row">
-            <span class="note-meta-label">Criada</span>
+            <span class="note-meta-label">{{ __('app.note_created') }}</span>
             <span class="note-meta-value" style="font-family:'DM Sans',monospace;font-size:11px">{{ $note->created_at->format('d/m/Y') }}</span>
         </div>
         <div class="note-meta-row">
-            <span class="note-meta-label">Editada</span>
+            <span class="note-meta-label">{{ __('app.note_edited') }}</span>
             <span class="note-meta-value" id="sidebar-updated" style="font-family:'DM Sans',monospace;font-size:11px">{{ $note->updated_at->format('d/m/Y H:i') }}</span>
         </div>
 
-        <div class="note-sidebar-section" style="margin-top:8px">Cor</div>
+        <div class="note-sidebar-section" style="margin-top:8px">{{ __('app.note_section_color') }}</div>
         <div class="note-colors" id="note-colors">
             @php
                 $colors = ['#ff914d','#e05454','#4ade80','#60a5fa','#c084fc','#f472b6','#facc15','#34d399','#94a3b8','#f0a05a'];
@@ -489,11 +489,11 @@ html[data-theme=light] #link-popover input[type=text]:focus {
             @endforeach
         </div>
 
-        <div class="note-sidebar-section">Categoria</div>
+        <div class="note-sidebar-section">{{ __('app.note_section_cat') }}</div>
         <div style="padding:0 12px 12px">
             <div class="select-wrap">
                 <select id="note-category">
-                    <option value="">— Nenhuma —</option>
+                    <option value="">{{ __('app.note_no_category') }}</option>
                     @foreach($categories as $cat)
                         <option value="{{ $cat->name }}" data-color="{{ $cat->color }}" data-icon="{{ $cat->icon }}"
                             {{ $note->category === $cat->name ? 'selected' : '' }}>
@@ -505,27 +505,27 @@ html[data-theme=light] #link-popover input[type=text]:focus {
         </div>
 
         <div class="note-stats" id="note-stats">
-            <span id="stat-words">0 palavras</span>
-            <span id="stat-chars">0 caracteres</span>
-            <span id="stat-read">0 min leitura</span>
+            <span id="stat-words">0 {{ __('app.note_words') }}</span>
+            <span id="stat-chars">0 {{ __('app.note_chars') }}</span>
+            <span id="stat-read">0 {{ __('app.note_read_min') }}</span>
         </div>
     </div>
 
     {{-- Main editor --}}
     <div class="note-editor-area">
         <textarea id="note-title" class="note-title-input" rows="1"
-            placeholder="Título da nota…">{{ $note->title === 'Sem título' ? '' : $note->title }}</textarea>
+            placeholder="{{ __('app.note_title_ph') }}">{{ $note->title === __('app.note_untitled_val') ? '' : $note->title }}</textarea>
 
         {{-- Toolbar --}}
         <div class="tiptap-toolbar" id="tiptap-toolbar">
             {{-- Heading --}}
             <div class="ttb-dropdown" id="ttb-heading-wrap">
                 <button class="ttb-dropdown-trigger" id="ttb-heading-trigger" type="button">
-                    <span id="ttb-heading-label">Parágrafo</span>
+                    <span id="ttb-heading-label">{{ __('app.note_paragraph') }}</span>
                     <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
                 </button>
                 <div class="ttb-dropdown-menu" id="ttb-heading-menu">
-                    <button type="button" data-heading="0" class="ttb-dropdown-item active">Parágrafo</button>
+                    <button type="button" data-heading="0" class="ttb-dropdown-item active">{{ __('app.note_paragraph') }}</button>
                     <button type="button" data-heading="1" class="ttb-dropdown-item" style="font-size:16px;font-weight:700">Título 1</button>
                     <button type="button" data-heading="2" class="ttb-dropdown-item" style="font-size:14px;font-weight:600">Título 2</button>
                     <button type="button" data-heading="3" class="ttb-dropdown-item" style="font-size:13px;font-weight:600">Título 3</button>
@@ -552,7 +552,7 @@ html[data-theme=light] #link-popover input[type=text]:focus {
             {{-- Table --}}
             <button class="ttb-btn" data-cmd="insertTable" title="Inserir tabela"><i class="fa fa-table"></i></button>
             <button class="ttb-btn" data-cmd="addRowAfter" title="Adicionar linha"><i class="fa fa-plus"></i></button>
-            <button class="ttb-btn" data-cmd="deleteRow"   title="Remover linha"><i class="fa fa-trash" style="font-size:11px"></i></button>
+            <button class="ttb-btn" data-cmd="deleteRow"   title="{{ __('app.note_row_delete') }}"><i class="fa fa-trash" style="font-size:11px"></i></button>
             <div class="ttb-sep"></div>
             {{-- Link & Image --}}
             <button class="ttb-btn" data-cmd="link"        title="Link"><i class="fa fa-link"></i></button>
@@ -599,13 +599,13 @@ html[data-theme=light] #link-popover input[type=text]:focus {
         <button id="img-tab-upload" class="img-tab">📁 Upload</button>
     </div>
     <div id="img-panel-url">
-        <input id="img-url-input"  type="url"  placeholder="https://exemplo.com/imagem.jpg">
-        <input id="img-alt-input"  type="text" placeholder="Texto alternativo (opcional)" style="margin-bottom:4px">
+        <input id="img-url-input"  type="url"  placeholder="{{ __('app.note_img_url_ph') }}">
+        <input id="img-alt-input"  type="text" placeholder="{{ __('app.note_img_alt_ph') }}" style="margin-bottom:4px">
     </div>
     <div id="img-panel-upload" style="display:none">
         <label id="img-drop-zone">
             <span style="font-size:26px;line-height:1">🖼️</span>
-            <span id="img-drop-label">Clique ou arraste uma imagem</span>
+            <span id="img-drop-label">{{ __('app.note_click_drag_image') }}</span>
             <span style="font-size:11px;opacity:.6">PNG, JPG, GIF, WebP</span>
             <input id="img-file-input" type="file" accept="image/*" style="display:none">
         </label>
@@ -624,7 +624,7 @@ html[data-theme=light] #link-popover input[type=text]:focus {
     <div class="link-popover-title">🔗 Inserir link</div>
     <p class="link-popover-hint">Cole a URL abaixo. O texto selecionado no editor será usado como rótulo.</p>
     <input id="link-url-input"  type="url"  placeholder="https://exemplo.com">
-    <input id="link-text-input" type="text" placeholder="Texto de exibição (opcional)">
+    <input id="link-text-input" type="text" placeholder="{{ __('app.note_link_display_text') }}">
     <div class="link-popover-footer">
         <button class="btn btn-ghost btn-sm" id="link-remove-btn" title="Remover link">🗑 Remover</button>
         <button class="btn btn-ghost btn-sm" id="link-cancel-btn">Cancelar</button>
@@ -634,6 +634,13 @@ html[data-theme=light] #link-popover input[type=text]:focus {
 @endpush
 
 @push('scripts')
+<script>
+window.TASKLETTO_I18N = {
+    words:   '{{ __('app.note_words') }}',
+    chars:   '{{ __('app.note_chars') }}',
+    read_min:'{{ __('app.note_read_min') }}',
+};
+</script>
 <script>
 window.__NOTE__ = {
     noteId:  {{ $note->id }},

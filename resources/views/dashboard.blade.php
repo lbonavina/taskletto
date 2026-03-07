@@ -4,11 +4,11 @@
 @section('topbar-actions')
     <button class="btn btn-ghost btn-sm" onclick="fetch('/notes',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name=csrf-token]').content},body:JSON.stringify({})}).then(r=>r.json()).then(d=>location.href='/notes/'+d.id)">
         <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v12M2 8h12"/></svg>
-        Nova nota
+        {{ __('app.dash_new_note') }}
     </button>
     <button class="btn btn-primary btn-sm" onclick="document.getElementById('modal-new-task').classList.add('open')">
         <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v12M2 8h12"/></svg>
-        Nova tarefa
+        {{ __('app.new_task') }}
     </button>
 @endsection
 
@@ -217,26 +217,26 @@
 {{-- Hero --}}
 <div class="dash-hero">
     <div class="dash-hero-date" id="dash-date"></div>
-    <div class="dash-hero-title" id="dash-greet">Olá 👋</div>
+    <div class="dash-hero-title" id="dash-greet">{{ __('app.dash_good_morning') }} 👋</div>
     <div class="dash-hero-sub">
         @if($overdue > 0)
-            Você tem <strong>{{ $overdue }} tarefa{{ $overdue>1?'s':'' }} vencida{{ $overdue>1?'s':'' }}</strong> aguardando atenção.
+            {{ __('app.dash_overdue_msg', ['n' => $overdue]) }}
         @elseif($byStatus->get('in_progress',0) > 0)
-            <strong>{{ $byStatus->get('in_progress',0) }} tarefa{{ $byStatus->get('in_progress',0)>1?'s':'' }}</strong> em andamento. Continue assim.
+            {{ __('app.dash_in_progress_msg', ['n' => $byStatus->get('in_progress',0)]) }}
         @else
-            Tudo em dia. Que tal criar uma nova nota ou tarefa?
+            {{ __('app.dash_all_good') }}
         @endif
     </div>
     <div class="dash-hero-stats">
         <div class="dhs" style="--dhs-color:var(--status-in_progress)">
             <div class="dhs-dot"></div>
             <div class="dhs-val count-up" data-target="{{ $byStatus->get('in_progress',0) }}">0</div>
-            <div class="dhs-label">em andamento</div>
+            <div class="dhs-label">{{ __('app.dash_in_progress') }}</div>
         </div>
         <div class="dhs" style="--dhs-color:var(--danger)">
             <div class="dhs-dot"></div>
             <div class="dhs-val count-up" data-target="{{ $overdue }}">0</div>
-            <div class="dhs-label">vencidas</div>
+            <div class="dhs-label">{{ __('app.dash_overdue') }}</div>
         </div>
         <div class="dhs" style="--dhs-color:var(--status-completed)">
             <div class="dhs-dot"></div>
@@ -246,7 +246,7 @@
         <div class="dhs" style="--dhs-color:#c084fc">
             <div class="dhs-dot"></div>
             <div class="dhs-val count-up" data-target="{{ $totalNotes }}">0</div>
-            <div class="dhs-label">notas</div>
+            <div class="dhs-label">{{ __('app.dash_notes') }}</div>
         </div>
     </div>
 </div>
@@ -260,8 +260,8 @@
         {{-- Notas recentes --}}
         <div class="notes-sect">
             <div class="sh">
-                <div class="sh-title">Notas recentes</div>
-                <a href="/notes" class="sh-link">ver todas →</a>
+                <div class="sh-title">{{ __('app.dash_recent_notes') }}</div>
+                <a href="/notes" class="sh-link">{{ __('app.dash_see_all') }}</a>
             </div>
             @if($recentNotes->isNotEmpty())
             <div class="notes-grid">
@@ -270,8 +270,8 @@
                     <div class="nc-bar"></div>
                     <div class="nc-body">
                         <div class="nc-content">
-                            <div class="nc-title">{{ $first->title ?: 'Sem título' }}</div>
-                            <div class="nc-excerpt">{{ $first->excerpt(120) ?: 'Nota em branco…' }}</div>
+                            <div class="nc-title">{{ $first->title ?: __('app.notes_untitled') }}</div>
+                            <div class="nc-excerpt">{{ $first->excerpt(120) ?: __('app.notes_blank') }}</div>
                         </div>
                         <div class="nc-foot">
                             @if($first->pinned)<span style="font-size:11px;opacity:.6">📌</span>@endif
@@ -283,8 +283,8 @@
                 <a href="/notes/{{ $note->id }}" class="nc" style="--nc-color:{{ $note->color }}">
                     <div class="nc-bar"></div>
                     <div class="nc-body">
-                        <div class="nc-title">{{ $note->title ?: 'Sem título' }}</div>
-                        <div class="nc-excerpt">{{ $note->excerpt(80) ?: 'Nota em branco…' }}</div>
+                        <div class="nc-title">{{ $note->title ?: __('app.notes_untitled') }}</div>
+                        <div class="nc-excerpt">{{ $note->excerpt(80) ?: __('app.notes_blank') }}</div>
                         <div class="nc-foot">
                             @if($note->pinned)<span style="font-size:11px;opacity:.6">📌</span>@endif
                             <span class="nc-time">{{ $note->updated_at->diffForHumans() }}</span>
@@ -294,13 +294,13 @@
                 @endforeach
                 <a href="#" class="nc-new" onclick="event.preventDefault();fetch('/notes',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name=csrf-token]').content},body:JSON.stringify({})}).then(r=>r.json()).then(d=>location.href='/notes/'+d.id)">
                     <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v12M2 8h12"/></svg>
-                    Nova nota
+                    {{ __('app.dash_new_note') }}
                 </a>
             </div>
             @else
             <div class="dash-empty">
                 <div class="dei">📝</div>
-                <p>Nenhuma nota ainda. <a href="#" style="color:var(--accent)" onclick="event.preventDefault();fetch('/notes',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name=csrf-token]').content},body:JSON.stringify({})}).then(r=>r.json()).then(d=>location.href='/notes/'+d.id)">Criar primeira nota →</a></p>
+                <p>{{ __('app.dash_no_notes') }} <a href="#" style="color:var(--accent)" onclick="event.preventDefault();fetch('/notes',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name=csrf-token]').content},body:JSON.stringify({})}).then(r=>r.json()).then(d=>location.href='/notes/'+d.id)">{{ __('app.dash_create_first_note') }}</a></p>
             </div>
             @endif
         </div>
@@ -309,12 +309,12 @@
         <div class="tasks-sect">
             <div class="sh">
                 <div class="sh-title">
-                    Urgentes &amp; vencidas
+                    {{ __('app.dash_urgent_overdue') }}
                     @if($overdue > 0)
                         <span style="margin-left:6px;background:rgba(224,84,84,.12);color:var(--danger);border-radius:20px;padding:1px 8px;font-size:10px;font-family:'DM Mono',monospace;font-weight:700">{{ $overdue }}</span>
                     @endif
                 </div>
-                <a href="/tasks" class="sh-link">ver todas →</a>
+                <a href="/tasks" class="sh-link">{{ __('app.dash_see_all') }}</a>
             </div>
             @if($urgentTasks->isNotEmpty())
             <div class="task-list">
@@ -324,9 +324,9 @@
                     <div class="tr-name">{{ $t->title }}</div>
                     <div class="tr-meta">
                         @if($t->isOverdue())
-                            <span class="tr-tag overdue">vencida</span>
+                            <span class="tr-tag overdue">{{ __('app.dash_tag_overdue') }}</span>
                         @elseif($t->due_date && \Carbon\Carbon::parse($t->due_date)->isToday())
-                            <span class="tr-tag today">hoje</span>
+                            <span class="tr-tag today">{{ __('app.dash_tag_today') }}</span>
                         @elseif($t->due_date)
                             <span class="tr-tag">{{ \Carbon\Carbon::parse($t->due_date)->format('d/m') }}</span>
                         @endif
@@ -339,7 +339,7 @@
             @else
             <div class="dash-empty">
                 <div class="dei">🎉</div>
-                <p>Nenhuma tarefa urgente. Boa!</p>
+                <p>{{ __('app.dash_no_urgent') }}</p>
             </div>
             @endif
         </div>
@@ -348,8 +348,8 @@
         @if($inProgressTasks->isNotEmpty())
         <div class="tasks-sect">
             <div class="sh">
-                <div class="sh-title">Em andamento</div>
-                <a href="/tasks?status=in_progress" class="sh-link">ver todas →</a>
+                <div class="sh-title">{{ __('app.dash_in_progress_title') }}</div>
+                <a href="/tasks?status=in_progress" class="sh-link">{{ __('app.dash_see_all') }}</a>
             </div>
             <div class="task-list">
                 @foreach($inProgressTasks as $t)
@@ -376,7 +376,7 @@
         {{-- Progresso --}}
         <div class="sc">
             <div class="sc-title">
-                Conclusão
+                {{ __('app.dash_completion') }}
                 <span class="sc-pct">{{ $completionRate }}%</span>
             </div>
             <div class="ring-row">
@@ -386,15 +386,15 @@
                 </svg>
                 <div>
                     <div class="ring-big" id="ring-pct">0%</div>
-                    <div class="ring-sub">{{ $total }} tarefa{{ $total!=1?'s':'' }} no total</div>
+                    <div class="ring-sub">{{ $total }} {{ __('app.dash_tasks_total') }}</div>
                 </div>
             </div>
             @php
                 $statusItems = [
-                    ['label'=>'Pendentes',   'key'=>'pending',     'color'=>'var(--status-pending)'],
-                    ['label'=>'Em progresso','key'=>'in_progress', 'color'=>'var(--status-in_progress)'],
-                    ['label'=>'Concluídas',  'key'=>'completed',   'color'=>'var(--status-completed)'],
-                    ['label'=>'Canceladas',  'key'=>'cancelled',   'color'=>'var(--status-cancelled)'],
+                    ['label'=>__('app.dash_pending'),   'key'=>'pending',     'color'=>'var(--status-pending)'],
+                    ['label'=>__('app.dash_in_progress_label'),'key'=>'in_progress', 'color'=>'var(--status-in_progress)'],
+                    ['label'=>__('app.dash_completed'),  'key'=>'completed',   'color'=>'var(--status-completed)'],
+                    ['label'=>__('app.dash_cancelled'),  'key'=>'cancelled',   'color'=>'var(--status-cancelled)'],
                 ];
             @endphp
             @foreach($statusItems as $s)
@@ -413,8 +413,8 @@
 
         {{-- Atividade --}}
         <div class="sc">
-            <div class="sc-title" style="margin-bottom:4px">Atividade</div>
-            <div class="chart-sub">Últimos 7 dias</div>
+            <div class="sc-title" style="margin-bottom:4px">{{ __('app.dash_activity') }}</div>
+            <div class="chart-sub">{{ __('app.dash_last_7_days') }}</div>
             <div class="chart-bars" id="chart-wrap">
                 @php $max=collect($days)->flatMap(fn($d)=>[$d['created'],$d['completed']])->max()?:1; @endphp
                 @foreach($days as $i => $day)
@@ -428,8 +428,8 @@
                 @endforeach
             </div>
             <div class="chart-leg">
-                <div class="cl-item"><div class="cl-dot" style="background:rgba(96,165,250,.6)"></div>Criadas</div>
-                <div class="cl-item"><div class="cl-dot" style="background:rgba(74,222,128,.65)"></div>Concluídas</div>
+                <div class="cl-item"><div class="cl-dot" style="background:rgba(96,165,250,.6)"></div>{{ __('app.dash_created') }}</div>
+                <div class="cl-item"><div class="cl-dot" style="background:rgba(74,222,128,.65)"></div>{{ __('app.dash_completed_legend') }}</div>
             </div>
         </div>
 
@@ -437,8 +437,8 @@
         @if($categories->isNotEmpty())
         <div class="sc">
             <div class="sh" style="margin-bottom:12px">
-                <div class="sh-title">Categorias</div>
-                <a href="/categories" class="sh-link">gerenciar →</a>
+                <div class="sh-title">{{ __('app.dash_categories') }}</div>
+                <a href="/categories" class="sh-link">{{ __('app.dash_manage') }}</a>
             </div>
             @php $maxCat=$categories->max('tasks_count')?:1; @endphp
             @foreach($categories as $cat)
@@ -466,9 +466,9 @@
 <script>
 (function(){
     const h=new Date().getHours();
-    document.getElementById('dash-greet').textContent=h<12?'Bom dia ☀️':h<18?'Boa tarde 🌤️':'Boa noite 🌙';
+    document.getElementById('dash-greet').textContent=h<12?'{{ __('app.dash_good_morning') }} ☀️':h<18?'{{ __('app.dash_good_afternoon') }} 🌤️':'{{ __('app.dash_good_evening') }} 🌙';
     const d=new Date();
-    const ds=d.toLocaleDateString('pt-BR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    const ds=d.toLocaleDateString('{{ str_replace('_','-',app()->getLocale()) }}',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
     document.getElementById('dash-date').textContent=ds.charAt(0).toUpperCase()+ds.slice(1);
 })();
 

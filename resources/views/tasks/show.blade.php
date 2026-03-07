@@ -1,9 +1,9 @@
 @extends('layouts.app')
 @section('title', $task->title)
-@section('page-title', 'Detalhe da Tarefa')
+@section('page-title', __('app.task_detail_title'))
 
 @section('topbar-actions')
-    <a href="/tasks" class="btn btn-ghost btn-sm">← Voltar</a>
+    <a href="/tasks" class="btn btn-ghost btn-sm">{{ __('app.task_back') }}</a>
 @endsection
 
 @push('styles')
@@ -175,71 +175,71 @@ html[data-theme=light] #quill-editor-wrap .ql-toolbar .ql-picker-options { backg
                 </div>
                 <div style="display:flex;gap:6px;flex-shrink:0">
                     @if(!$task->isCompleted())
-                        <button class="btn btn-primary btn-sm" id="btn-complete">✓ Concluir</button>
+                        <button class="btn btn-primary btn-sm" id="btn-complete">{{ __('app.task_complete_btn') }}</button>
                     @else
-                        <button class="btn btn-ghost btn-sm" id="btn-reopen">↩ Reabrir</button>
+                        <button class="btn btn-ghost btn-sm" id="btn-reopen">{{ __('app.task_reopen_btn') }}</button>
                     @endif
-                    <button class="btn btn-danger btn-sm" id="btn-delete">Excluir</button>
+                    <button class="btn btn-danger btn-sm" id="btn-delete">{{ __('app.task_delete_btn') }}</button>
                 </div>
             </div>
             <div style="border-top:1px solid var(--border);padding-top:16px">
-                <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:8px">Descrição</div>
+                <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:8px">{{ __('app.task_section_desc') }}</div>
                 @if($task->description)
                     <div class="desc-display ql-editor" style="padding:0">
                         {!! $task->description !!}
                     </div>
                 @else
-                    <p style="color:var(--muted);font-size:14px">Nenhuma descrição.</p>
+                    <p style="color:var(--muted);font-size:14px">{{ __('app.task_no_desc') }}</p>
                 @endif
             </div>
         </div>
 
         {{-- Edit card --}}
         <div class="card" style="margin-bottom:16px">
-            <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:18px">Editar Tarefa</div>
+            <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:18px">{{ __('app.task_section_edit') }}</div>
             <div id="edit-alert" style="display:none" class="alert"></div>
 
             <div class="form-group">
-                <label>Título</label>
+                <label>{{ __('app.task_label_title') }}</label>
                 <input type="text" id="edit-title" value="{{ $task->title }}">
             </div>
             <div class="form-group">
-                <label>Descrição</label>
+                <label>{{ __('app.task_label_description') }}</label>
                 <div id="quill-editor-wrap">
                     <div id="quill-editor"></div>
                 </div>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
                 <div class="form-group">
-                    <label>Status</label>
+                    <label>{{ __('app.task_label_status') }}</label>
                     <div class="select-wrap">
                         <select id="edit-status">
-                            <option value="pending"     {{ $task->status->value === 'pending'     ? 'selected' : '' }}>Pendente</option>
-                            <option value="in_progress" {{ $task->status->value === 'in_progress' ? 'selected' : '' }}>Em progresso</option>
-                            <option value="completed"   {{ $task->status->value === 'completed'   ? 'selected' : '' }}>Concluída</option>
-                            <option value="cancelled"   {{ $task->status->value === 'cancelled'   ? 'selected' : '' }}>Cancelada</option>
+                            <option value="pending"     {{ $task->status->value === 'pending'     ? 'selected' : '' }}>{{ __('app.status_pending') }}</option>
+                            <option value="in_progress" {{ $task->status->value === 'in_progress' ? 'selected' : '' }}>{{ __('app.status_in_progress') }}</option>
+                            <option value="completed"   {{ $task->status->value === 'completed'   ? 'selected' : '' }}>{{ __('app.status_completed') }}</option>
+                            <option value="cancelled"   {{ $task->status->value === 'cancelled'   ? 'selected' : '' }}>{{ __('app.status_cancelled') }}</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Prioridade</label>
+                    <label>{{ __('app.task_label_priority') }}</label>
                     <div class="select-wrap">
                         <select id="edit-priority">
-                            <option value="low"    {{ $task->priority->value === 'low'    ? 'selected' : '' }}>Baixa</option>
-                            <option value="medium" {{ $task->priority->value === 'medium' ? 'selected' : '' }}>Média</option>
-                            <option value="high"   {{ $task->priority->value === 'high'   ? 'selected' : '' }}>Alta</option>
-                            <option value="urgent" {{ $task->priority->value === 'urgent' ? 'selected' : '' }}>Urgente</option>
+                            <option value="low"    {{ $task->priority->value === 'low'    ? 'selected' : '' }}>{{ __('app.priority_low') }}</option>
+                            <option value="medium" {{ $task->priority->value === 'medium' ? 'selected' : '' }}>{{ __('app.priority_medium') }}</option>
+                            <option value="high"   {{ $task->priority->value === 'high'   ? 'selected' : '' }}>{{ __('app.priority_high') }}</option>
+                            <option value="urgent" {{ $task->priority->value === 'urgent' ? 'selected' : '' }}>{{ __('app.priority_urgent') }}</option>
                         </select>
                     </div>
                 </div>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
                 <div class="form-group">
-                    <label>Vencimento</label>
+                    <label>{{ __('app.task_label_due') }}</label>
                     <input type="date" id="edit-due-date" value="{{ $task->due_date?->format('Y-m-d') }}">
                 </div>
                 <div class="form-group">
-                    <label>Categoria</label>
+                    <label>{{ __('app.task_label_category') }}</label>
                     <div class="select-wrap">
                         <select id="edit-category">
                             <option value="">— Sem categoria —</option>
@@ -254,14 +254,14 @@ html[data-theme=light] #quill-editor-wrap .ql-toolbar .ql-picker-options { backg
                 </div>
             </div>
             <div style="text-align:right">
-                <button class="btn btn-primary" id="btn-save-edit">Salvar alterações</button>
+                <button class="btn btn-primary" id="btn-save-edit">{{ __('app.task_save_changes') }}</button>
             </div>
         </div>
 
         {{-- History --}}
         @if($task->histories && $task->histories->count())
         <div class="card">
-            <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:16px">Histórico</div>
+            <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:16px">{{ __('app.task_section_history') }}</div>
             @foreach($task->histories->sortByDesc('created_at') as $h)
             <div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
                 <div style="width:6px;height:6px;border-radius:50%;background:var(--accent);margin-top:5px;flex-shrink:0"></div>
@@ -277,18 +277,18 @@ html[data-theme=light] #quill-editor-wrap .ql-toolbar .ql-picker-options { backg
 
     {{-- Info sidebar --}}
     <div class="card" style="font-size:13px">
-        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:16px">Informações</div>
+        <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:16px">{{ __('app.task_section_info') }}</div>
         <div style="display:flex;flex-direction:column;gap:12px">
             <div>
                 <div style="font-size:11px;color:var(--muted);margin-bottom:2px">ID</div>
                 <div style="font-family:'DM Sans',monospace">#{{ $task->id }}</div>
             </div>
             <div>
-                <div style="font-size:11px;color:var(--muted);margin-bottom:2px">Criada em</div>
+                <div style="font-size:11px;color:var(--muted);margin-bottom:2px">{{ __('app.task_info_created') }}</div>
                 <div style="font-family:'DM Sans',monospace;font-size:12px">{{ $task->created_at->format('d/m/Y H:i') }}</div>
             </div>
             <div>
-                <div style="font-size:11px;color:var(--muted);margin-bottom:2px">Atualizada em</div>
+                <div style="font-size:11px;color:var(--muted);margin-bottom:2px">{{ __('app.task_info_updated') }}</div>
                 <div style="font-family:'DM Sans',monospace;font-size:12px">{{ $task->updated_at->format('d/m/Y H:i') }}</div>
             </div>
             @if($task->completed_at)
@@ -299,7 +299,7 @@ html[data-theme=light] #quill-editor-wrap .ql-toolbar .ql-picker-options { backg
             @endif
             @if($task->due_date)
             <div>
-                <div style="font-size:11px;color:var(--muted);margin-bottom:2px">Vencimento</div>
+                <div style="font-size:11px;color:var(--muted);margin-bottom:2px">{{ __('app.task_info_due') }}</div>
                 <div style="font-family:'DM Sans',monospace;font-size:12px;color:{{ $task->isOverdue() ? 'var(--danger)' : 'var(--text)' }}">
                     {{ $task->due_date->format('d/m/Y') }}
                     @if($task->isOverdue()) <span style="font-size:10px">(atrasada)</span> @endif
@@ -325,7 +325,7 @@ async function apiCall(method, path, body = null) {
 // ── Quill init ───────────────────────────────────────────────────────────────
 const quill = new Quill('#quill-editor', {
     theme: 'snow',
-    placeholder: 'Adicione uma descrição detalhada...',
+    placeholder: '{{ __('app.task_desc_ph') }}',
     modules: {
         toolbar: [
             [{ header: [1, 2, 3, false] }],
@@ -365,8 +365,8 @@ if (btnComplete) {
         this.innerHTML = '<span class="spinner"></span>';
         this.disabled = true;
         const res = await apiCall('PATCH', `/api/v1/tasks/${taskId}/complete`);
-        if (res.ok) { launchConfetti(); toast('Tarefa concluída! 🎉', 'success'); setTimeout(() => location.reload(), 1200); }
-        else { toast('Erro ao concluir.', 'error'); this.innerHTML = '✓ Concluir'; this.disabled = false; }
+        if (res.ok) { launchConfetti(); toast('{{ __('app.task_toast_completed') }}', 'success'); setTimeout(() => location.reload(), 1200); }
+        else { toast('{{ __('app.task_toast_err_complete') }}', 'error'); this.innerHTML = '{{ __('app.task_complete_btn') }}'; this.disabled = false; }
     });
 }
 
@@ -376,16 +376,16 @@ if (btnReopen) {
         this.innerHTML = '<span class="spinner"></span>';
         this.disabled = true;
         const res = await apiCall('PATCH', `/api/v1/tasks/${taskId}/reopen`);
-        if (res.ok) { toast('Tarefa reaberta.', 'info'); setTimeout(() => location.reload(), 600); }
-        else { toast('Erro ao reabrir.', 'error'); this.innerHTML = '↩ Reabrir'; this.disabled = false; }
+        if (res.ok) { toast('{{ __('app.task_toast_reopened') }}', 'info'); setTimeout(() => location.reload(), 600); }
+        else { toast('{{ __('app.task_toast_err_reopen') }}', 'error'); this.innerHTML = '{{ __('app.task_reopen_btn') }}'; this.disabled = false; }
     });
 }
 
 document.getElementById('btn-delete').addEventListener('click', function() {
-    confirmDialog('Excluir tarefa', 'Esta ação não pode ser desfeita. Deseja excluir?', async () => {
+    confirmDialog('{{ __('app.task_delete_title') }}', '{{ __('app.task_delete_msg') }}', async () => {
         const res = await apiCall('DELETE', `/api/v1/tasks/${taskId}`);
-        if (res.ok) { toast('Tarefa excluída.', 'info'); setTimeout(() => window.location.href = '/tasks', 600); }
-        else toast('Erro ao excluir.', 'error');
+        if (res.ok) { toast('{{ __('app.task_toast_deleted') }}', 'info'); setTimeout(() => window.location.href = '/tasks', 600); }
+        else toast('{{ __('app.task_toast_err_delete') }}', 'error');
     });
 });
 
@@ -409,13 +409,13 @@ document.getElementById('btn-save-edit').addEventListener('click', async functio
     try {
         const res = await apiCall('PUT', `/api/v1/tasks/${taskId}`, payload);
         const data = await res.json();
-        if (res.ok) { toast('Alterações salvas!', 'success'); setTimeout(() => location.reload(), 700); }
+        if (res.ok) { toast('{{ __('app.task_toast_saved') }}', 'success'); setTimeout(() => location.reload(), 700); }
         else {
             const msgs = data.errors ? Object.values(data.errors).flat().join(' ') : (data.message || 'Erro.');
             alertEl.className = 'alert alert-error'; alertEl.textContent = msgs; alertEl.style.display = 'block';
         }
-    } catch(e) { toast('Erro de conexão.', 'error'); }
-    finally { btn.innerHTML = 'Salvar alterações'; btn.disabled = false; }
+    } catch(e) { toast('{{ __('app.task_toast_err_save') }}', 'error'); }
+    finally { btn.innerHTML = '{{ __('app.task_save_changes') }}'; btn.disabled = false; }
 });
 </script>
 @endpush

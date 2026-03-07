@@ -288,9 +288,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateStats(ed) {
         const chars = ed.storage.characterCount.characters();
         const words = ed.storage.characterCount.words();
-        document.getElementById('stat-words').textContent = words + ' palavras';
-        document.getElementById('stat-chars').textContent = chars + ' caracteres';
-        document.getElementById('stat-read').textContent = Math.max(1, Math.round(words / 200)) + ' min leitura';
+        const i18n = window.TASKLETTO_I18N || {};
+        document.getElementById('stat-words').textContent = words + ' ' + (i18n.words || 'words');
+        document.getElementById('stat-chars').textContent = chars + ' ' + (i18n.chars || 'chars');
+        document.getElementById('stat-read').textContent = Math.max(1, Math.round(words / 200)) + ' ' + (i18n.read_min || 'min read');
     }
     updateStats(editor);
 

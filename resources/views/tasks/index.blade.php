@@ -1,13 +1,13 @@
 @extends('layouts.app')
-@section('page-title', 'Tarefas')
+@section('page-title', __('app.nav_tasks'))
 
 @section('topbar-actions')
     <button class="btn btn-ghost btn-sm" id="kb-help-btn" title="Atalhos de teclado (?)">
         <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="14" height="10" rx="2"/><path d="M4 7h1M7 7h1M10 7h1M4 10h8"/></svg>
     </button>
-    <button class="btn btn-primary" id="btn-new-task-top" title="Nova tarefa (N)">
+    <button class="btn btn-primary" id="btn-new-task-top" title="{{ __('app.new_task') }} (N)">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v12M2 8h12"/></svg>
-        Nova Tarefa
+        {{ __('app.new_task') }}
     </button>
 @endsection
 
@@ -16,65 +16,65 @@
 {{-- Quick filters --}}
 <div class="quick-filters">
     <a href="/tasks" class="qf {{ !request()->anyFilled(['status','priority','overdue','search','quick']) ? 'active' : '' }}">
-        Todas
+        {{ __('app.tasks_all') }}
         @if(isset($stats)) <span class="qf-count">{{ $stats['total'] }}</span> @endif
     </a>
     <a href="/tasks?quick=urgent" class="qf {{ request('quick') === 'urgent' ? 'active' : '' }}">
-        🔥 Urgentes
+        {{ __('app.tasks_urgent_filter') }}
         @if(isset($stats)) <span class="qf-count">{{ $stats['by_priority']['urgent'] ?? 0 }}</span> @endif
     </a>
     <a href="/tasks?quick=today" class="qf {{ request('quick') === 'today' ? 'active' : '' }}">
-        📅 Vence hoje
+        {{ __('app.tasks_due_today') }}
         @if(isset($stats)) <span class="qf-count">{{ $stats['due_today'] ?? 0 }}</span> @endif
     </a>
     <a href="/tasks?quick=overdue" class="qf {{ request('quick') === 'overdue' ? 'active' : '' }}">
-        ⚠ Atrasadas
+        {{ __('app.tasks_overdue_filter') }}
         @if(($stats['overdue'] ?? 0) > 0)
             <span class="qf-count qf-danger">{{ $stats['overdue'] }}</span>
         @endif
     </a>
     <a href="/tasks?status=in_progress" class="qf {{ request('status') === 'in_progress' ? 'active' : '' }}">
-        ⚡ Em progresso
+        {{ __('app.tasks_in_progress_filter') }}
     </a>
     <div style="flex:1"></div>
     {{-- Drag toggle --}}
-    <button class="qf" id="drag-toggle" title="Reordenar (R)">
+    <button class="qf" id="drag-toggle" title="{{ __('app.tasks_reorder') }} (R)">
         <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5h12M2 8h12M2 11h12"/></svg>
-        Reordenar
+        {{ __('app.tasks_reorder') }}
     </button>
 </div>
 
 {{-- Advanced filters (collapsible) --}}
 <div id="advanced-filters" style="display:none;margin-bottom:16px">
     <form method="GET" action="/tasks" class="filter-bar">
-        <input type="text" name="search" placeholder="Buscar tarefas..." value="{{ request('search') }}" id="search-input">
+        <input type="text" name="search" placeholder="{{ __('app.tasks_search_ph') }}" value="{{ request('search') }}" id="search-input">
         <div class="select-wrap">
             <select name="status" onchange="this.form.submit()">
-                <option value="">Todos os status</option>
-                <option value="pending"     {{ request('status') === 'pending'     ? 'selected' : '' }}>Pendente</option>
-                <option value="in_progress" {{ request('status') === 'in_progress' ? 'selected' : '' }}>Em progresso</option>
-                <option value="completed"   {{ request('status') === 'completed'   ? 'selected' : '' }}>Concluída</option>
-                <option value="cancelled"   {{ request('status') === 'cancelled'   ? 'selected' : '' }}>Cancelada</option>
+                <option value="">{{ __('app.tasks_all_status') }}</option>
+                <option value="pending"     {{ request('status') === 'pending'     ? 'selected' : '' }}>{{ __('app.status_pending') }}</option>
+                <option value="in_progress" {{ request('status') === 'in_progress' ? 'selected' : '' }}>{{ __('app.status_in_progress') }}</option>
+                <option value="completed"   {{ request('status') === 'completed'   ? 'selected' : '' }}>{{ __('app.status_completed') }}</option>
+                <option value="cancelled"   {{ request('status') === 'cancelled'   ? 'selected' : '' }}>{{ __('app.status_cancelled') }}</option>
             </select>
         </div>
         <div class="select-wrap">
             <select name="priority" onchange="this.form.submit()">
-                <option value="">Todas as prioridades</option>
-                <option value="low"    {{ request('priority') === 'low'    ? 'selected' : '' }}>Baixa</option>
-                <option value="medium" {{ request('priority') === 'medium' ? 'selected' : '' }}>Média</option>
-                <option value="high"   {{ request('priority') === 'high'   ? 'selected' : '' }}>Alta</option>
-                <option value="urgent" {{ request('priority') === 'urgent' ? 'selected' : '' }}>Urgente</option>
+                <option value="">{{ __('app.tasks_all_priorities') }}</option>
+                <option value="low"    {{ request('priority') === 'low'    ? 'selected' : '' }}>{{ __('app.priority_low') }}</option>
+                <option value="medium" {{ request('priority') === 'medium' ? 'selected' : '' }}>{{ __('app.priority_medium') }}</option>
+                <option value="high"   {{ request('priority') === 'high'   ? 'selected' : '' }}>{{ __('app.priority_high') }}</option>
+                <option value="urgent" {{ request('priority') === 'urgent' ? 'selected' : '' }}>{{ __('app.priority_urgent') }}</option>
             </select>
         </div>
         <label class="check-label">
             <input type="checkbox" name="overdue" value="1" onchange="this.form.submit()" {{ request('overdue') ? 'checked' : '' }}>
             <span class="toggle-track"></span>
-            Apenas atrasadas
+            {{ __('app.tasks_only_overdue') }}
         </label>
         @if(request()->anyFilled(['search','status','priority','overdue','quick']))
-            <a href="/tasks" class="btn btn-ghost btn-sm">✕ Limpar</a>
+            <a href="/tasks" class="btn btn-ghost btn-sm">{{ __('app.tasks_clear') }}</a>
         @endif
-        <button type="submit" class="btn btn-ghost btn-sm">Filtrar</button>
+        <button type="submit" class="btn btn-ghost btn-sm">{{ __('app.tasks_filter') }}</button>
     </form>
 </div>
 
@@ -83,27 +83,27 @@
     <div class="bulk-bar">
         <span id="bulk-count" style="font-size:13px;font-weight:600;color:var(--text)">0 selecionadas</span>
         <div style="display:flex;gap:6px;margin-left:auto">
-            <button class="btn btn-ghost btn-sm" id="bulk-complete">✓ Concluir</button>
-            <button class="btn btn-ghost btn-sm" id="bulk-status">Mudar status</button>
-            <button class="btn btn-ghost btn-sm" id="bulk-priority">Mudar prioridade</button>
-            <button class="btn btn-danger btn-sm" id="bulk-delete">✕ Excluir</button>
-            <button class="btn btn-ghost btn-sm" id="bulk-cancel">Cancelar</button>
+            <button class="btn btn-ghost btn-sm" id="bulk-complete">{{ __('app.tasks_complete') }}</button>
+            <button class="btn btn-ghost btn-sm" id="bulk-status">{{ __('app.tasks_change_status') }}</button>
+            <button class="btn btn-ghost btn-sm" id="bulk-priority">{{ __('app.tasks_change_priority') }}</button>
+            <button class="btn btn-danger btn-sm" id="bulk-delete">{{ __('app.tasks_delete') }}</button>
+            <button class="btn btn-ghost btn-sm" id="bulk-cancel">{{ __('app.cancel') }}</button>
         </div>
     </div>
     {{-- Inline selects for bulk change --}}
     <div id="bulk-status-picker" class="bulk-picker" style="display:none">
-        <span style="font-size:12px;color:var(--muted)">Novo status:</span>
-        <button class="bulk-opt" data-val="pending">Pendente</button>
-        <button class="bulk-opt" data-val="in_progress">Em progresso</button>
-        <button class="bulk-opt" data-val="completed">Concluída</button>
-        <button class="bulk-opt" data-val="cancelled">Cancelada</button>
+        <span style="font-size:12px;color:var(--muted)">{{ __('app.tasks_new_status') }}</span>
+        <button class="bulk-opt" data-val="pending">{{ __('app.status_pending') }}</button>
+        <button class="bulk-opt" data-val="in_progress">{{ __('app.status_in_progress') }}</button>
+        <button class="bulk-opt" data-val="completed">{{ __('app.status_completed') }}</button>
+        <button class="bulk-opt" data-val="cancelled">{{ __('app.status_cancelled') }}</button>
     </div>
     <div id="bulk-priority-picker" class="bulk-picker" style="display:none">
-        <span style="font-size:12px;color:var(--muted)">Nova prioridade:</span>
-        <button class="bulk-opt priority-low"    data-val="low">Baixa</button>
-        <button class="bulk-opt priority-medium" data-val="medium">Média</button>
-        <button class="bulk-opt priority-high"   data-val="high">Alta</button>
-        <button class="bulk-opt priority-urgent" data-val="urgent">Urgente</button>
+        <span style="font-size:12px;color:var(--muted)">{{ __('app.tasks_new_priority') }}</span>
+        <button class="bulk-opt priority-low"    data-val="low">{{ __('app.priority_low') }}</button>
+        <button class="bulk-opt priority-medium" data-val="medium">{{ __('app.priority_medium') }}</button>
+        <button class="bulk-opt priority-high"   data-val="high">{{ __('app.priority_high') }}</button>
+        <button class="bulk-opt priority-urgent" data-val="urgent">{{ __('app.priority_urgent') }}</button>
     </div>
 </div>
 
@@ -112,8 +112,8 @@
     @if($tasks->isEmpty())
         <div class="empty-state">
             <svg width="48" height="48" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M2 4h12M2 8h8M2 12h10"/></svg>
-            <p>Nenhuma tarefa encontrada.</p>
-            <button class="btn btn-primary" id="btn-empty-new">Criar primeira tarefa</button>
+            <p>{{ __('app.tasks_none_found') }}</p>
+            <button class="btn btn-primary" id="btn-empty-new">{{ __('app.tasks_create_first') }}</button>
         </div>
     @else
         <div class="table-wrap">
@@ -131,14 +131,14 @@
                 <thead>
                     <tr>
                         <th style="width:44px;padding-left:14px">
-                            <input type="checkbox" id="select-all" class="row-checkbox" title="Selecionar todas">
+                            <input type="checkbox" id="select-all" class="row-checkbox" title="{{ __('app.tasks_select_all') }}">
                         </th>
                         <th id="drag-handle-header" style="width:28px;display:none"></th>
-                        <th>Título</th>
-                        <th>Status</th>
-                        <th>Prioridade</th>
-                        <th>Categoria</th>
-                        <th>Vencimento</th>
+                        <th>{{ __('app.tasks_col_title') }}</th>
+                        <th>{{ __('app.tasks_col_status') }}</th>
+                        <th>{{ __('app.tasks_col_priority') }}</th>
+                        <th>{{ __('app.tasks_col_category') }}</th>
+                        <th>{{ __('app.tasks_col_due') }}</th>
                         <th style="width:110px"></th>
                     </tr>
                 </thead>
@@ -150,10 +150,10 @@
                             if ($task->due_date && !$task->isCompleted()) {
                                 $diff = now()->startOfDay()->diffInDays($task->due_date->startOfDay(), false);
                                 $dueLabel = match(true) {
-                                    $diff < 0  => ['text' => abs($diff).'d atrasada', 'color' => 'var(--danger)'],
-                                    $diff === 0 => ['text' => 'Hoje',                 'color' => 'var(--accent2)'],
-                                    $diff === 1 => ['text' => 'Amanhã',               'color' => 'var(--accent)'],
-                                    $diff <= 7  => ['text' => 'em '.$diff.'d',        'color' => 'var(--muted)'],
+                                    $diff < 0  => ['text' => __('app.tasks_days_overdue', ['n' => abs($diff)]), 'color' => 'var(--danger)'],
+                                    $diff === 0 => ['text' => __('app.tasks_today'),  'color' => 'var(--accent2)'],
+                                    $diff === 1 => ['text' => __('app.tasks_tomorrow'), 'color' => 'var(--accent)'],
+                                    $diff <= 7  => ['text' => __('app.tasks_in_days', ['n' => $diff]), 'color' => 'var(--muted)'],
                                     default     => ['text' => $task->due_date->format('d/m/Y'), 'color' => 'var(--muted)'],
                                 };
                             }
@@ -198,9 +198,9 @@
                             </td>
                             <td style="text-align:right;white-space:nowrap" onclick="event.stopPropagation()">
                                 @if(!$task->isCompleted())
-                                    <button class="btn btn-ghost btn-sm quick-complete" data-id="{{ $task->id }}" title="Concluir (clique)">✓</button>
+                                    <button class="btn btn-ghost btn-sm quick-complete" data-id="{{ $task->id }}" title="{{ __('app.tasks_quick_complete') }}">✓</button>
                                 @endif
-                                <a href="/tasks/{{ $task->id }}" class="btn btn-ghost btn-sm">Ver</a>
+                                <a href="/tasks/{{ $task->id }}" class="btn btn-ghost btn-sm">{{ __('app.tasks_view') }}</a>
                             </td>
                         </tr>
                     @endforeach
@@ -223,16 +223,16 @@
 {{-- Keyboard shortcuts modal --}}
 <div id="kb-modal" style="display:none;position:fixed;inset:0;z-index:9200;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);align-items:center;justify-content:center">
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;width:420px;animation:modalIn .2s cubic-bezier(.34,1.56,.64,1) both">
-        <div style="font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:20px">Atalhos de Teclado</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:20px">{{ __("app.tasks_kbd_title") }}</div>
         <div style="display:flex;flex-direction:column;gap:10px;font-size:13px">
             @foreach([
-                ['N', 'Nova tarefa'],
-                ['/', 'Focar na busca'],
-                ['R', 'Modo reordenar'],
-                ['Esc', 'Fechar modal / cancelar seleção'],
-                ['A', 'Selecionar todas as tarefas'],
-                ['Delete', 'Excluir selecionadas'],
-                ['?', 'Mostrar atalhos'],
+                ['N', __('app.tasks_kbd_new')],
+                ['/', __('app.tasks_kbd_search')],
+                ['R', __('app.tasks_kbd_reorder')],
+                ['Esc', __('app.tasks_kbd_close')],
+                ['A', __('app.tasks_kbd_select_all')],
+                ['Delete', __('app.tasks_kbd_delete')],
+                ['?', __('app.tasks_kbd_shortcuts')],
             ] as [$key, $desc])
             <div style="display:flex;align-items:center;gap:12px">
                 <kbd>{{ $key }}</kbd>
@@ -241,7 +241,7 @@
             @endforeach
         </div>
         <div style="text-align:right;margin-top:20px">
-            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('kb-modal').style.display='none'">Fechar</button>
+            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('kb-modal').style.display='none'">{{ __('app.close') }}</button>
         </div>
     </div>
 </div>
@@ -396,9 +396,9 @@ document.querySelectorAll('.quick-complete').forEach(btn => {
         if (res.ok) {
             row.style.transition = 'opacity .3s, transform .3s';
             row.style.opacity = '0'; row.style.transform = 'translateX(12px)';
-            toast('Tarefa concluída!', 'success');
+            toast('{{ __('app.tasks_completed_toast') }}', 'success');
             setTimeout(() => row.remove(), 300);
-        } else { toast('Erro ao concluir.', 'error'); this.innerHTML = '✓'; this.disabled = false; }
+        } else { toast('{{ __('app.tasks_error_complete') }}', 'error'); this.innerHTML = '✓'; this.disabled = false; }
     });
 });
 
@@ -467,7 +467,7 @@ async function applyInline(field, taskId, val, btn) {
     const row = document.querySelector(`tr[data-id="${taskId}"]`);
     const res = await api('PUT', `/api/v1/tasks/${taskId}`, { [field]: val });
     if (res.ok) {
-        toast(`${field === 'status' ? 'Status' : 'Prioridade'} atualizado!`, 'success');
+        toast(field === 'status' ? '{{ __('app.tasks_inline_status') }}' : '{{ __('app.tasks_inline_priority') }}', 'success');
         setTimeout(() => location.reload(), 500);
     } else { toast('Erro ao atualizar.', 'error'); }
 }
@@ -493,7 +493,7 @@ let selected = new Set();
 function updateBulkBar() {
     if (selected.size > 0) {
         bulkBar.style.display = 'block';
-        bulkCount.textContent = `${selected.size} selecionada${selected.size > 1 ? 's' : ''}`;
+        bulkCount.textContent = `${selected.size} {{ __('app.tasks_selected') }}`;
     } else {
         bulkBar.style.display = 'none';
         document.getElementById('bulk-status-picker').style.display  = 'none';
@@ -536,7 +536,7 @@ document.getElementById('bulk-complete')?.addEventListener('click', async () => 
     if (!selected.size) return;
     const ids = [...selected];
     await Promise.all(ids.map(id => api('PATCH', `/api/v1/tasks/${id}/complete`)));
-    toast(`${ids.length} tarefa(s) concluída(s)!`, 'success');
+    toast(`${ids.length} {{ __('app.tasks_completed_many') }}`, 'success');
     setTimeout(() => location.reload(), 500);
 });
 
@@ -544,11 +544,11 @@ document.getElementById('bulk-complete')?.addEventListener('click', async () => 
 document.getElementById('bulk-delete')?.addEventListener('click', () => {
     if (!selected.size) return;
     confirmDialog(
-        'Excluir tarefas',
-        `Excluir ${selected.size} tarefa(s)? Esta ação não pode ser desfeita.`,
+        '{{ __('app.tasks_delete_title') }}',
+        `{{ __('app.tasks_delete_confirm', ['n' => '']) }}`.replace(':n', selected.size),
         async () => {
             await Promise.all([...selected].map(id => api('DELETE', `/api/v1/tasks/${id}`)));
-            toast(`${selected.size} tarefa(s) excluída(s).`, 'info');
+            toast(`${selected.size} {{ __('app.tasks_deleted_toast') }}`, 'info');
             setTimeout(() => location.reload(), 500);
         }
     );
@@ -572,7 +572,7 @@ document.querySelectorAll('#bulk-status-picker .bulk-opt').forEach(btn => {
     btn.addEventListener('click', async function() {
         const val = this.dataset.val;
         await Promise.all([...selected].map(id => api('PUT', `/api/v1/tasks/${id}`, { status: val })));
-        toast(`Status atualizado!`, 'success');
+        toast('{{ __('app.tasks_status_updated') }}', 'success');
         setTimeout(() => location.reload(), 500);
     });
 });
@@ -580,7 +580,7 @@ document.querySelectorAll('#bulk-priority-picker .bulk-opt').forEach(btn => {
     btn.addEventListener('click', async function() {
         const val = this.dataset.val;
         await Promise.all([...selected].map(id => api('PUT', `/api/v1/tasks/${id}`, { priority: val })));
-        toast(`Prioridade atualizada!`, 'success');
+        toast('{{ __('app.tasks_priority_updated') }}', 'success');
         setTimeout(() => location.reload(), 500);
     });
 });
@@ -646,7 +646,7 @@ if (tbody) {
 async function saveOrder() {
     const order = [...tbody.querySelectorAll('tr[data-id]')].map(r => parseInt(r.dataset.id));
     await api('POST', '/tasks/sort', { order });
-    toast('Ordem salva!', 'success');
+    toast('{{ __('app.tasks_order_saved') }}', 'success');
 }
 
 // ── Keyboard shortcuts ────────────────────────────────────────────────────────

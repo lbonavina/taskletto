@@ -193,14 +193,14 @@ html[data-theme=light] .skeleton-line {
     {{-- Search --}}
     <div class="notes-search-wrap">
         <span class="search-icon">🔍</span>
-        <input id="notes-search" type="text" placeholder="Buscar notas… (ou pressione /)" autocomplete="off">
-        <button class="search-clear" id="btn-search-clear" title="Limpar">✕</button>
+        <input id="notes-search" type="text" placeholder="{{ __('app.notes_search_ph') }}" autocomplete="off">
+        <button class="search-clear" id="btn-search-clear" title="{{ __('app.notes_search_clear') }}">✕</button>
     </div>
 
     {{-- Category --}}
     <div class="select-wrap">
         <select id="filter-category">
-            <option value="">Todas as categorias</option>
+            <option value="">{{ __('app.notes_all_cats') }}</option>
             @foreach($categories as $cat)
                 <option value="{{ $cat->name }}">{{ $cat->icon }} {{ $cat->name }}</option>
             @endforeach
@@ -210,12 +210,12 @@ html[data-theme=light] .skeleton-line {
     {{-- Sort --}}
     <div class="select-wrap">
         <select id="filter-sort">
-            <option value="updated_desc">↓ Recém editadas</option>
-            <option value="updated_asc">↑ Editadas há mais tempo</option>
-            <option value="created_desc">↓ Recém criadas</option>
-            <option value="created_asc">↑ Mais antigas</option>
-            <option value="title_asc">A → Z</option>
-            <option value="title_desc">Z → A</option>
+            <option value="updated_desc">{{ __('app.notes_sort_updated_desc') }}</option>
+            <option value="updated_asc">{{ __('app.notes_sort_updated_asc') }}</option>
+            <option value="created_desc">{{ __('app.notes_sort_created_desc') }}</option>
+            <option value="created_asc">{{ __('app.notes_sort_created_asc') }}</option>
+            <option value="title_asc">{{ __('app.notes_sort_title_asc') }}</option>
+            <option value="title_desc">{{ __('app.notes_sort_title_desc') }}</option>
         </select>
     </div>
 
@@ -239,7 +239,7 @@ html[data-theme=light] .skeleton-line {
     @if($pinned->isEmpty() && $others->isEmpty())
         <div class="notes-empty" style="padding:80px 20px">
             <div class="notes-empty-icon">📝</div>
-            <p style="color:var(--muted);font-size:15px;margin-bottom:20px">Nenhuma nota ainda.<br>Crie sua primeira nota!</p>
+            <p style="color:var(--muted);font-size:15px;margin-bottom:20px">{{ __('app.no_notes') }}</p>
             <button class="btn btn-primary" id="btn-new-note-empty">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v12M2 8h12"/></svg>
                 Nova Nota
@@ -252,8 +252,8 @@ html[data-theme=light] .skeleton-line {
                 @foreach($pinned as $note)
                 <a href="/notes/{{ $note->id }}" class="note-card" style="--note-color:{{ $note->color }}">
                     <span class="note-card-pin">📌</span>
-                    <div class="note-card-title">{{ $note->title ?: 'Sem título' }}</div>
-                    <div class="note-card-excerpt">{{ $note->excerpt() ?: 'Nota em branco…' }}</div>
+                    <div class="note-card-title">{{ $note->title ?: __('app.notes_untitled') }}</div>
+                    <div class="note-card-excerpt">{{ $note->excerpt() ?: __('app.notes_blank') }}</div>
                     <div class="note-card-meta">
                         <span>{{ $note->updated_at->diffForHumans() }}</span>
                         @if($note->category)<span class="note-cat-badge">{{ $note->category }}</span>@endif
@@ -267,8 +267,8 @@ html[data-theme=light] .skeleton-line {
             <div class="notes-grid">
                 @foreach($others as $note)
                 <a href="/notes/{{ $note->id }}" class="note-card" style="--note-color:{{ $note->color }}">
-                    <div class="note-card-title">{{ $note->title ?: 'Sem título' }}</div>
-                    <div class="note-card-excerpt">{{ $note->excerpt() ?: 'Nota em branco…' }}</div>
+                    <div class="note-card-title">{{ $note->title ?: __('app.notes_untitled') }}</div>
+                    <div class="note-card-excerpt">{{ $note->excerpt() ?: __('app.notes_blank') }}</div>
                     <div class="note-card-meta">
                         <span>{{ $note->updated_at->diffForHumans() }}</span>
                         @if($note->category)<span class="note-cat-badge">{{ $note->category }}</span>@endif
@@ -363,7 +363,7 @@ document.getElementById('btn-new-note-empty')?.addEventListener('click', createN
         if (total === 0) {
             output.innerHTML = `<div class="notes-empty">
                 <div class="notes-empty-icon">🔍</div>
-                <p>Nenhuma nota encontrada${term ? ` para <strong>"${esc(term)}"</strong>` : ''}.</p>
+                <p>{{ __('app.notes_none_found') }}${term ? ` para <strong>"${esc(term)}"</strong>` : ''}.</p>
             </div>`;
             return;
         }
