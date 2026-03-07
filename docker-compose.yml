@@ -1,0 +1,104 @@
+services:
+
+  # ── PHP-FPM (Laravel) ────────────────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: taskletto_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+      - taskletto_vendor:/var/www/html/vendor
+      - taskletto_node_modules:/var/www/html/node_modules
+    networks:
+      - taskletto_network
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # ── Nginx ─────────────────────────────────────────────────────────────────────
+  nginx:
+    image: nginx:alpine
+    container_name: taskletto_nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - taskletto_network
+    depends_on:
+      - app
+
+  # ── MySQL ─────────────────────────────────────────────────────────────────────
+  db:
+    image: mysql:8.0
+    container_name: taskletto_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: taskletto
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: taskletto_user
+      MYSQL_PASSWORD: taskletto_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - taskletto_db_data:/var/lib/mysql
+    networks:
+      - taskletto_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "taskletto_user", "-ptaskletto_pass"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── phpMyAdmin ────────────────────────────────────────────────────────────────
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: taskletto_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: taskletto_user
+      PMA_PASSWORD: taskletto_pass
+    networks:
+      - taskletto_network
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # ── Vite dev server (hot-reload, somente desenvolvimento) ─────────────────────
+  # Para usar: docker compose --profile dev up
+  vite:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: taskletto_vite
+    working_dir: /var/www/html
+    command: npm run dev -- --host
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/var/www/html
+      - taskletto_node_modules:/var/www/html/node_modules
+    networks:
+      - taskletto_network
+    profiles:
+      - dev
+
+networks:
+  taskletto_network:
+    driver: bridge
+
+volumes:
+  taskletto_db_data:
+    driver: local
+  taskletto_vendor:
+    driver: local
+  taskletto_node_modules:
+    driver: local

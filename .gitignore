@@ -1,0 +1,51 @@
+# ── Laravel ───────────────────────────────────────────────────────────────────
+/vendor/
+/node_modules/
+/public/build/
+/public/hot/
+/public/storage
+/storage/*.key
+/storage/framework/cache/
+/storage/framework/sessions/
+/storage/framework/views/
+/storage/logs/
+/bootstrap/cache/
+
+# ── Ambiente ──────────────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+!.env.docker
+
+# ── Banco de dados ────────────────────────────────────────────────────────────
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+database/database.sqlite
+
+# ── Docker ────────────────────────────────────────────────────────────────────
+# (mantém Dockerfile, docker-compose.yml, docker/, nginx/ — só ignora dados)
+
+# ── IDE / Editor ──────────────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ── Windows lixo ──────────────────────────────────────────────────────────────
+*:Zone.Identifier
+*.Zone.Identifier
+
+# ── Arquivos temporários / build ──────────────────────────────────────────────
+*.zip
+*.tar.gz
+*.bak
+*.log
+npm-debug.log*
+
+# ── NativePHP (quando instalar) ───────────────────────────────────────────────
+/dist/
+/.electron/
+/resources/js/nativephp*
