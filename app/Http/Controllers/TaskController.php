@@ -15,7 +15,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 /**
  * @OA\Info(
  *     title="Taskletto",
- *     version="1.0.0",
+ *     version="1.1.0",
  *     description="API RESTful para gerenciamento de tarefas com suporte a prioridades, categorias e status.",
  *     @OA\Contact(
  *         email="seu@email.com",
@@ -157,16 +157,16 @@ class TaskController extends Controller
             $term = $request->search;
             $query->where(function ($q) use ($term) {
                 $q->where('title', 'like', "%{$term}%")
-                  ->orWhere('description', 'like', "%{$term}%");
+                    ->orWhere('description', 'like', "%{$term}%");
             });
         }
 
         $perPage = min($request->integer('per_page', 15), 100);
 
         $tasks = $query->orderByRaw("CASE priority WHEN 'urgent' THEN 1 WHEN 'high' THEN 2 WHEN 'medium' THEN 3 ELSE 4 END")
-                       ->orderBy('due_date')
-                       ->orderBy('created_at', 'desc')
-                       ->paginate($perPage);
+            ->orderBy('due_date')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
 
         return TaskResource::collection($tasks);
     }
@@ -304,7 +304,7 @@ class TaskController extends Controller
         if ($task->isCompleted()) {
             return response()->json([
                 'message' => 'Esta tarefa já está concluída.',
-                'error'   => 'already_completed',
+                'error' => 'already_completed',
             ], 409);
         }
 
@@ -312,7 +312,7 @@ class TaskController extends Controller
 
         return response()->json([
             'message' => 'Tarefa marcada como concluída.',
-            'data'    => new TaskResource($task),
+            'data' => new TaskResource($task),
         ]);
     }
 
@@ -335,10 +335,10 @@ class TaskController extends Controller
      */
     public function reopen(Task $task): JsonResponse
     {
-        if (! $task->isCompleted()) {
+        if (!$task->isCompleted()) {
             return response()->json([
                 'message' => 'Somente tarefas concluídas podem ser reabertas.',
-                'error'   => 'not_completed',
+                'error' => 'not_completed',
             ], 409);
         }
 
@@ -346,7 +346,7 @@ class TaskController extends Controller
 
         return response()->json([
             'message' => 'Tarefa reaberta com sucesso.',
-            'data'    => new TaskResource($task),
+            'data' => new TaskResource($task),
         ]);
     }
 
@@ -390,10 +390,10 @@ class TaskController extends Controller
 
         return response()->json([
             'data' => [
-                'total'           => $total,
-                'by_status'       => $byStatus,
-                'by_priority'     => $byPriority,
-                'overdue'         => $overdue,
+                'total' => $total,
+                'by_status' => $byStatus,
+                'by_priority' => $byPriority,
+                'overdue' => $overdue,
                 'completion_rate' => $completionRate,
             ],
         ]);
