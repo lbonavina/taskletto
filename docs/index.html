@@ -14,8 +14,7 @@
     <link rel="canonical" href="https://lbonavina.github.io/taskletto">
 
     <meta property="og:title" content="Taskletto — Gerenciador de Tarefas e Notas">
-    <meta property="og:description"
-        content="App desktop gratuito para gerenciar tarefas e notas com foco em produtividade.">
+    <meta property="og:description" content="App desktop gratuito para gerenciar tarefas e notas com foco em produtividade.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lbonavina.github.io/taskletto">
     <meta property="og:image" content="https://lbonavina.github.io/taskletto/og.png">
@@ -39,923 +38,236 @@
     </script>
 
     <base href="/taskletto/">
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="shortcut icon" href="favicon.png">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="shortcut icon" href="favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
 
     <style>
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --bg: #0f0f11;
-            --surface: #16161a;
-            --surface2: #1e1e24;
-            --border: #2a2a32;
-            --accent: #ff914d;
-            --accent2: #ff6b1a;
-            --text: #e8e8ec;
-            --muted: #7a7a8a;
-            --success: #4ade80;
-            --info: #60a5fa;
+            --bg: #0f0f11; --surface: #16161a; --surface2: #1e1e24;
+            --border: #2a2a32; --accent: #ff914d; --accent2: #ff6b1a;
+            --text: #e8e8ec; --muted: #7a7a8a; --success: #4ade80; --info: #60a5fa;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 16px;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        ::-webkit-scrollbar {
-            width: 5px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 99px;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
+        html { scroll-behavior: smooth; }
+        body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 16px; line-height: 1.6; overflow-x: hidden; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+        a { color: inherit; text-decoration: none; }
 
         body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
+            content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
             opacity: .4;
         }
 
-        .blob {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(120px);
-            pointer-events: none;
-            z-index: 0;
-            opacity: .12;
-        }
+        .blob { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; opacity: .12; }
+        .blob-1 { width: 600px; height: 600px; background: var(--accent); top: -200px; left: -100px; }
+        .blob-2 { width: 400px; height: 400px; background: #6b5bff; bottom: -100px; right: -100px; }
 
-        .blob-1 {
-            width: 600px;
-            height: 600px;
-            background: var(--accent);
-            top: -200px;
-            left: -100px;
-        }
-
-        .blob-2 {
-            width: 400px;
-            height: 400px;
-            background: #6b5bff;
-            bottom: -100px;
-            right: -100px;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 24px;
-            position: relative;
-            z-index: 1;
-        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
 
         /* ── NAV ── */
         nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            padding: 16px 0;
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, .04);
-            background: rgba(15, 15, 17, .7);
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 16px 0; backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,.04);
+            background: rgba(15,15,17,.7);
         }
-
-        nav .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: -.3px;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-links a {
-            padding: 7px 14px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--muted);
-            transition: color .15s, background .15s;
-        }
-
-        .nav-links a:hover {
-            color: var(--text);
-            background: var(--surface2);
-        }
+        nav .container { display: flex; align-items: center; justify-content: space-between; }
+        .nav-logo { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; letter-spacing: -.3px; }
+        .nav-links { display: flex; align-items: center; gap: 8px; }
+        .nav-links a { padding: 7px 14px; border-radius: 8px; font-size: 14px; font-weight: 500; color: var(--muted); transition: color .15s, background .15s; }
+        .nav-links a:not(.btn-nav):hover { color: var(--text); background: var(--surface2); }
 
         /* Language toggle */
         .lang-toggle {
-            display: flex;
-            align-items: center;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-            margin-right: 4px;
+            display: flex; align-items: center;
+            background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 8px; overflow: hidden; margin-right: 4px;
         }
-
         .lang-btn {
-            padding: 6px 11px;
-            font-size: 12px;
-            font-weight: 600;
-            font-family: 'DM Mono', monospace;
-            color: var(--muted);
-            cursor: pointer;
-            border: none;
-            background: none;
-            transition: color .15s, background .15s;
-            letter-spacing: .3px;
+            padding: 6px 11px; font-size: 12px; font-weight: 600;
+            font-family: 'DM Mono', monospace; color: var(--muted);
+            cursor: pointer; border: none; background: none;
+            transition: color .15s, background .15s; letter-spacing: .3px;
         }
-
-        .lang-btn.active {
-            background: var(--surface);
-            color: var(--accent);
-        }
-
-        .lang-btn:hover:not(.active) {
-            color: var(--text);
-        }
+        .lang-btn.active { background: var(--surface); color: var(--accent); }
+        .lang-btn:hover:not(.active) { color: var(--text); }
 
         .btn-nav {
-            padding: 8px 18px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            color: #fff;
+            padding: 8px 18px; border-radius: 10px; font-size: 14px; font-weight: 600;
+            background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff;
             transition: box-shadow .2s, transform .15s;
-            box-shadow: 0 4px 16px rgba(255, 145, 77, .3);
+            box-shadow: 0 4px 16px rgba(255,145,77,.3);
         }
-
-        .btn-nav:hover {
-            box-shadow: 0 6px 24px rgba(255, 145, 77, .5);
-            transform: translateY(-1px);
-        }
+        .btn-nav:hover { color: #fff; box-shadow: 0 6px 24px rgba(255,145,77,.5); transform: translateY(-1px); }
 
         /* ── HERO ── */
-        .hero {
-            padding: 160px 0 100px;
-            text-align: center;
-        }
-
+        .hero { padding: 160px 0 100px; text-align: center; }
         .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
-            border-radius: 99px;
-            margin-bottom: 32px;
-            background: rgba(255, 145, 77, .08);
-            border: 1px solid rgba(255, 145, 77, .2);
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--accent);
-            font-family: 'DM Mono', monospace;
-            animation: fadeUp .6s .1s both;
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 14px; border-radius: 99px; margin-bottom: 32px;
+            background: rgba(255,145,77,.08); border: 1px solid rgba(255,145,77,.2);
+            font-size: 13px; font-weight: 500; color: var(--accent);
+            font-family: 'DM Mono', monospace; animation: fadeUp .6s .1s both;
         }
+        .hero-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
 
-        .hero-badge .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--accent);
-            animation: pulse 2s infinite;
-        }
+        .hero h1 { font-size: clamp(42px, 7vw, 80px); font-weight: 700; letter-spacing: -2px; line-height: 1.05; margin-bottom: 24px; animation: fadeUp .6s .2s both; }
+        .hero h1 .accent-word { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .hero-sub { font-size: clamp(17px, 2.5vw, 20px); color: var(--muted); max-width: 560px; margin: 0 auto 40px; font-weight: 400; line-height: 1.6; animation: fadeUp .6s .3s both; }
+        .hero-ctas { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; animation: fadeUp .6s .4s both; }
 
-        @keyframes pulse {
+        .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 600; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; transition: box-shadow .2s, transform .15s; box-shadow: 0 4px 24px rgba(255,145,77,.3); }
+        .btn-primary:hover { box-shadow: 0 6px 32px rgba(255,145,77,.5); transform: translateY(-2px); }
+        .btn-ghost { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 600; border: 1px solid var(--border); color: var(--text); transition: border-color .15s, background .15s, transform .15s; }
+        .btn-ghost:hover { border-color: var(--muted); background: var(--surface2); transform: translateY(-2px); }
 
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: .3;
-            }
-        }
-
-        .hero h1 {
-            font-size: clamp(42px, 7vw, 80px);
-            font-weight: 700;
-            letter-spacing: -2px;
-            line-height: 1.05;
-            margin-bottom: 24px;
-            animation: fadeUp .6s .2s both;
-        }
-
-        .hero h1 .accent-word {
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-sub {
-            font-size: clamp(17px, 2.5vw, 20px);
-            color: var(--muted);
-            max-width: 560px;
-            margin: 0 auto 40px;
-            font-weight: 400;
-            line-height: 1.6;
-            animation: fadeUp .6s .3s both;
-        }
-
-        .hero-ctas {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            animation: fadeUp .6s .4s both;
-        }
-
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            color: #fff;
-            transition: box-shadow .2s, transform .15s;
-            box-shadow: 0 4px 24px rgba(255, 145, 77, .3);
-        }
-
-        .btn-primary:hover {
-            box-shadow: 0 6px 32px rgba(255, 145, 77, .5);
-            transform: translateY(-2px);
-        }
-
-        .btn-ghost {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 600;
-            border: 1px solid var(--border);
-            color: var(--text);
-            transition: border-color .15s, background .15s, transform .15s;
-        }
-
-        .btn-ghost:hover {
-            border-color: var(--muted);
-            background: var(--surface2);
-            transform: translateY(-2px);
-        }
-
-        .hero-note {
-            margin-top: 16px;
-            font-size: 13px;
-            color: var(--muted);
-            animation: fadeUp .6s .5s both;
-        }
-
-        .hero-note strong {
-            color: var(--success);
-        }
+        .hero-note { margin-top: 16px; font-size: 13px; color: var(--muted); animation: fadeUp .6s .5s both; }
+        .hero-note strong { color: var(--success); }
 
         /* ── MOCKUP ── */
-        .mockup-wrap {
-            margin-top: 72px;
-            position: relative;
-            animation: fadeUp .8s .5s both;
-        }
-
-        .mockup-glow {
-            position: absolute;
-            inset: -40px;
-            border-radius: 24px;
-            background: radial-gradient(ellipse at 50% 0%, rgba(255, 145, 77, .15) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .mockup-window {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, .6), 0 0 0 1px rgba(255, 255, 255, .04);
-            position: relative;
-        }
-
-        .mockup-titlebar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 16px;
-            background: var(--surface2);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .titlebar-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-
-        .titlebar-dots {
-            display: flex;
-            gap: 6px;
-        }
-
-        .titlebar-dot:nth-child(1) {
-            background: #ff5f57;
-        }
-
-        .titlebar-dot:nth-child(2) {
-            background: #febc2e;
-        }
-
-        .titlebar-dot:nth-child(3) {
-            background: #28c840;
-        }
-
-        .titlebar-title {
-            flex: 1;
-            text-align: center;
-            font-size: 12px;
-            color: var(--muted);
-            font-family: 'DM Mono', monospace;
-        }
-
-        .mockup-body {
-            display: flex;
-            height: 440px;
-        }
-
-        .mock-sidebar {
-            width: 200px;
-            flex-shrink: 0;
-            background: var(--surface);
-            border-right: 1px solid var(--border);
-            padding: 16px 0;
-        }
-
-        .mock-logo {
-            padding: 0 16px 16px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 12px;
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: -.2px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .mock-logo-icon {
-            width: 26px;
-            height: 26px;
-            border-radius: 6px;
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-        }
-
-        .mock-section {
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--muted);
-            padding: 8px 16px 4px;
-        }
-
-        .mock-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 7px 16px;
-            font-size: 12px;
-            color: var(--muted);
-            cursor: default;
-        }
-
-        .mock-item.active {
-            color: var(--accent);
-            background: rgba(255, 145, 77, .07);
-            border-left: 2px solid var(--accent);
-        }
-
-        .mock-icon {
-            width: 14px;
-            height: 14px;
-            opacity: .7;
-            flex-shrink: 0;
-        }
-
-        .mock-badge {
-            margin-left: auto;
-            background: #e05454;
-            color: #fff;
-            font-size: 9px;
-            font-weight: 700;
-            padding: 1px 5px;
-            border-radius: 20px;
-            font-family: 'DM Mono', monospace;
-        }
-
-        .mock-main {
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .mock-topbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 20px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .mock-topbar-title {
-            font-size: 16px;
-            font-weight: 700;
-            letter-spacing: -.3px;
-        }
-
-        .mock-btn {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            color: #fff;
-        }
-
-        .mock-filters {
-            display: flex;
-            gap: 6px;
-            padding: 10px 20px;
-            border-bottom: 1px solid var(--border);
-            overflow: hidden;
-        }
-
-        .mock-qf {
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 10px;
-            font-weight: 500;
-            background: var(--surface2);
-            color: var(--muted);
-            white-space: nowrap;
-        }
-
-        .mock-qf.active {
-            background: rgba(255, 145, 77, .12);
-            color: var(--accent);
-        }
-
-        .mock-table {
-            padding: 8px 0;
-        }
-
-        .mock-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 20px;
-            border-bottom: 1px solid rgba(42, 42, 50, .6);
-            font-size: 11px;
-        }
-
-        .mock-row:hover {
-            background: rgba(255, 255, 255, .02);
-        }
-
-        .mock-status {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .mock-task-title {
-            flex: 1;
-            font-size: 11.5px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .mock-priority {
-            font-size: 9px;
-            font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-family: 'DM Mono', monospace;
-        }
-
-        .mock-date {
-            font-size: 10px;
-            color: var(--muted);
-            white-space: nowrap;
-        }
-
-        .p-urgent {
-            background: rgba(224, 84, 84, .12);
-            color: #e05454;
-        }
-
-        .p-high {
-            background: rgba(240, 160, 90, .12);
-            color: #f0a05a;
-        }
-
-        .p-medium {
-            background: rgba(96, 165, 250, .12);
-            color: #60a5fa;
-        }
-
-        .p-low {
-            background: rgba(74, 222, 128, .12);
-            color: #4ade80;
-        }
-
-        .s-prog {
-            background: #f0a05a;
-        }
-
-        .s-pend {
-            background: #60a5fa;
-        }
-
-        .s-done {
-            background: #4ade80;
-        }
+        .mockup-wrap { margin-top: 72px; position: relative; animation: fadeUp .8s .5s both; }
+        .mockup-glow { position: absolute; inset: -40px; border-radius: 24px; background: radial-gradient(ellipse at 50% 0%, rgba(255,145,77,.15) 0%, transparent 70%); pointer-events: none; }
+        .mockup-window { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.04); position: relative; }
+        .mockup-titlebar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: var(--surface2); border-bottom: 1px solid var(--border); }
+        .titlebar-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .titlebar-dots { display: flex; gap: 6px; }
+        .titlebar-dot:nth-child(1) { background: #ff5f57; }
+        .titlebar-dot:nth-child(2) { background: #febc2e; }
+        .titlebar-dot:nth-child(3) { background: #28c840; }
+        .titlebar-title { flex: 1; text-align: center; font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
+        .mockup-body { display: flex; height: 440px; }
+        .mock-sidebar { width: 200px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); padding: 16px 0; }
+        .mock-logo { padding: 0 16px 16px; border-bottom: 1px solid var(--border); margin-bottom: 12px; font-size: 15px; font-weight: 700; letter-spacing: -.2px; display: flex; align-items: center; gap: 8px; }
+        .mock-logo-icon { width: 26px; height: 26px; border-radius: 6px; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 12px; }
+        .mock-section { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); padding: 8px 16px 4px; }
+        .mock-item { display: flex; align-items: center; gap: 8px; padding: 7px 16px; font-size: 12px; color: var(--muted); cursor: default; }
+        .mock-item.active { color: var(--accent); background: rgba(255,145,77,.07); border-left: 2px solid var(--accent); }
+        .mock-icon { width: 14px; height: 14px; opacity: .7; flex-shrink: 0; }
+        .mock-badge { margin-left: auto; background: #e05454; color: #fff; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 20px; font-family: 'DM Mono', monospace; }
+        .mock-main { flex: 1; overflow: hidden; }
+        .mock-topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border); }
+        .mock-topbar-title { font-size: 16px; font-weight: 700; letter-spacing: -.3px; }
+        .mock-btn { display: flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
+        .mock-filters { display: flex; gap: 6px; padding: 10px 20px; border-bottom: 1px solid var(--border); overflow: hidden; }
+        .mock-qf { padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 500; background: var(--surface2); color: var(--muted); white-space: nowrap; }
+        .mock-qf.active { background: rgba(255,145,77,.12); color: var(--accent); }
+        .mock-table { padding: 8px 0; }
+        .mock-row { display: flex; align-items: center; gap: 12px; padding: 8px 20px; border-bottom: 1px solid rgba(42,42,50,.6); font-size: 11px; }
+        .mock-row:hover { background: rgba(255,255,255,.02); }
+        .mock-status { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .mock-task-title { flex: 1; font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mock-priority { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; font-family: 'DM Mono', monospace; }
+        .mock-date { font-size: 10px; color: var(--muted); white-space: nowrap; }
+        .p-urgent { background: rgba(224,84,84,.12); color: #e05454; }
+        .p-high { background: rgba(240,160,90,.12); color: #f0a05a; }
+        .p-medium { background: rgba(96,165,250,.12); color: #60a5fa; }
+        .p-low { background: rgba(74,222,128,.12); color: #4ade80; }
+        .s-prog { background: #f0a05a; } .s-pend { background: #60a5fa; } .s-done { background: #4ade80; }
 
         /* ── FEATURES ── */
-        .section {
-            padding: 100px 0;
-        }
-
-        .section-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 16px;
-            font-family: 'DM Mono', monospace;
-        }
-
-        .section-title {
-            font-size: clamp(28px, 4vw, 44px);
-            font-weight: 700;
-            letter-spacing: -1.5px;
-            line-height: 1.1;
-            margin-bottom: 16px;
-        }
-
-        .section-sub {
-            font-size: 17px;
-            color: var(--muted);
-            max-width: 500px;
-            line-height: 1.6;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1px;
-            background: var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            margin-top: 64px;
-        }
-
-        .feature-card {
-            background: var(--surface);
-            padding: 32px;
-            transition: background .2s;
-        }
-
-        .feature-card:hover {
-            background: var(--surface2);
-        }
-
-        .feature-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 145, 77, .1);
-            border: 1px solid rgba(255, 145, 77, .15);
-            font-size: 20px;
-        }
-
-        .feature-title {
-            font-size: 16px;
-            font-weight: 600;
-            letter-spacing: -.3px;
-            margin-bottom: 8px;
-        }
-
-        .feature-desc {
-            font-size: 14px;
-            color: var(--muted);
-            line-height: 1.6;
-        }
+        .section { padding: 100px 0; }
+        .section-label { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; font-family: 'DM Mono', monospace; }
+        .section-title { font-size: clamp(28px, 4vw, 44px); font-weight: 700; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 16px; }
+        .section-sub { font-size: 17px; color: var(--muted); max-width: 500px; line-height: 1.6; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1px; background: var(--border); border-radius: 16px; overflow: hidden; border: 1px solid var(--border); margin-top: 64px; }
+        .feature-card { background: var(--surface); padding: 32px; transition: background .2s; }
+        .feature-card:hover { background: var(--surface2); }
+        .feature-icon { width: 44px; height: 44px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; background: rgba(255,145,77,.1); border: 1px solid rgba(255,145,77,.15); font-size: 20px; }
+        .feature-title { font-size: 16px; font-weight: 600; letter-spacing: -.3px; margin-bottom: 8px; }
+        .feature-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
 
         /* ── STRIP ── */
-        .strip {
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            padding: 24px 0;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .strip-inner {
-            display: flex;
-            gap: 40px;
-            white-space: nowrap;
-            animation: marquee 20s linear infinite;
-        }
-
-        .strip-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--muted);
-            flex-shrink: 0;
-        }
-
-        .strip-item span {
-            color: var(--accent);
-            font-size: 16px;
-        }
-
-        @keyframes marquee {
-            from {
-                transform: translateX(0);
-            }
-
-            to {
-                transform: translateX(-50%);
-            }
-        }
+        .strip { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 24px 0; overflow: hidden; position: relative; }
+        .strip-inner { display: flex; gap: 40px; white-space: nowrap; animation: marquee 20s linear infinite; }
+        .strip-item { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 500; color: var(--muted); flex-shrink: 0; }
+        .strip-item span { color: var(--accent); font-size: 16px; }
+        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
         /* ── STEPS ── */
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 40px;
-            margin-top: 64px;
-        }
-
-        .step {
-            position: relative;
-        }
-
-        .step-num {
-            font-size: 48px;
-            font-weight: 700;
-            font-family: 'DM Mono', monospace;
-            background: linear-gradient(135deg, var(--accent), transparent);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1;
-            margin-bottom: 16px;
-            opacity: .6;
-        }
-
-        .step-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            letter-spacing: -.3px;
-        }
-
-        .step-desc {
-            font-size: 14px;
-            color: var(--muted);
-            line-height: 1.6;
-        }
-
-        .step-connector {
-            position: absolute;
-            top: 24px;
-            right: -20px;
-            color: var(--border);
-            font-size: 20px;
-        }
+        .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 64px; }
+        .step { position: relative; }
+        .step-num { font-size: 48px; font-weight: 700; font-family: 'DM Mono', monospace; background: linear-gradient(135deg, var(--accent), transparent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; margin-bottom: 16px; opacity: .6; }
+        .step-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; letter-spacing: -.3px; }
+        .step-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+        .step-connector { position: absolute; top: 24px; right: -20px; color: var(--border); font-size: 20px; }
 
         /* ── CTA ── */
-        .cta-section {
-            padding: 100px 0;
-            text-align: center;
-        }
-
-        .cta-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 72px 40px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-box::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at 50% -20%, rgba(255, 145, 77, .12) 0%, transparent 60%);
-        }
-
-        .cta-box h2 {
-            font-size: clamp(28px, 4vw, 44px);
-            font-weight: 700;
-            letter-spacing: -1.5px;
-            margin-bottom: 16px;
-            position: relative;
-        }
-
-        .cta-btns {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            position: relative;
-        }
-
-        .os-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 500;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            color: var(--muted);
-            font-family: 'DM Mono', monospace;
-            margin-top: 20px;
-        }
+        .cta-section { padding: 100px 0; text-align: center; }
+        .cta-box { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 72px 40px; position: relative; overflow: hidden; }
+        .cta-box::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% -20%, rgba(255,145,77,.12) 0%, transparent 60%); }
+        .cta-box h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 700; letter-spacing: -1.5px; margin-bottom: 16px; position: relative; }
+        .cta-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; position: relative; }
+        .os-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 20px; }
 
         /* ── FOOTER ── */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 40px 0;
-        }
+        footer { border-top: 1px solid var(--border); padding: 40px 0; }
+        footer .container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+        .footer-logo { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .footer-links { display: flex; gap: 24px; }
+        .footer-links a { font-size: 13px; color: var(--muted); transition: color .15s; }
+        .footer-links a:hover { color: var(--text); }
+        .footer-copy { font-size: 13px; color: var(--muted); }
 
-        footer .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .footer-logo {
-            font-size: 15px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 24px;
-        }
-
-        .footer-links a {
-            font-size: 13px;
-            color: var(--muted);
-            transition: color .15s;
-        }
-
-        .footer-links a:hover {
-            color: var(--text);
-        }
-
-        .footer-copy {
-            font-size: 13px;
-            color: var(--muted);
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(24px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity .7s ease, transform .7s ease;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity .7s ease, transform .7s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
 
         @media (max-width: 768px) {
-            .steps {
-                grid-template-columns: 1fr;
-            }
+            /* Nav */
+            .nav-links a:not(.btn-nav) { display: none; }
+            .lang-toggle { display: flex !important; }
+            .btn-nav { padding: 7px 14px; font-size: 13px; }
 
-            .step-connector {
-                display: none;
-            }
+            /* Hero */
+            .hero { padding: 120px 0 60px; }
+            .hero h1 { letter-spacing: -1px; }
+            .hero-ctas { flex-direction: column; align-items: stretch; }
+            .hero-ctas .btn-primary,
+            .hero-ctas .btn-ghost { justify-content: center; }
 
-            .mockup-body {
-                height: 320px;
-            }
+            /* Mockup — esconde no mobile, muito pequeno */
+            .mockup-wrap { display: none; }
 
-            .mock-sidebar {
-                width: 160px;
-            }
+            /* Sections */
+            .section { padding: 64px 0; }
+            .section-title br { display: none; }
+            .features-grid { grid-template-columns: 1fr; }
 
-            .nav-links a:not(.btn-nav):not(.lang-toggle) {
-                display: none;
-            }
+            /* Steps */
+            .steps { grid-template-columns: 1fr; gap: 32px; }
+            .step-connector { display: none; }
+            .step-num { font-size: 36px; }
 
-            .lang-toggle {
-                display: flex !important;
-            }
+            /* CTA */
+            .cta-section { padding: 64px 0; }
+            .cta-box { padding: 48px 24px; }
+            .cta-btns { flex-direction: column; align-items: stretch; }
+            .cta-btns .btn-primary { justify-content: center; }
 
-            footer .container {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+            /* Footer */
+            footer .container { flex-direction: column; align-items: flex-start; gap: 20px; }
+            .footer-links { flex-wrap: wrap; gap: 16px; }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 0 16px; }
+            .hero { padding: 100px 0 48px; }
+            .hero-badge { font-size: 11px; }
+            .hero-sub { font-size: 16px; }
+            .nav-logo img { max-height: 32px; }
+            .feature-card { padding: 24px; }
+            .cta-box { padding: 40px 20px; border-radius: 16px; }
+            .os-badge { font-size: 11px; }
+            .strip-item { font-size: 12px; }
         }
     </style>
 </head>
@@ -978,8 +290,7 @@
                     <button class="lang-btn active" onclick="setLang('pt')">PT</button>
                     <button class="lang-btn" onclick="setLang('en')">EN</button>
                 </div>
-                <a href="https://github.com/lbonavina/taskletto/releases" class="btn-nav" data-i18n="nav_download">↓
-                    Download grátis</a>
+                <a href="https://github.com/lbonavina/taskletto/releases" class="btn-nav" data-i18n="nav_download">↓ Download grátis</a>
             </div>
         </div>
     </nav>
@@ -989,7 +300,7 @@
         <div class="container">
             <div class="hero-badge">
                 <span class="dot"></span>
-                <span data-i18n="badge">v1.1 · Grátis e open source</span>
+                <span data-i18n="badge">v1.0 · Grátis e open source</span>
             </div>
             <h1>
                 <span data-i18n="hero_line1">Suas tarefas.</span><br>
@@ -997,26 +308,19 @@
                 <span class="accent-word" data-i18n="hero_line3">Tudo no desktop.</span>
             </h1>
             <p class="hero-sub" data-i18n="hero_sub">
-                Taskletto é um app desktop leve e focado para quem precisa organizar tarefas e escrever notas sem abrir
-                o browser.
+                Taskletto é um app desktop leve e focado para quem precisa organizar tarefas e escrever notas sem abrir o browser.
             </p>
             <div class="hero-ctas">
                 <a href="https://github.com/lbonavina/taskletto/releases" class="btn-primary">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M8 2v8M4 7l4 4 4-4M2 13h12" />
-                    </svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M4 7l4 4 4-4M2 13h12"/></svg>
                     <span data-i18n="btn_download">Baixar para Windows</span>
                 </a>
                 <a href="https://github.com/lbonavina/taskletto" target="_blank" class="btn-ghost">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <path
-                            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
-                    </svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
                     <span data-i18n="btn_github">Ver no GitHub</span>
                 </a>
             </div>
-            <p class="hero-note"><strong data-i18n="hero_note_strong">100% gratuito.</strong> <span
-                    data-i18n="hero_note">Sem conta, sem assinatura, sem telemetria.</span></p>
+            <p class="hero-note"><strong data-i18n="hero_note_strong">100% gratuito.</strong> <span data-i18n="hero_note">Sem conta, sem assinatura, sem telemetria.</span></p>
 
             <!-- MOCKUP -->
             <div class="mockup-wrap">
@@ -1033,42 +337,23 @@
                     </div>
                     <div class="mockup-body">
                         <div class="mock-sidebar">
-                            <div class="mock-logo">
-                                <img src="logo.png" style="max-height: 30px;" alt="Taskletto">
-                            </div>
+                            <div class="mock-logo"><div class="mock-logo-icon">✦</div>Taskletto</div>
                             <div class="mock-section" data-i18n="mock_main">Principal</div>
                             <div class="mock-item">
-                                <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-                                    stroke-width="1.5">
-                                    <rect x="1" y="1" width="6" height="6" rx="1.5" />
-                                    <rect x="9" y="1" width="6" height="6" rx="1.5" />
-                                    <rect x="1" y="9" width="6" height="6" rx="1.5" />
-                                    <rect x="9" y="9" width="6" height="6" rx="1.5" />
-                                </svg>
+                                <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
                                 Dashboard
                             </div>
                             <div class="mock-item active">
-                                <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-                                    stroke-width="1.5">
-                                    <path d="M2 4h12M2 8h8M2 12h10" />
-                                </svg>
+                                <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h8M2 12h10"/></svg>
                                 <span data-i18n="mock_tasks">Tarefas</span>
                                 <span class="mock-badge">2</span>
                             </div>
                             <div class="mock-item">
-                                <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-                                    stroke-width="1.5">
-                                    <path
-                                        d="M1.5 4.5h3a1 1 0 011 1v5a1 1 0 01-1 1h-3a1 1 0 01-1-1v-5a1 1 0 011-1zM8 2.5h3a1 1 0 011 1v9a1 1 0 01-1 1H8a1 1 0 01-1-1v-9a1 1 0 011-1z" />
-                                </svg>
+                                <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 4.5h3a1 1 0 011 1v5a1 1 0 01-1 1h-3a1 1 0 01-1-1v-5a1 1 0 011-1zM8 2.5h3a1 1 0 011 1v9a1 1 0 01-1 1H8a1 1 0 01-1-1v-9a1 1 0 011-1z"/></svg>
                                 <span data-i18n="mock_categories">Categorias</span>
                             </div>
                             <div class="mock-item">
-                                <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-                                    stroke-width="1.5">
-                                    <path d="M3 2h7l3 3v9a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" />
-                                    <path d="M10 2v3h3M5 7h6M5 10h4" />
-                                </svg>
+                                <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2h7l3 3v9a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z"/><path d="M10 2v3h3M5 7h6M5 10h4"/></svg>
                                 <span data-i18n="mock_notes">Notas</span>
                             </div>
                         </div>
@@ -1076,10 +361,7 @@
                             <div class="mock-topbar">
                                 <div class="mock-topbar-title" data-i18n="mock_tasks">Tarefas</div>
                                 <div class="mock-btn">
-                                    <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-                                        stroke-width="2.5">
-                                        <path d="M8 2v12M2 8h12" />
-                                    </svg>
+                                    <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 2v12M2 8h12"/></svg>
                                     <span data-i18n="mock_new_task">Nova Tarefa</span>
                                 </div>
                             </div>
@@ -1091,48 +373,12 @@
                                 <div class="mock-qf">⚡ <span data-i18n="mock_in_progress">Em progresso</span></div>
                             </div>
                             <div class="mock-table">
-                                <div class="mock-row">
-                                    <div class="mock-status s-prog"></div>
-                                    <div class="mock-task-title" data-i18n="task1">Revisar documentação do projeto</div>
-                                    <div class="mock-priority p-urgent" data-i18n="pri_urgent">urgente</div>
-                                    <div class="mock-date" style="color:#e05454" data-i18n="overdue">vencida</div>
-                                </div>
-                                <div class="mock-row">
-                                    <div class="mock-status s-pend"></div>
-                                    <div class="mock-task-title" data-i18n="task2">Reunião com cliente — preparar pauta
-                                    </div>
-                                    <div class="mock-priority p-high" data-i18n="pri_high">alta</div>
-                                    <div class="mock-date" data-i18n="today_label">hoje</div>
-                                </div>
-                                <div class="mock-row">
-                                    <div class="mock-status s-prog"></div>
-                                    <div class="mock-task-title" data-i18n="task3">Atualizar dependências do repositório
-                                    </div>
-                                    <div class="mock-priority p-medium" data-i18n="pri_medium">média</div>
-                                    <div class="mock-date" data-i18n="in3d">em 3 d</div>
-                                </div>
-                                <div class="mock-row">
-                                    <div class="mock-status s-pend"></div>
-                                    <div class="mock-task-title" data-i18n="task4">Escrever testes unitários</div>
-                                    <div class="mock-priority p-low" data-i18n="pri_low">baixa</div>
-                                    <div class="mock-date" data-i18n="in7d">em 7 d</div>
-                                </div>
-                                <div class="mock-row">
-                                    <div class="mock-status s-done"></div>
-                                    <div class="mock-task-title" style="opacity:.4;text-decoration:line-through"
-                                        data-i18n="task5">Configurar CI/CD pipeline</div>
-                                    <div class="mock-priority"
-                                        style="background:rgba(122,122,138,.1);color:var(--muted)" data-i18n="pri_low">
-                                        baixa</div>
-                                    <div class="mock-date" data-i18n="completed_label">concluída</div>
-                                </div>
-                                <div class="mock-row">
-                                    <div class="mock-status s-pend"></div>
-                                    <div class="mock-task-title" data-i18n="task6">Deploy da versão 1.1 em produção
-                                    </div>
-                                    <div class="mock-priority p-high" data-i18n="pri_high">alta</div>
-                                    <div class="mock-date" data-i18n="tomorrow_label">amanhã</div>
-                                </div>
+                                <div class="mock-row"><div class="mock-status s-prog"></div><div class="mock-task-title" data-i18n="task1">Revisar documentação do projeto</div><div class="mock-priority p-urgent" data-i18n="pri_urgent">urgente</div><div class="mock-date" style="color:#e05454" data-i18n="overdue">vencida</div></div>
+                                <div class="mock-row"><div class="mock-status s-pend"></div><div class="mock-task-title" data-i18n="task2">Reunião com cliente — preparar pauta</div><div class="mock-priority p-high" data-i18n="pri_high">alta</div><div class="mock-date" data-i18n="today_label">hoje</div></div>
+                                <div class="mock-row"><div class="mock-status s-prog"></div><div class="mock-task-title" data-i18n="task3">Atualizar dependências do repositório</div><div class="mock-priority p-medium" data-i18n="pri_medium">média</div><div class="mock-date" data-i18n="in3d">em 3 d</div></div>
+                                <div class="mock-row"><div class="mock-status s-pend"></div><div class="mock-task-title" data-i18n="task4">Escrever testes unitários</div><div class="mock-priority p-low" data-i18n="pri_low">baixa</div><div class="mock-date" data-i18n="in7d">em 7 d</div></div>
+                                <div class="mock-row"><div class="mock-status s-done"></div><div class="mock-task-title" style="opacity:.4;text-decoration:line-through" data-i18n="task5">Configurar CI/CD pipeline</div><div class="mock-priority" style="background:rgba(122,122,138,.1);color:var(--muted)" data-i18n="pri_low">baixa</div><div class="mock-date" data-i18n="completed_label">concluída</div></div>
+                                <div class="mock-row"><div class="mock-status s-pend"></div><div class="mock-task-title" data-i18n="task6">Deploy da versão 1.1 em produção</div><div class="mock-priority p-high" data-i18n="pri_high">alta</div><div class="mock-date" data-i18n="tomorrow_label">amanhã</div></div>
                             </div>
                         </div>
                     </div>
@@ -1171,53 +417,21 @@
             <div class="reveal">
                 <div class="section-label">✦ <span data-i18n="feat_label">Funcionalidades</span></div>
                 <h2 class="section-title" data-i18n="feat_title">Tudo que você precisa,<br>nada que não precisa.</h2>
-                <p class="section-sub" data-i18n="feat_sub">Sem bloat, sem assinatura. Só o essencial para manter o foco
-                    no que importa.</p>
+                <p class="section-sub" data-i18n="feat_sub">Sem bloat, sem assinatura. Só o essencial para manter o foco no que importa.</p>
             </div>
             <div class="features-grid reveal">
-                <div class="feature-card">
-                    <div class="feature-icon">📋</div>
-                    <div class="feature-title" data-i18n="f1_title">Gestão de tarefas completa</div>
-                    <div class="feature-desc" data-i18n="f1_desc">Status, prioridade, vencimento, categorias e
-                        descrição. Tudo em um lugar só com filtros rápidos e busca.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📝</div>
-                    <div class="feature-title" data-i18n="f2_title">Editor de notas rico</div>
-                    <div class="feature-desc" data-i18n="f2_desc">Baseado no Tiptap — suporta negrito, itálico, tabelas,
-                        checklists, blocos de código, links e muito mais.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🏷️</div>
-                    <div class="feature-title" data-i18n="f3_title">Categorias com emoji e cor</div>
-                    <div class="feature-desc" data-i18n="f3_desc">Organize tarefas em categorias visuais com ícone emoji
-                        personalizado e cor de identificação.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <div class="feature-title" data-i18n="f4_title">Atalhos de teclado</div>
-                    <div class="feature-desc" data-i18n="f4_desc">Navegue, crie e filtre sem tirar as mãos do teclado.
-                        Cada ação tem um atalho pensado para produtividade.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🌙</div>
-                    <div class="feature-title" data-i18n="f5_title">Tema claro e escuro</div>
-                    <div class="feature-desc" data-i18n="f5_desc">Alterne entre dark e light mode com um clique. O tema
-                        é salvo automaticamente entre sessões.</div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <div class="feature-title" data-i18n="f6_title">100% local e offline</div>
-                    <div class="feature-desc" data-i18n="f6_desc">Seus dados ficam no seu computador. Sem conta, sem
-                        servidor, sem nada sendo enviado para nenhum lugar.</div>
-                </div>
+                <div class="feature-card"><div class="feature-icon">📋</div><div class="feature-title" data-i18n="f1_title">Gestão de tarefas completa</div><div class="feature-desc" data-i18n="f1_desc">Status, prioridade, vencimento, categorias e descrição. Tudo em um lugar só com filtros rápidos e busca.</div></div>
+                <div class="feature-card"><div class="feature-icon">📝</div><div class="feature-title" data-i18n="f2_title">Editor de notas rico</div><div class="feature-desc" data-i18n="f2_desc">Baseado no Tiptap — suporta negrito, itálico, tabelas, checklists, blocos de código, links e muito mais.</div></div>
+                <div class="feature-card"><div class="feature-icon">🏷️</div><div class="feature-title" data-i18n="f3_title">Categorias com emoji e cor</div><div class="feature-desc" data-i18n="f3_desc">Organize tarefas em categorias visuais com ícone emoji personalizado e cor de identificação.</div></div>
+                <div class="feature-card"><div class="feature-icon">⚡</div><div class="feature-title" data-i18n="f4_title">Atalhos de teclado</div><div class="feature-desc" data-i18n="f4_desc">Navegue, crie e filtre sem tirar as mãos do teclado. Cada ação tem um atalho pensado para produtividade.</div></div>
+                <div class="feature-card"><div class="feature-icon">🌙</div><div class="feature-title" data-i18n="f5_title">Tema claro e escuro</div><div class="feature-desc" data-i18n="f5_desc">Alterne entre dark e light mode com um clique. O tema é salvo automaticamente entre sessões.</div></div>
+                <div class="feature-card"><div class="feature-icon">🔒</div><div class="feature-title" data-i18n="f6_title">100% local e offline</div><div class="feature-desc" data-i18n="f6_desc">Seus dados ficam no seu computador. Sem conta, sem servidor, sem nada sendo enviado para nenhum lugar.</div></div>
             </div>
         </div>
     </section>
 
     <!-- HOW IT WORKS -->
-    <section class="section" id="como-funciona"
-        style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <section class="section" id="como-funciona" style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
         <div class="container">
             <div class="reveal">
                 <div class="section-label">✦ <span data-i18n="how_label">Como funciona</span></div>
@@ -1228,22 +442,19 @@
                 <div class="step">
                     <div class="step-num">01</div>
                     <div class="step-title" data-i18n="step1_title">Baixe o instalador</div>
-                    <div class="step-desc" data-i18n="step1_desc">Clique em Download, escolha Windows e execute o
-                        instalador. Leva menos de um minuto.</div>
+                    <div class="step-desc" data-i18n="step1_desc">Clique em Download, escolha Windows e execute o instalador. Leva menos de um minuto.</div>
                     <div class="step-connector">→</div>
                 </div>
                 <div class="step">
                     <div class="step-num">02</div>
                     <div class="step-title" data-i18n="step2_title">Crie suas categorias</div>
-                    <div class="step-desc" data-i18n="step2_desc">Defina categorias com cores e emojis para organizar
-                        tarefas por projeto, área ou contexto.</div>
+                    <div class="step-desc" data-i18n="step2_desc">Defina categorias com cores e emojis para organizar tarefas por projeto, área ou contexto.</div>
                     <div class="step-connector">→</div>
                 </div>
                 <div class="step">
                     <div class="step-num">03</div>
                     <div class="step-title" data-i18n="step3_title">Comece a produzir</div>
-                    <div class="step-desc" data-i18n="step3_desc">Adicione tarefas, escreva notas e use os filtros para
-                        focar no que precisa ser feito agora.</div>
+                    <div class="step-desc" data-i18n="step3_desc">Adicione tarefas, escreva notas e use os filtros para focar no que precisa ser feito agora.</div>
                 </div>
             </div>
         </div>
@@ -1256,10 +467,7 @@
                 <h2 data-i18n="cta_title">Baixe agora. É grátis.</h2>
                 <div class="cta-btns">
                     <a href="https://github.com/lbonavina/taskletto/releases" class="btn-primary">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M8 2v8M4 7l4 4 4-4M2 13h12" />
-                        </svg>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M4 7l4 4 4-4M2 13h12"/></svg>
                         <span data-i18n="btn_download">Baixar para Windows</span>
                     </a>
                 </div>
@@ -1281,122 +489,120 @@
                 <a href="https://github.com/lbonavina/taskletto/issues" target="_blank">Issues</a>
                 <a href="https://ko-fi.com/lbonavina" target="_blank">Ko-fi ☕</a>
             </div>
-            <div class="footer-copy"><span data-i18n="footer_made">Feito por</span> <a
-                    href="https://github.com/lbonavina" style="color:var(--accent)">Lucas Bonavina</a></div>
+            <div class="footer-copy"><span data-i18n="footer_made">Feito por</span> <a href="https://github.com/lbonavina" style="color:var(--accent)">Lucas Bonavina</a></div>
         </div>
     </footer>
 
     <script>
-        const i18n = {
-            pt: {
-                meta_title: 'Taskletto — Gerenciador de Tarefas e Notas para Desktop',
-                meta_desc: 'Taskletto é um app desktop gratuito para gerenciar tarefas e notas com foco em produtividade. Disponível para Windows.',
-                nav_features: 'Funcionalidades', nav_how: 'Como funciona', nav_download: '↓ Download grátis',
-                badge: 'v1.1 · Grátis e open source',
-                hero_line1: 'Suas tarefas.', hero_line2: 'Suas notas.', hero_line3: 'Tudo no desktop.',
-                hero_sub: 'Taskletto é um app desktop leve e focado para quem precisa organizar tarefas e escrever notas sem abrir o browser.',
-                btn_download: 'Baixar para Windows', btn_github: 'Ver no GitHub',
-                hero_note_strong: '100% gratuito.', hero_note: 'Sem conta, sem assinatura, sem telemetria.',
-                mock_main: 'Principal', mock_tasks: 'Tarefas', mock_categories: 'Categorias', mock_notes: 'Notas',
-                mock_new_task: 'Nova Tarefa', mock_all: 'Todas', mock_urgent: 'Urgentes',
-                mock_due_today: 'Vence hoje', mock_overdue: 'Atrasadas', mock_in_progress: 'Em progresso',
-                task1: 'Revisar documentação do projeto', task2: 'Reunião com cliente — preparar pauta',
-                task3: 'Atualizar dependências do repositório', task4: 'Escrever testes unitários',
-                task5: 'Configurar CI/CD pipeline', task6: 'Deploy da versão 1.1 em produção',
-                pri_urgent: 'urgente', pri_high: 'alta', pri_medium: 'média', pri_low: 'baixa',
-                overdue: 'vencida', today_label: 'hoje', in3d: 'em 3 d', in7d: 'em 7 d',
-                completed_label: 'concluída', tomorrow_label: 'amanhã',
-                strip1: 'Tarefas com prioridade', strip2: 'Editor de notas rico', strip3: 'Categorias personalizadas',
-                strip4: 'Filtros avançados', strip5: 'Modo claro e escuro', strip6: 'Atalhos de teclado',
-                strip7: '100% offline', strip8: 'Open source',
-                feat_label: 'Funcionalidades', feat_title: 'Tudo que você precisa,<br>nada que não precisa.',
-                feat_sub: 'Sem bloat, sem assinatura. Só o essencial para manter o foco no que importa.',
-                f1_title: 'Gestão de tarefas completa', f1_desc: 'Status, prioridade, vencimento, categorias e descrição. Tudo em um lugar só com filtros rápidos e busca.',
-                f2_title: 'Editor de notas rico', f2_desc: 'Baseado no Tiptap — suporta negrito, itálico, tabelas, checklists, blocos de código, links e muito mais.',
-                f3_title: 'Categorias com emoji e cor', f3_desc: 'Organize tarefas em categorias visuais com ícone emoji personalizado e cor de identificação.',
-                f4_title: 'Atalhos de teclado', f4_desc: 'Navegue, crie e filtre sem tirar as mãos do teclado. Cada ação tem um atalho pensado para produtividade.',
-                f5_title: 'Tema claro e escuro', f5_desc: 'Alterne entre dark e light mode com um clique. O tema é salvo automaticamente entre sessões.',
-                f6_title: '100% local e offline', f6_desc: 'Seus dados ficam no seu computador. Sem conta, sem servidor, sem nada sendo enviado para nenhum lugar.',
-                how_label: 'Como funciona', how_title: 'Pronto em 3 passos.', how_sub: 'Sem cadastro, sem configuração complicada. Baixa e usa.',
-                step1_title: 'Baixe o instalador', step1_desc: 'Clique em Download, escolha Windows e execute o instalador. Leva menos de um minuto.',
-                step2_title: 'Crie suas categorias', step2_desc: 'Defina categorias com cores e emojis para organizar tarefas por projeto, área ou contexto.',
-                step3_title: 'Comece a produzir', step3_desc: 'Adicione tarefas, escreva notas e use os filtros para focar no que precisa ser feito agora.',
-                cta_title: 'Baixe agora. É grátis.',
-                footer_made: 'Feito por',
-            },
-            en: {
-                meta_title: 'Taskletto — Desktop Task & Notes Manager',
-                meta_desc: 'Taskletto is a free desktop app to manage tasks and notes focused on productivity. Available for Windows.',
-                nav_features: 'Features', nav_how: 'How it works', nav_download: '↓ Free Download',
-                badge: 'v1.1 · Free & open source',
-                hero_line1: 'Your tasks.', hero_line2: 'Your notes.', hero_line3: 'All on the desktop.',
-                hero_sub: 'Taskletto is a lightweight, focused desktop app for people who need to organize tasks and write notes without opening a browser.',
-                btn_download: 'Download for Windows', btn_github: 'View on GitHub',
-                hero_note_strong: '100% free.', hero_note: 'No account, no subscription, no telemetry.',
-                mock_main: 'Main', mock_tasks: 'Tasks', mock_categories: 'Categories', mock_notes: 'Notes',
-                mock_new_task: 'New Task', mock_all: 'All', mock_urgent: 'Urgent',
-                mock_due_today: 'Due today', mock_overdue: 'Overdue', mock_in_progress: 'In progress',
-                task1: 'Review project documentation', task2: 'Client meeting — prepare agenda',
-                task3: 'Update repository dependencies', task4: 'Write unit tests',
-                task5: 'Set up CI/CD pipeline', task6: 'Deploy version 1.1 to production',
-                pri_urgent: 'urgent', pri_high: 'high', pri_medium: 'medium', pri_low: 'low',
-                overdue: 'overdue', today_label: 'today', in3d: 'in 3 d', in7d: 'in 7 d',
-                completed_label: 'done', tomorrow_label: 'tomorrow',
-                strip1: 'Priority tasks', strip2: 'Rich notes editor', strip3: 'Custom categories',
-                strip4: 'Advanced filters', strip5: 'Light & dark mode', strip6: 'Keyboard shortcuts',
-                strip7: '100% offline', strip8: 'Open source',
-                feat_label: 'Features', feat_title: 'Everything you need,<br>nothing you don\'t.',
-                feat_sub: 'No bloat, no subscription. Just the essentials to keep you focused on what matters.',
-                f1_title: 'Full task management', f1_desc: 'Status, priority, due dates, categories and description. All in one place with quick filters and search.',
-                f2_title: 'Rich notes editor', f2_desc: 'Powered by Tiptap — supports bold, italic, tables, checklists, code blocks, links and much more.',
-                f3_title: 'Emoji & color categories', f3_desc: 'Organize tasks into visual categories with a custom emoji icon and color.',
-                f4_title: 'Keyboard shortcuts', f4_desc: 'Navigate, create and filter without taking your hands off the keyboard. Every action has a shortcut.',
-                f5_title: 'Light & dark theme', f5_desc: 'Switch between dark and light mode with one click. The theme is automatically saved between sessions.',
-                f6_title: '100% local & offline', f6_desc: 'Your data stays on your computer. No account, no server, nothing is ever sent anywhere.',
-                how_label: 'How it works', how_title: 'Ready in 3 steps.', how_sub: 'No sign-up, no complex setup. Download and use.',
-                step1_title: 'Download the installer', step1_desc: 'Click Download, choose Windows and run the installer. Takes less than a minute.',
-                step2_title: 'Create your categories', step2_desc: 'Set up categories with colors and emojis to organize tasks by project, area or context.',
-                step3_title: 'Start being productive', step3_desc: 'Add tasks, write notes and use filters to focus on what needs to be done right now.',
-                cta_title: 'Download now. It\'s free.',
-                footer_made: 'Made by',
-            }
-        };
-
-        let currentLang = localStorage.getItem('lp_lang') || 'pt';
-
-        function setLang(lang) {
-            currentLang = lang;
-            localStorage.setItem('lp_lang', lang);
-            document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
-
-            // Update button states
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === lang);
-            });
-
-            const t = i18n[lang];
-
-            // Update all [data-i18n] elements
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.dataset.i18n;
-                if (t[key] !== undefined) el.innerHTML = t[key];
-            });
-
-            // Update page title
-            document.title = t.meta_title;
-            const metaDesc = document.querySelector('meta[name="description"]');
-            if (metaDesc) metaDesc.setAttribute('content', t.meta_desc);
+    const i18n = {
+        pt: {
+            meta_title: 'Taskletto — Gerenciador de Tarefas e Notas para Desktop',
+            meta_desc: 'Taskletto é um app desktop gratuito para gerenciar tarefas e notas com foco em produtividade. Disponível para Windows.',
+            nav_features: 'Funcionalidades', nav_how: 'Como funciona', nav_download: '↓ Download grátis',
+            badge: 'v1.0 · Grátis e open source',
+            hero_line1: 'Suas tarefas.', hero_line2: 'Suas notas.', hero_line3: 'Tudo no desktop.',
+            hero_sub: 'Taskletto é um app desktop leve e focado para quem precisa organizar tarefas e escrever notas sem abrir o browser.',
+            btn_download: 'Baixar para Windows', btn_github: 'Ver no GitHub',
+            hero_note_strong: '100% gratuito.', hero_note: 'Sem conta, sem assinatura, sem telemetria.',
+            mock_main: 'Principal', mock_tasks: 'Tarefas', mock_categories: 'Categorias', mock_notes: 'Notas',
+            mock_new_task: 'Nova Tarefa', mock_all: 'Todas', mock_urgent: 'Urgentes',
+            mock_due_today: 'Vence hoje', mock_overdue: 'Atrasadas', mock_in_progress: 'Em progresso',
+            task1: 'Revisar documentação do projeto', task2: 'Reunião com cliente — preparar pauta',
+            task3: 'Atualizar dependências do repositório', task4: 'Escrever testes unitários',
+            task5: 'Configurar CI/CD pipeline', task6: 'Deploy da versão 1.1 em produção',
+            pri_urgent: 'urgente', pri_high: 'alta', pri_medium: 'média', pri_low: 'baixa',
+            overdue: 'vencida', today_label: 'hoje', in3d: 'em 3 d', in7d: 'em 7 d',
+            completed_label: 'concluída', tomorrow_label: 'amanhã',
+            strip1: 'Tarefas com prioridade', strip2: 'Editor de notas rico', strip3: 'Categorias personalizadas',
+            strip4: 'Filtros avançados', strip5: 'Modo claro e escuro', strip6: 'Atalhos de teclado',
+            strip7: '100% offline', strip8: 'Open source',
+            feat_label: 'Funcionalidades', feat_title: 'Tudo que você precisa,<br>nada que não precisa.',
+            feat_sub: 'Sem bloat, sem assinatura. Só o essencial para manter o foco no que importa.',
+            f1_title: 'Gestão de tarefas completa', f1_desc: 'Status, prioridade, vencimento, categorias e descrição. Tudo em um lugar só com filtros rápidos e busca.',
+            f2_title: 'Editor de notas rico', f2_desc: 'Baseado no Tiptap — suporta negrito, itálico, tabelas, checklists, blocos de código, links e muito mais.',
+            f3_title: 'Categorias com emoji e cor', f3_desc: 'Organize tarefas em categorias visuais com ícone emoji personalizado e cor de identificação.',
+            f4_title: 'Atalhos de teclado', f4_desc: 'Navegue, crie e filtre sem tirar as mãos do teclado. Cada ação tem um atalho pensado para produtividade.',
+            f5_title: 'Tema claro e escuro', f5_desc: 'Alterne entre dark e light mode com um clique. O tema é salvo automaticamente entre sessões.',
+            f6_title: '100% local e offline', f6_desc: 'Seus dados ficam no seu computador. Sem conta, sem servidor, sem nada sendo enviado para nenhum lugar.',
+            how_label: 'Como funciona', how_title: 'Pronto em 3 passos.', how_sub: 'Sem cadastro, sem configuração complicada. Baixa e usa.',
+            step1_title: 'Baixe o instalador', step1_desc: 'Clique em Download, escolha Windows e execute o instalador. Leva menos de um minuto.',
+            step2_title: 'Crie suas categorias', step2_desc: 'Defina categorias com cores e emojis para organizar tarefas por projeto, área ou contexto.',
+            step3_title: 'Comece a produzir', step3_desc: 'Adicione tarefas, escreva notas e use os filtros para focar no que precisa ser feito agora.',
+            cta_title: 'Baixe agora. É grátis.',
+            footer_made: 'Feito por',
+        },
+        en: {
+            meta_title: 'Taskletto — Desktop Task & Notes Manager',
+            meta_desc: 'Taskletto is a free desktop app to manage tasks and notes focused on productivity. Available for Windows.',
+            nav_features: 'Features', nav_how: 'How it works', nav_download: '↓ Free Download',
+            badge: 'v1.0 · Free & open source',
+            hero_line1: 'Your tasks.', hero_line2: 'Your notes.', hero_line3: 'All on the desktop.',
+            hero_sub: 'Taskletto is a lightweight, focused desktop app for people who need to organize tasks and write notes without opening a browser.',
+            btn_download: 'Download for Windows', btn_github: 'View on GitHub',
+            hero_note_strong: '100% free.', hero_note: 'No account, no subscription, no telemetry.',
+            mock_main: 'Main', mock_tasks: 'Tasks', mock_categories: 'Categories', mock_notes: 'Notes',
+            mock_new_task: 'New Task', mock_all: 'All', mock_urgent: 'Urgent',
+            mock_due_today: 'Due today', mock_overdue: 'Overdue', mock_in_progress: 'In progress',
+            task1: 'Review project documentation', task2: 'Client meeting — prepare agenda',
+            task3: 'Update repository dependencies', task4: 'Write unit tests',
+            task5: 'Set up CI/CD pipeline', task6: 'Deploy version 1.1 to production',
+            pri_urgent: 'urgent', pri_high: 'high', pri_medium: 'medium', pri_low: 'low',
+            overdue: 'overdue', today_label: 'today', in3d: 'in 3 d', in7d: 'in 7 d',
+            completed_label: 'done', tomorrow_label: 'tomorrow',
+            strip1: 'Priority tasks', strip2: 'Rich notes editor', strip3: 'Custom categories',
+            strip4: 'Advanced filters', strip5: 'Light & dark mode', strip6: 'Keyboard shortcuts',
+            strip7: '100% offline', strip8: 'Open source',
+            feat_label: 'Features', feat_title: 'Everything you need,<br>nothing you don\'t.',
+            feat_sub: 'No bloat, no subscription. Just the essentials to keep you focused on what matters.',
+            f1_title: 'Full task management', f1_desc: 'Status, priority, due dates, categories and description. All in one place with quick filters and search.',
+            f2_title: 'Rich notes editor', f2_desc: 'Powered by Tiptap — supports bold, italic, tables, checklists, code blocks, links and much more.',
+            f3_title: 'Emoji & color categories', f3_desc: 'Organize tasks into visual categories with a custom emoji icon and color.',
+            f4_title: 'Keyboard shortcuts', f4_desc: 'Navigate, create and filter without taking your hands off the keyboard. Every action has a shortcut.',
+            f5_title: 'Light & dark theme', f5_desc: 'Switch between dark and light mode with one click. The theme is automatically saved between sessions.',
+            f6_title: '100% local & offline', f6_desc: 'Your data stays on your computer. No account, no server, nothing is ever sent anywhere.',
+            how_label: 'How it works', how_title: 'Ready in 3 steps.', how_sub: 'No sign-up, no complex setup. Download and use.',
+            step1_title: 'Download the installer', step1_desc: 'Click Download, choose Windows and run the installer. Takes less than a minute.',
+            step2_title: 'Create your categories', step2_desc: 'Set up categories with colors and emojis to organize tasks by project, area or context.',
+            step3_title: 'Start being productive', step3_desc: 'Add tasks, write notes and use filters to focus on what needs to be done right now.',
+            cta_title: 'Download now. It\'s free.',
+            footer_made: 'Made by',
         }
+    };
 
-        // Init
-        setLang(currentLang);
+    let currentLang = localStorage.getItem('lp_lang') || 'pt';
 
-        // Scroll reveal
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    function setLang(lang) {
+        currentLang = lang;
+        localStorage.setItem('lp_lang', lang);
+        document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+
+        // Update button states
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === lang);
+        });
+
+        const t = i18n[lang];
+
+        // Update all [data-i18n] elements
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.dataset.i18n;
+            if (t[key] !== undefined) el.innerHTML = t[key];
+        });
+
+        // Update page title
+        document.title = t.meta_title;
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) metaDesc.setAttribute('content', t.meta_desc);
+    }
+
+    // Init
+    setLang(currentLang);
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
 </body>
-
 </html>
