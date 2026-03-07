@@ -656,30 +656,30 @@
             </a>
         </div>
         <nav class="sidebar-nav">
-            <div class="nav-label">Principal</div>
+            <div class="nav-label">{{ __('app.nav_principal') }}</div>
             <a href="/dashboard" class="nav-item {{ request()->is('dashboard') ? 'active' : '' }}">
                 <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="9" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="9" width="6" height="6" rx="1.5"/><rect x="9" y="9" width="6" height="6" rx="1.5"/></svg>
-                Dashboard
+                {{ __('app.nav_dashboard') }}
             </a>
             <a href="/tasks" class="nav-item {{ request()->is('tasks*') ? 'active' : '' }}">
                 <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M2 8h8M2 12h10"/></svg>
-                Tarefas
+                {{ __('app.nav_tasks') }}
                 @if(($overdueCount ?? 0) > 0)
                     <span class="nav-badge">{{ $overdueCount }}</span>
                 @endif
             </a>
             <a href="/categories" class="nav-item {{ request()->is('categories*') ? 'active' : '' }}">
                 <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 4.5h3a1 1 0 011 1v5a1 1 0 01-1 1h-3a1 1 0 01-1-1v-5a1 1 0 011-1zM8 2.5h3a1 1 0 011 1v9a1 1 0 01-1 1H8a1 1 0 01-1-1v-9a1 1 0 011-1z"/></svg>
-                Categorias
+                {{ __('app.nav_categories') }}
             </a>
             <a href="/notes" class="nav-item {{ request()->is('notes*') ? 'active' : '' }}">
                 <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 2h7l3 3v9a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z"/><path d="M10 2v3h3M5 7h6M5 10h4"/></svg>
-                Notas
+                {{ __('app.nav_notes') }}
             </a>
-            <div class="nav-label" style="margin-top:8px">Sistema</div>
+            <div class="nav-label" style="margin-top:8px">{{ __('app.nav_system') }}</div>
             <a href="/settings" class="nav-item {{ request()->is('settings') ? 'active' : '' }}">
                 <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="2.5"/><path d="M8 1.5v1M8 13.5v1M1.5 8h1M13.5 8h1M3.2 3.2l.7.7M12.1 12.1l.7.7M12.8 3.2l-.7.7M3.9 12.1l-.7.7"/></svg>
-                Configurações
+                {{ __('app.nav_settings') }}
             </a>
         </nav>
         <div class="sidebar-footer">
@@ -690,19 +690,19 @@
 
             <button id="theme-toggle" onclick="toggleTheme()" class="sidebar-footer-btn" title="Alternar tema">
                 <span class="sfb-icon" id="theme-icon">🌙</span>
-                <span class="sfb-label" id="theme-label">Modo claro</span>
+                <span class="sfb-label" id="theme-label">{{ __('app.nav_light_mode') }}</span>
             </button>
 
             <button id="btn-shortcuts" class="sidebar-footer-btn" title="Atalhos (?)">
                 <span class="sfb-icon">
                     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="14" height="10" rx="2"/><rect x="2.5" y="5.5" width="2" height="1.5" rx=".4"/><rect x="6" y="5.5" width="2" height="1.5" rx=".4"/><rect x="9.5" y="5.5" width="2" height="1.5" rx=".4"/><rect x="2.5" y="8.5" width="2" height="1.5" rx=".4"/><rect x="6" y="8.5" width="4.5" height="1.5" rx=".4"/><rect x="11.5" y="8.5" width="2" height="1.5" rx=".4"/></svg>
                 </span>
-                <span class="sfb-label">Atalhos de teclado</span>
+                <span class="sfb-label">{{ __('app.nav_shortcuts') }}</span>
                 <span class="sfb-hint">?</span>
             </button>
 
             <div style="border-top:1px solid var(--border);margin:6px 0 4px;"></div>
-            <div style="padding:4px 10px 2px;font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);opacity:.6">Criador</div>
+            <div style="padding:4px 10px 2px;font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);opacity:.6">{{ __('app.nav_creator') }}</div>
 
             <a href="/open-external?url=https://github.com/lbonavina" class="sidebar-footer-btn" title="GitHub de Lucas Bonavina">
                 <span class="sfb-icon">
@@ -762,8 +762,8 @@ function updateThemeBtn(theme) {
     const icon  = document.getElementById('theme-icon');
     const label = document.getElementById('theme-label');
     if (!icon) return;
-    if (theme === 'light') { icon.textContent = '☀️'; label.textContent = 'Modo escuro'; }
-    else                   { icon.textContent = '🌙'; label.textContent = 'Modo claro'; }
+    if (theme === 'light') { icon.textContent = '☀️'; label.textContent = '{{ __('app.nav_dark_mode') }}'; }
+    else                   { icon.textContent = '🌙'; label.textContent = '{{ __('app.nav_light_mode') }}'; }
 }
 updateThemeBtn(localStorage.getItem('taskletto-theme') || 'dark');
 
@@ -1048,7 +1048,7 @@ document.querySelectorAll('.nav-item').forEach(link => {
                 <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="1.5"><rect x="1" y="3" width="14" height="10" rx="2"/><rect x="2.5" y="5.5" width="2" height="1.5" rx=".4"/><rect x="6" y="5.5" width="2" height="1.5" rx=".4"/><rect x="9.5" y="5.5" width="2" height="1.5" rx=".4"/><rect x="2.5" y="8.5" width="2" height="1.5" rx=".4"/><rect x="6" y="8.5" width="4.5" height="1.5" rx=".4"/><rect x="11.5" y="8.5" width="2" height="1.5" rx=".4"/></svg>
             </div>
             <div class="kbd-header-text">
-                <h2>Atalhos de teclado</h2>
+                <h2>{{ __('app.nav_shortcuts') }}</h2>
                 <p>Navegue mais rápido com esses atalhos</p>
             </div>
             <button id="kbd-modal-close" title="Fechar (Esc)">✕</button>
@@ -1084,7 +1084,7 @@ document.querySelectorAll('.nav-item').forEach(link => {
             <div class="kbd-section" data-section="tasks">
                 <div class="kbd-section-title">Ações globais &amp; Tarefas</div>
                 <div class="kbd-grid">
-                    <div class="kbd-row"><span class="kbd-desc">Atalhos de teclado</span><div class="kbd-keys"><kbd>?</kbd></div></div>
+                    <div class="kbd-row"><span class="kbd-desc">{{ __('app.nav_shortcuts') }}</span><div class="kbd-keys"><kbd>?</kbd></div></div>
                     <div class="kbd-row"><span class="kbd-desc">Alternar tema</span><div class="kbd-keys"><kbd>Ctrl</kbd><span class="kbd-plus">+</span><kbd>⇧</kbd><span class="kbd-plus">+</span><kbd>L</kbd></div></div>
                     <div class="kbd-row"><span class="kbd-desc">Fechar / Cancelar</span><div class="kbd-keys"><kbd>Esc</kbd></div></div>
                     <div class="kbd-row"><span class="kbd-desc">Nova tarefa</span><div class="kbd-keys"><kbd>C</kbd></div></div>
