@@ -7,8 +7,20 @@ use App\Http\Controllers\Web\TaskDetailController;
 use App\Http\Controllers\Web\TaskSortController;
 use App\Http\Controllers\Web\TaskWebController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 Route::get('/', fn() => redirect()->route('dashboard'));
+
+// Open external URLs in the system browser (NativePHP)
+Route::get('/open-external', function (Request $request) {
+    $url = $request->input('url');
+    $allowed = ['https://github.com', 'https://www.linkedin.com', 'https://ko-fi.com'];
+    $isAllowed = collect($allowed)->contains(fn($prefix) => str_starts_with($url, $prefix));
+    if ($url && $isAllowed) {
+        \Native\Laravel\Facades\Shell::openExternal($url);
+    }
+    return redirect()->back();
+})->name('open-external');
 
 Route::get('/dashboard', [DashboardController::class , 'index'])->name('dashboard');
 
