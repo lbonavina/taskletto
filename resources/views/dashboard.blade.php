@@ -82,7 +82,7 @@
 .nc-bar { height:3px; background:var(--nc-color,var(--accent)); flex-shrink:0; }
 .nc-body { padding:14px 16px; flex:1; display:flex; flex-direction:column; gap:6px; }
 .nc-title {
-    font-family:'Codec Pro',sans-serif; font-size:13.5px; font-weight:700;
+    font-family:'Codec Pro',sans-serif; font-size:16px; font-weight:500;
     color:var(--text); letter-spacing:-.2px;
     overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
 }
@@ -98,7 +98,7 @@
 .nc.feat .nc-bar { width:3px; height:auto; }
 .nc.feat .nc-body { flex-direction:row; align-items:flex-start; gap:16px; padding:18px 20px; }
 .nc.feat .nc-content { flex:1; min-width:0; }
-.nc.feat .nc-title { font-size:15px; white-space:normal; margin-bottom:4px; }
+.nc.feat .nc-title { font-size:16px; white-space:normal; margin-bottom:4px; }
 .nc.feat .nc-excerpt { -webkit-line-clamp:2; }
 .nc.feat .nc-foot { flex-direction:column; align-items:flex-end; gap:4px; justify-content:center; flex-shrink:0; }
 

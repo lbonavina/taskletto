@@ -335,6 +335,7 @@
     color: var(--muted); background: var(--surface); border: 1px solid var(--border);
     text-decoration: none; cursor: pointer; transition: all .15s;
     white-space: nowrap;
+    font-family: "DM Sans", monospace;
 }
 .qf:hover { color: var(--text); border-color: #3a3a46; }
 .qf.active { background: var(--accent); color: #0f0f11; border-color: var(--accent); font-weight: 600; }

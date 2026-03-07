@@ -246,7 +246,7 @@ html[data-theme=light] #quill-editor-wrap .ql-toolbar .ql-picker-options { backg
                             @foreach($categories as $cat)
                                 <option value="{{ $cat->name }}" data-color="{{ $cat->color }}" data-icon="{{ $cat->icon }}"
                                     {{ $task->category === $cat->name ? 'selected' : '' }}>
-                                    {{ $cat->icon }} {{ $cat->name }}
+                                    {{ $cat->name }}
                                 </option>
                             @endforeach
                         </select>
