@@ -1,4 +1,8 @@
 {
+    "name": "taskletto",
+    "productName": "Taskletto",
+    "version": "1.0.0",
+    "description": "Gerenciador de tarefas e notas",
     "$schema": "https://www.schemastore.org/package.json",
     "private": true,
     "type": "module",
