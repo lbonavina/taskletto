@@ -17,7 +17,7 @@
 
 <br/>
 
-![Taskletto Screenshot](https://placehold.co/900x480/0f0f11/ff914d?text=Taskletto+Screenshot&font=raleway)
+![Taskletto Screenshot](https://github.com/lbonavina/taskletto/main/public/screenshot.png)
 
 </div>
 
@@ -91,7 +91,7 @@
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/seu-usuario/taskletto.git
+git clone https://github.com/lbonavina/taskletto.git
 cd taskletto
 
 # 2. Instale as dependências PHP
