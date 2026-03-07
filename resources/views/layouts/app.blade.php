@@ -261,10 +261,7 @@
             transition: background .12s, color .12s, border-color .12s, transform .1s;
         }
         #kbd-modal-close:hover { background: var(--surface2); color: var(--text); border-color: var(--muted); transform: scale(1.05); }
-        /* Search */
-        .kbd-search-wrap {
-            padding: 14px 24px 0; flex-shrink: 0;
-        }
+        .kbd-search-wrap { padding: 14px 24px 0; flex-shrink: 0; }
         .kbd-search-wrap input {
             width: 100%; padding: 8px 14px 8px 36px;
             background: var(--surface2); border: 1px solid var(--border);
@@ -281,10 +278,7 @@
         }
         .kbd-search-wrap-inner { position: relative; }
         html[data-theme=light] .kbd-search-wrap input { background: #f4f4f6; border-color: #dddde6; }
-        /* Tabs */
-        .kbd-tabs {
-            display: flex; gap: 4px; padding: 12px 24px 0; flex-shrink: 0;
-        }
+        .kbd-tabs { display: flex; gap: 4px; padding: 12px 24px 0; flex-shrink: 0; }
         .kbd-tab {
             padding: 5px 12px; border-radius: 7px; font-size: 12px; font-weight: 500;
             border: 1px solid transparent; cursor: pointer; background: none;
@@ -292,36 +286,25 @@
             transition: background .12s, color .12s, border-color .12s;
         }
         .kbd-tab:hover { background: var(--surface2); color: var(--text); }
-        .kbd-tab.active {
-            background: rgba(255,145,77,.12); color: var(--accent);
-            border-color: rgba(255,145,77,.25);
-        }
-        /* Body */
+        .kbd-tab.active { background: rgba(255,145,77,.12); color: var(--accent); border-color: rgba(255,145,77,.25); }
         #kbd-modal-body {
             overflow-y: auto; padding: 10px 24px 24px;
             scrollbar-width: thin; scrollbar-color: var(--border) transparent;
             flex: 1;
         }
-        .kbd-section {
-            margin-top: 8px;
-        }
+        .kbd-section { margin-top: 8px; }
         .kbd-section-title {
             font-size: 10px; font-weight: 700; text-transform: uppercase;
             letter-spacing: 1px; color: var(--muted);
             padding: 14px 0 8px;
             display: flex; align-items: center; gap: 8px;
         }
-        .kbd-section-title::after {
-            content: ''; flex: 1; height: 1px; background: var(--border);
-        }
+        .kbd-section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
         .kbd-section-title:first-child { padding-top: 6px; }
-        .kbd-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 4px;
-        }
+        .kbd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
         .kbd-row {
             display: flex; align-items: center; justify-content: space-between;
-            padding: 9px 12px; border-radius: 10px;
-            transition: background .1s;
+            padding: 9px 12px; border-radius: 10px; transition: background .1s;
         }
         .kbd-row:hover { background: var(--surface2); }
         .kbd-desc { font-size: 12.5px; color: var(--text); }
@@ -343,7 +326,6 @@
             box-shadow: 0 1px 2px rgba(0,0,0,.08);
         }
         .kbd-plus { font-size: 9px; color: var(--muted); opacity: .7; }
-        /* Empty search state */
         .kbd-empty { text-align: center; padding: 32px 20px; color: var(--muted); font-size: 13px; }
         .kbd-empty-icon { font-size: 32px; margin-bottom: 8px; opacity: .4; }
 
@@ -371,11 +353,7 @@
             font-family: inherit; white-space: nowrap;
             position: relative; overflow: hidden;
         }
-        .btn::after {
-            content: ''; position: absolute; inset: 0;
-            background: white; opacity: 0;
-            transition: opacity .15s;
-        }
+        .btn::after { content: ''; position: absolute; inset: 0; background: white; opacity: 0; transition: opacity .15s; }
         .btn:active::after { opacity: .08; }
         .btn-primary { background: var(--accent); color: #0f0f11; border-color: var(--accent); }
         .btn-primary:hover { background: #f0d060; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,145,77,.25); }
@@ -394,8 +372,7 @@
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; margin-bottom: 28px; }
         .stat-card {
             background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px;
-            transition: border-color .2s, transform .2s, box-shadow .2s;
-            cursor: default;
+            transition: border-color .2s, transform .2s, box-shadow .2s; cursor: default;
         }
         .stat-card:hover { border-color: rgba(255,145,77,.3); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
         .stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); margin-bottom: 6px; }
@@ -428,54 +405,31 @@
 
         /* ── Forms ── */
         .form-group { margin-bottom: 18px; position: relative; }
-
         label {
-            display: block;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: .6px;
-            text-transform: uppercase;
-            color: var(--muted);
-            margin-bottom: 7px;
-            transition: color .15s;
+            display: block; font-size: 11px; font-weight: 600; letter-spacing: .6px;
+            text-transform: uppercase; color: var(--muted); margin-bottom: 7px; transition: color .15s;
         }
         .form-group:focus-within > label { color: var(--accent); }
-
-        input[type=text],
-        input[type=date],
-        input[type=email],
-        input[type=password],
-        input[type=number],
-        textarea {
-            width: 100%;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--text);
-            padding: 10px 14px;
-            font-size: 13.5px;
-            font-family: inherit;
-            line-height: 1.5;
+        input[type=text], input[type=date], input[type=email], input[type=password], input[type=number], textarea {
+            width: 100%; background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 10px; color: var(--text); padding: 10px 14px;
+            font-size: 13.5px; font-family: inherit; line-height: 1.5;
             transition: border-color .15s, box-shadow .15s, background .15s;
-            outline: none;
-            -webkit-appearance: none;
+            outline: none; -webkit-appearance: none;
         }
-        input[type=text]::placeholder,
-        textarea::placeholder { color: var(--muted); opacity: .5; }
+        input[type=text]::placeholder, textarea::placeholder { color: var(--muted); opacity: .5; }
         input[type=text]:hover, input[type=date]:hover, textarea:hover { border-color: #3a3a46; }
         input[type=text]:focus, input[type=date]:focus, input[type=email]:focus,
         input[type=password]:focus, input[type=number]:focus, textarea:focus {
-            border-color: var(--accent);
-            background: #1a1a20;
+            border-color: var(--accent); background: #1a1a20;
             box-shadow: 0 0 0 3px rgba(255,145,77,.1), 0 1px 4px rgba(0,0,0,.3);
         }
         input[type=date] { color-scheme: dark; }
         textarea { resize: vertical; min-height: 90px; }
 
-        /* ── Custom select (native hidden, replaced by JS) ── */
+        /* ── Custom select ── */
         .select-wrap { position: relative; display: block; }
         select.native-select-hidden { display: none !important; }
-
         .csel-trigger {
             width: 100%; background: var(--surface2); border: 1px solid var(--border);
             border-radius: 10px; color: var(--text); padding: 10px 36px 10px 14px;
@@ -496,7 +450,6 @@
             color: var(--muted); transition: transform .2s, color .15s; pointer-events: none;
         }
         .csel-trigger.open .csel-arrow { transform: translateY(-50%) rotate(180deg); color: var(--accent); }
-
         .csel-dropdown {
             position: absolute; top: calc(100% + 4px); left: 0; right: 0;
             background: #1e1e26; border: 1px solid var(--border); border-radius: 10px;
@@ -516,37 +469,29 @@
         .csel-option.selected { background: rgba(255,145,77,.13); color: var(--accent); font-weight: 500; }
         .csel-option-dot   { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; display: inline-block; }
         .csel-option-emoji { font-size: 15px; line-height: 1; }
-
         html[data-theme=light] .csel-dropdown { background: #ffffff; }
         html[data-theme=light] .csel-trigger  { background: #f4f4f6; }
-        html[data-theme=light] .csel-trigger:focus,
-        html[data-theme=light] .csel-trigger.open { background: #ffffff; }
+        html[data-theme=light] .csel-trigger:focus, html[data-theme=light] .csel-trigger.open { background: #ffffff; }
         html[data-theme=light] .csel-option:hover { background: rgba(255,145,77,.07); }
 
         /* ── Checkbox toggle ── */
         .check-label {
             display: inline-flex; align-items: center; gap: 8px;
             cursor: pointer; user-select: none; white-space: nowrap;
-            padding: 9px 13px;
-            border: 1px solid var(--border); border-radius: 10px;
-            background: var(--surface2);
-            color: var(--muted); font-size: 13px;
+            padding: 9px 13px; border: 1px solid var(--border); border-radius: 10px;
+            background: var(--surface2); color: var(--muted); font-size: 13px;
             transition: border-color .15s, color .15s, background .15s;
         }
         .check-label:hover { border-color: #3a3a46; color: var(--text); }
         .check-label input[type=checkbox] { display: none; }
         .check-label .toggle-track {
-            width: 32px; height: 18px; border-radius: 9px;
-            background: var(--border);
-            position: relative; flex-shrink: 0;
-            transition: background .2s;
+            width: 32px; height: 18px; border-radius: 9px; background: var(--border);
+            position: relative; flex-shrink: 0; transition: background .2s;
         }
         .check-label .toggle-track::after {
-            content: '';
-            position: absolute; top: 3px; left: 3px;
+            content: ''; position: absolute; top: 3px; left: 3px;
             width: 12px; height: 12px; border-radius: 50%;
-            background: var(--muted);
-            transition: transform .2s, background .2s;
+            background: var(--muted); transition: transform .2s, background .2s;
         }
         .check-label input:checked ~ .toggle-track { background: var(--accent); }
         .check-label input:checked ~ .toggle-track::after { transform: translateX(14px); background: #0f0f11; }
@@ -555,15 +500,10 @@
         /* ── Modal ── */
         .modal-overlay {
             display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0);
-            z-index: 10000; align-items: center; justify-content: center;
-            backdrop-filter: blur(0px);
-            transition: background .2s, backdrop-filter .2s;
+            background: rgba(0,0,0,0); z-index: 10000; align-items: center; justify-content: center;
+            backdrop-filter: blur(0px); transition: background .2s, backdrop-filter .2s;
         }
-        .modal-overlay.open {
-            display: flex;
-            animation: overlayIn .2s ease forwards;
-        }
+        .modal-overlay.open { display: flex; animation: overlayIn .2s ease forwards; }
         @keyframes overlayIn {
             from { background: rgba(0,0,0,0); backdrop-filter: blur(0px); }
             to   { background: rgba(0,0,0,.7); backdrop-filter: blur(4px); }
@@ -571,8 +511,7 @@
         .modal {
             background: var(--surface); border: 1px solid var(--border);
             border-radius: 16px; padding: 28px; width: 100%; max-width: 480px;
-            position: relative;
-            animation: modalIn .22s cubic-bezier(.34,1.56,.64,1) both;
+            position: relative; animation: modalIn .22s cubic-bezier(.34,1.56,.64,1) both;
         }
         @keyframes modalIn {
             from { opacity: 0; transform: scale(.92) translateY(12px); }
@@ -586,13 +525,12 @@
         #toast-container {
             position: fixed; bottom: 24px; right: 24px;
             display: flex; flex-direction: column; gap: 8px;
-            z-index: 9998; pointer-events: none;
+            z-index: 10100; pointer-events: none;
         }
         .toast {
             display: flex; align-items: center; gap: 10px;
             padding: 12px 16px; border-radius: 10px;
-            font-size: 13px; font-weight: 500;
-            border: 1px solid;
+            font-size: 13px; font-weight: 500; border: 1px solid;
             pointer-events: auto;
             animation: toastIn .3s cubic-bezier(.34,1.56,.64,1) both;
             min-width: 240px; max-width: 360px;
@@ -630,32 +568,19 @@
         /* ── Pagination ── */
         nav[role=navigation] { display: flex; flex-direction: column; align-items: center; gap: 12px; }
         nav[role=navigation] > div:first-child { font-size: 12px; color: var(--muted); }
-        .pagination {
-            display: flex; align-items: center; gap: 4px;
-            list-style: none; padding: 0; margin: 0;
-        }
-        .pagination .page-item .page-link,
-        .pagination .page-item span {
+        .pagination { display: flex; align-items: center; gap: 4px; list-style: none; padding: 0; margin: 0; }
+        .pagination .page-item .page-link, .pagination .page-item span {
             display: inline-flex; align-items: center; justify-content: center;
             min-width: 32px; height: 32px; padding: 0 6px;
-            border-radius: 8px; font-size: 13px;
-            text-decoration: none; color: var(--muted);
-            border: 1px solid var(--border);
-            background: transparent;
-            transition: all .15s; line-height: 1;
-            font-family: 'DM Mono', monospace;
+            border-radius: 8px; font-size: 13px; text-decoration: none; color: var(--muted);
+            border: 1px solid var(--border); background: transparent;
+            transition: all .15s; line-height: 1; font-family: 'DM Mono', monospace;
         }
-        .pagination .page-item .page-link:hover {
-            color: var(--text); border-color: #3a3a46;
-            background: var(--surface2);
+        .pagination .page-item .page-link:hover { color: var(--text); border-color: #3a3a46; background: var(--surface2); }
+        .pagination .page-item.active .page-link, .pagination .page-item.active span {
+            background: var(--accent); color: #0f0f11; border-color: var(--accent); font-weight: 700;
         }
-        .pagination .page-item.active .page-link,
-        .pagination .page-item.active span {
-            background: var(--accent); color: #0f0f11;
-            border-color: var(--accent); font-weight: 700;
-        }
-        .pagination .page-item.disabled .page-link,
-        .pagination .page-item.disabled span {
+        .pagination .page-item.disabled .page-link, .pagination .page-item.disabled span {
             opacity: .3; cursor: not-allowed; pointer-events: none;
         }
 
@@ -673,15 +598,18 @@
         .overdue-chip { color: var(--danger); font-size: 11px; font-weight: 500; }
 
         /* ── Filter bar ── */
-        .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
+        .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: stretch; margin-bottom: 20px; }
+        .filter-bar > * { height: 40px; box-sizing: border-box; }
         .filter-bar input[type=text] {
-            min-width: 200px; width: auto;
-            padding: 9px 12px 9px 36px; font-size: 13px;
+            min-width: 200px; width: auto; padding: 0 12px 0 36px; font-size: 13px; height: 40px;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 16 16' fill='none' stroke='%237a7a8a' stroke-width='1.5'%3E%3Ccircle cx='6.5' cy='6.5' r='4'/%3E%3Cpath d='M11 11l2.5 2.5'/%3E%3C/svg%3E");
             background-repeat: no-repeat; background-position: 11px center;
         }
-        .filter-bar .select-wrap { width: auto; }
-        .filter-bar select { padding: 9px 32px 9px 12px; font-size: 13px; }
+        .filter-bar .select-wrap { width: auto; height: 40px; }
+        .filter-bar .select-wrap .csel-trigger { height: 40px; padding-top: 0; padding-bottom: 0; }
+        .filter-bar select { padding: 0 32px 0 12px; font-size: 13px; height: 40px; }
+        .filter-bar .check-label { height: 40px; padding: 0 13px; font-size: 13px; }
+        .filter-bar .btn { height: 40px; padding-top: 0; padding-bottom: 0; }
 
         /* ── Spinner ── */
         .spinner { width: 14px; height: 14px; border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%; animation: spin .6s linear infinite; display: inline-block; }
@@ -820,7 +748,6 @@ function updateThemeBtn(theme) {
     if (theme === 'light') { icon.textContent = '☀️'; label.textContent = 'Modo escuro'; }
     else                   { icon.textContent = '🌙'; label.textContent = 'Modo claro'; }
 }
-// Init button state
 updateThemeBtn(localStorage.getItem('taskletto-theme') || 'dark');
 
 // ── Page loader ──────────────────────────────────────────────────────────────
@@ -848,7 +775,6 @@ window.toast = function(message, type = 'info', duration = 3500) {
     }, duration);
 };
 
-// Flash session → toast
 @if(session('success'))
     window.addEventListener('load', () => toast("{{ session('success') }}", 'success'));
     document.getElementById('flash-alert')?.remove();
@@ -882,6 +808,8 @@ document.querySelectorAll('.nav-item').forEach(link => {
 });
 </script>
 
+@stack('modals')
+
 @stack('scripts')
 
 <script>
@@ -904,7 +832,6 @@ document.querySelectorAll('.nav-item').forEach(link => {
         })();
         wrap.style.position = 'relative';
 
-        // Build trigger
         const trigger = document.createElement('div');
         trigger.className = 'csel-trigger';
         trigger.tabIndex  = 0;
@@ -920,7 +847,6 @@ document.querySelectorAll('.nav-item').forEach(link => {
         trigger.appendChild(labelEl);
         trigger.insertAdjacentHTML('beforeend', ARROW_SVG);
 
-        // Build dropdown
         const dropdown = document.createElement('div');
         dropdown.className = 'csel-dropdown';
 
@@ -980,7 +906,6 @@ document.querySelectorAll('.nav-item').forEach(link => {
             syncTrigger(icon, color, text, !opt.value);
         }
 
-        // Init display
         if (selectedOpt) {
             syncTrigger(selectedOpt.icon, selectedOpt.color, selectedOpt.text, !selectedOpt.opt.value);
         } else if (select.options.length) {
@@ -989,7 +914,6 @@ document.querySelectorAll('.nav-item').forEach(link => {
         }
 
         function open() {
-            // Close all other open dropdowns
             document.querySelectorAll('.csel-trigger.open').forEach(t => {
                 if (t !== trigger) {
                     t.classList.remove('open');
@@ -1033,7 +957,6 @@ document.querySelectorAll('.nav-item').forEach(link => {
         wrap.appendChild(trigger);
         wrap.appendChild(dropdown);
 
-        // Observe for dynamic option changes (e.g. preselected on show.blade)
         const mo = new MutationObserver(() => rebuildOptions());
         mo.observe(select, { childList: true, attributes: true, subtree: true });
 
@@ -1079,7 +1002,6 @@ document.querySelectorAll('.nav-item').forEach(link => {
         document.querySelectorAll('.select-wrap select').forEach(buildCustomSelect);
     }
 
-    // Close on outside click
     document.addEventListener('click', () => {
         document.querySelectorAll('.csel-trigger.open').forEach(t => {
             t.classList.remove('open');
@@ -1088,23 +1010,18 @@ document.querySelectorAll('.nav-item').forEach(link => {
         });
     });
 
-    // Init on DOM ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initAll);
     } else {
         initAll();
     }
 
-    // Re-init after any dynamic content (modals opening, etc.)
     const globalObserver = new MutationObserver(() => initAll());
     globalObserver.observe(document.body, { childList: true, subtree: true });
 
-    // Expose globally for manual re-init if needed
     window.initCustomSelects = initAll;
 })();
 </script>
-
-@stack('modals')
 
 {{-- Keyboard shortcuts modal --}}
 <div id="kbd-overlay">
@@ -1215,7 +1132,6 @@ document.querySelectorAll('.nav-item').forEach(link => {
     closeBtn?.addEventListener('click', closeFn);
     overlay?.addEventListener('click', e => { if (e.target === overlay) closeFn(); });
 
-    // ── Tabs ──────────────────────────────────────────────────────────────────
     function activateTab(tab) {
         document.querySelectorAll('.kbd-tab').forEach(t =>
             t.classList.toggle('active', t.dataset.tab === tab)
@@ -1233,7 +1149,6 @@ document.querySelectorAll('.nav-item').forEach(link => {
         filterBySearch('');
     });
 
-    // ── Search ────────────────────────────────────────────────────────────────
     function filterBySearch(term) {
         term = term.toLowerCase().trim();
         let anyVisible = false;
@@ -1254,7 +1169,6 @@ document.querySelectorAll('.nav-item').forEach(link => {
 
         if (noResults) noResults.style.display = anyVisible ? 'none' : '';
 
-        // Reset active tab to "all" when searching
         if (term) {
             document.querySelectorAll('.kbd-tab').forEach(t => t.classList.remove('active'));
             document.querySelector('.kbd-tab[data-tab="all"]')?.classList.add('active');
@@ -1264,7 +1178,6 @@ document.querySelectorAll('.nav-item').forEach(link => {
     searchIn?.addEventListener('input', () => filterBySearch(searchIn.value));
     searchIn?.addEventListener('keydown', e => { if (e.key === 'Escape') { closeFn(); } });
 
-    // ── Global keyboard shortcuts ─────────────────────────────────────────────
     let gBuffer = null, gTimer = null;
 
     document.addEventListener('keydown', e => {

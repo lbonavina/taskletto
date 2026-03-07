@@ -189,7 +189,7 @@
                             </td>
                             <td onclick="window.location='/tasks/{{ $task->id }}'">
                                 @if($dueLabel)
-                                    <span style="font-family:'DM Sans',monospace;font-size:12px;color:{{ $dueLabel['color'] }}">
+                                    <span style="font-family:'DM Mono',monospace;font-size:12px;color:{{ $dueLabel['color'] }}">
                                         {{ $dueLabel['text'] }}
                                     </span>
                                 @else
@@ -223,7 +223,7 @@
 {{-- Keyboard shortcuts modal --}}
 <div id="kb-modal" style="display:none;position:fixed;inset:0;z-index:9200;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);align-items:center;justify-content:center">
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;width:420px;animation:modalIn .2s cubic-bezier(.34,1.56,.64,1) both">
-        <div style="font-family:'Codec Pro',sans-serif;font-size:18px;font-weight:700;letter-spacing:-.3px;margin-bottom:20px">Atalhos de Teclado</div>
+        <div style="font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:20px">Atalhos de Teclado</div>
         <div style="display:flex;flex-direction:column;gap:10px;font-size:13px">
             @foreach([
                 ['N', 'Nova tarefa'],
@@ -268,7 +268,7 @@
 }
 .qf:hover { color: var(--text); border-color: #3a3a46; }
 .qf.active { background: var(--accent); color: #0f0f11; border-color: var(--accent); font-weight: 600; }
-.qf-count { background: rgba(0,0,0,.2); border-radius: 10px; padding: 0 5px; font-family: 'DM Sans',monospace; font-size: 10px; }
+.qf-count { background: rgba(0,0,0,.2); border-radius: 10px; padding: 0 5px; font-family: 'DM Mono',monospace; font-size: 10px; }
 .qf.active .qf-count { background: rgba(0,0,0,.15); }
 .qf-danger { background: rgba(224,84,84,.3) !important; color: var(--danger) !important; }
 
@@ -365,7 +365,7 @@ kbd {
     display: inline-flex; align-items: center; justify-content: center;
     min-width: 28px; height: 22px; padding: 0 6px;
     background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 5px; font-family: 'DM Sans',monospace; font-size: 11px;
+    border-radius: 5px; font-family: 'DM Mono',monospace; font-size: 11px;
     color: var(--text); font-weight: 600; flex-shrink: 0;
 }
 
@@ -416,7 +416,9 @@ const PRIORITY_OPTS = [
     { val: 'urgent', label: 'Urgente', color: 'var(--priority-urgent)' },
 ];
 
+// Move popup to body to escape overflow:auto stacking context
 const popup = document.getElementById('inline-popup');
+document.body.appendChild(popup);
 let popupOpen = false;
 
 function openInlinePopup(trigger, field, taskId, currentVal) {
@@ -430,15 +432,33 @@ function openInlinePopup(trigger, field, taskId, currentVal) {
         </button>
     `).join('');
 
-    const rect = trigger.getBoundingClientRect();
-    popup.style.display = 'block';
-    popup.style.animation = 'none';
-    popup.offsetHeight; // reflow
-    popup.style.animation = '';
-    const top = rect.bottom + 6 + window.scrollY;
-    const left = Math.min(rect.left, window.innerWidth - 180);
-    popup.style.top  = top + 'px';
-    popup.style.left = left + 'px';
+    // Render invisible first to measure real dimensions
+    popup.style.visibility = 'hidden';
+    popup.style.display    = 'block';
+    popup.style.animation  = 'none';
+    popup.offsetHeight; // force reflow
+
+    const rect   = trigger.getBoundingClientRect();
+    const popupW = popup.offsetWidth  || 180;
+    const popupH = popup.offsetHeight || 160;
+
+    let top  = rect.bottom + 6;
+    let left = rect.left;
+
+    // Flip upward if not enough space below
+    if (top + popupH > window.innerHeight - 8) {
+        top = rect.top - popupH - 6;
+    }
+    // Clamp horizontally within viewport
+    if (left + popupW > window.innerWidth - 8) {
+        left = window.innerWidth - popupW - 8;
+    }
+    if (left < 8) left = 8;
+
+    popup.style.top        = top + 'px';
+    popup.style.left       = left + 'px';
+    popup.style.visibility = '';
+    popup.style.animation  = '';
     popupOpen = true;
 }
 
@@ -566,17 +586,25 @@ document.querySelectorAll('#bulk-priority-picker .bulk-opt').forEach(btn => {
 });
 
 // ── Drag & drop reorder ───────────────────────────────────────────────────────
-let dragMode = false;
+let dragMode = true;
 let dragSrc  = null;
 
-document.getElementById('drag-toggle')?.addEventListener('click', function() {
-    dragMode = !dragMode;
-    this.classList.toggle('active', dragMode);
-    document.getElementById('drag-handle-header').style.display = dragMode ? '' : 'none';
+function setDragMode(active) {
+    dragMode = active;
+    const btn = document.getElementById('drag-toggle');
+    if (btn) btn.classList.toggle('active', dragMode);
+    const header = document.getElementById('drag-handle-header');
+    if (header) header.style.display = dragMode ? '' : 'none';
     document.querySelectorAll('.drag-handle-cell').forEach(c => c.style.display = dragMode ? '' : 'none');
     document.querySelectorAll('.task-row').forEach(r => r.classList.toggle('drag-mode', dragMode));
-    if (dragMode) toast('Arraste as linhas para reordenar', 'info');
+}
+
+document.getElementById('drag-toggle')?.addEventListener('click', function() {
+    setDragMode(!dragMode);
 });
+
+// Enable drag mode on page load
+document.addEventListener('DOMContentLoaded', () => setDragMode(true));
 
 const tbody = document.getElementById('sortable-body');
 if (tbody) {
@@ -678,6 +706,65 @@ document.addEventListener('keydown', e => {
 @if(request()->anyFilled(['search','status','priority','overdue']))
 document.getElementById('advanced-filters').style.display = 'block';
 @endif
+
+// ── Modal Nova Tarefa ──────────────────────────────────────────────────────
+document.getElementById('btn-save-task').addEventListener('click', async function() {
+    const btn = this;
+    const alertEl = document.getElementById('modal-alert');
+    const title   = document.getElementById('nt-title').value.trim();
+    alertEl.style.display = 'none';
+
+    if (!title || title.length < 3) {
+        alertEl.className = 'alert alert-error';
+        alertEl.textContent = 'O título deve ter pelo menos 3 caracteres.';
+        alertEl.style.display = 'block';
+        document.getElementById('nt-title').focus();
+        return;
+    }
+
+    btn.innerHTML = '<span class="spinner"></span> Criando...';
+    btn.disabled  = true;
+
+    const payload = {
+        title:       title,
+        description: document.getElementById('nt-description').value || null,
+        priority:    document.getElementById('nt-priority').value,
+        status:      document.getElementById('nt-status').value,
+        due_date:    document.getElementById('nt-due-date').value || null,
+        category:    document.getElementById('nt-category').value || null,
+    };
+
+    try {
+        const res  = await fetch('/api/v1/tasks', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content },
+            body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        if (res.ok) {
+            toast('Tarefa criada!', 'success');
+            setTimeout(() => window.location.href = '/tasks/' + data.data.id, 400);
+        } else {
+            const msgs = data.errors ? Object.values(data.errors).flat().join(' ') : (data.message || 'Erro.');
+            alertEl.className = 'alert alert-error';
+            alertEl.textContent = msgs;
+            alertEl.style.display = 'block';
+            btn.innerHTML = 'Criar Tarefa';
+            btn.disabled  = false;
+        }
+    } catch(e) {
+        toast('Erro de conexão.', 'error');
+        btn.innerHTML = 'Criar Tarefa';
+        btn.disabled  = false;
+    }
+});
+
+document.getElementById('modal-new-task').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('open');
+});
+document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.getElementById('modal-new-task').classList.remove('open');
+});
 </script>
 @endpush
 
