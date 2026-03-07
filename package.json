@@ -10,6 +10,45 @@
         "build": "vite build",
         "dev": "vite"
     },
+    "build": {
+        "appId": "com.lbonavina.taskletto",
+        "productName": "Taskletto",
+        "copyright": "© 2025 Lucas Bonavina",
+        "win": {
+            "icon": "public/icon.ico",
+            "target": [
+                {
+                    "target": "nsis",
+                    "arch": ["x64"]
+                }
+            ],
+            "publisherName": "Lucas Bonavina",
+            "verifyUpdateCodeSignature": false
+        },
+        "nsis": {
+            "oneClick": false,
+            "allowToChangeInstallationDirectory": true,
+            "installerIcon": "public/icon.ico",
+            "uninstallerIcon": "public/icon.ico",
+            "installerHeaderIcon": "public/icon.ico",
+            "createDesktopShortcut": true,
+            "createStartMenuShortcut": true,
+            "shortcutName": "Taskletto",
+            "installationDirectory": "$PROGRAMFILES\\Taskletto",
+            "displayLanguageSelector": false,
+            "license": null
+        },
+        "mac": {
+            "icon": "public/icon.ico",
+            "category": "public.app-category.productivity",
+            "target": ["dmg"]
+        },
+        "linux": {
+            "icon": "public/icon.ico",
+            "target": ["AppImage"],
+            "category": "Office"
+        }
+    },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
         "axios": "^1.11.0",
