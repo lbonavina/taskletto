@@ -12,32 +12,32 @@
     <style>
         @font-face {
             font-family: 'Codec Pro';
-            src: url('/fonts/codec-pro/CodecPro-Regular.woff2') format('woff2'),
-                 url('/fonts/codec-pro/CodecPro-Regular.woff')  format('woff');
+            src: url('/fonts/codec-pro/CodecPro-Regular.ttf') format('TrueType'),
+                 url('/fonts/codec-pro/CodecPro-Regular.ttf')  format('TrueType');
             font-weight: 400; font-style: normal; font-display: swap;
         }
         @font-face {
             font-family: 'Codec Pro';
-            src: url('/fonts/codec-pro/CodecPro-Medium.woff2') format('woff2'),
-                 url('/fonts/codec-pro/CodecPro-Medium.woff')  format('woff');
+            src: url('/fonts/codec-pro/CodecPro-Medium.ttf') format('TrueType'),
+                 url('/fonts/codec-pro/CodecPro-Medium.ttf')  format('TrueType');
             font-weight: 500; font-style: normal; font-display: swap;
         }
         @font-face {
             font-family: 'Codec Pro';
-            src: url('/fonts/codec-pro/CodecPro-Bold.woff2') format('woff2'),
-                 url('/fonts/codec-pro/CodecPro-Bold.woff')  format('woff');
+            src: url('/fonts/codec-pro/CodecPro-Bold.ttf') format('TrueType'),
+                 url('/fonts/codec-pro/CodecPro-Bold.ttf')  format('TrueType');
             font-weight: 700; font-style: normal; font-display: swap;
         }
         @font-face {
             font-family: 'Codec Pro';
-            src: url('/fonts/codec-pro/CodecPro-ExtraBold.woff2') format('woff2'),
-                 url('/fonts/codec-pro/CodecPro-ExtraBold.woff')  format('woff');
+            src: url('/fonts/codec-pro/CodecPro-ExtraBold.ttf') format('TrueType'),
+                 url('/fonts/codec-pro/CodecPro-ExtraBold.ttf')  format('TrueType');
             font-weight: 800; font-style: normal; font-display: swap;
         }
         @font-face {
             font-family: 'Codec Pro';
-            src: url('/fonts/codec-pro/CodecPro-Italic.woff2') format('woff2'),
-                 url('/fonts/codec-pro/CodecPro-Italic.woff')  format('woff');
+            src: url('/fonts/codec-pro/CodecPro-Italic.ttf') format('TrueType'),
+                 url('/fonts/codec-pro/CodecPro-Italic.ttf')  format('TrueType');
             font-weight: 400; font-style: italic; font-display: swap;
         }
     </style>
@@ -723,8 +723,8 @@
     <aside class="sidebar">
         <div class="sidebar-logo">
             <a href="/dashboard">
-                <img src="/logo-taskeletto.png" alt="Taskletto" class="logo-img logo-dark">
-                <img src="/logo-taskletto-light.png" alt="Taskletto" class="logo-img logo-light">
+                <img src="/logo-taskletto-light.png" alt="Taskletto" class="logo-img logo-dark">
+                <img src="/logo-taskletto.png" alt="Taskletto" class="logo-img logo-light">
             </a>
         </div>
         <nav class="sidebar-nav">
