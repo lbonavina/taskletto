@@ -7,6 +7,9 @@
         <button id="btn-pin" class="btn btn-ghost btn-sm" title="{{ $note->pinned ? 'Desafixar' : 'Fixar nota' }}">
             {{ $note->pinned ? '📌 Fixada' : '📌 Fixar' }}
         </button>
+        <a href="{{ route('notes.export', $note) }}" class="btn btn-ghost btn-sm" title="Exportar como Markdown" download>
+            ⬇ Exportar .md
+        </a>
         <button id="btn-delete" class="btn btn-danger btn-sm">Excluir</button>
         <a href="/notes" class="btn btn-ghost btn-sm">← Voltar</a>
     </div>

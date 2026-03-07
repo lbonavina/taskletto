@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Note;
 use App\Models\Category;
 use App\Models\Task;
+use App\Services\NoteMarkdownExporter;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class NoteController extends Controller
 {
@@ -98,6 +100,24 @@ class NoteController extends Controller
         $note->update($data);
 
         return response()->json(['ok' => true, 'updated_at' => $note->updated_at->format('d/m/Y H:i')]);
+    }
+
+    public function export(Note $note, NoteMarkdownExporter $exporter): Response
+    {
+        $markdown = $exporter->toMarkdown($note);
+
+        $title    = $note->title && $note->title !== 'Sem título'
+            ? $note->title
+            : 'nota-' . $note->id;
+
+        $filename = mb_strtolower(preg_replace('/[^a-zA-Z0-9\-_áéíóúãõâêîôûàèìòùç ]/u', '', $title));
+        $filename = preg_replace('/\s+/', '-', trim($filename));
+        $filename = trim($filename, '-') . '.md';
+
+        return response($markdown, 200, [
+            'Content-Type'        => 'text/markdown; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
     }
 
     public function destroy(Note $note): JsonResponse
