@@ -15,7 +15,7 @@
 
 {{-- Quick filters --}}
 <div class="quick-filters">
-    <a href="/tasks" class="qf {{ !request()->anyFilled(['status','priority','overdue','search','quick']) ? 'active' : '' }}">
+    <a href="/tasks" class="qf {{ !request()->anyFilled(['status','priority','overdue','search','quick','hide_completed','date_from','date_to','category']) ? 'active' : '' }}">
         Todas
         @if(isset($stats)) <span class="qf-count">{{ $stats['total'] }}</span> @endif
     </a>
@@ -33,8 +33,9 @@
             <span class="qf-count qf-danger">{{ $stats['overdue'] }}</span>
         @endif
     </a>
-    <a href="/tasks?status=in_progress" class="qf {{ request('status') === 'in_progress' ? 'active' : '' }}">
+    <a href="/tasks?status=in_progress" class="qf {{ request('status') === 'in_progress' && !request()->anyFilled(['priority','overdue','search','quick','hide_completed','date_from','date_to','category']) ? 'active' : '' }}">
         ⚡ Em progresso
+        @if(isset($stats)) <span class="qf-count">{{ $stats['by_status']['in_progress'] ?? 0 }}</span> @endif
     </a>
     <div style="flex:1"></div>
     {{-- Drag toggle --}}
@@ -44,37 +45,106 @@
     </button>
 </div>
 
-{{-- Advanced filters (collapsible) --}}
-<div id="advanced-filters" style="display:none;margin-bottom:16px">
-    <form method="GET" action="/tasks" class="filter-bar">
-        <input type="text" name="search" placeholder="Buscar tarefas..." value="{{ request('search') }}" id="search-input">
+{{-- Filter bar — always visible --}}
+<div id="advanced-filters" style="margin-bottom:16px">
+    <form method="GET" action="/tasks" id="filter-form" class="filter-bar filter-bar-full">
+
+        {{-- Search --}}
+        <input type="text" name="search" placeholder="🔍 Buscar tarefas..." value="{{ request('search') }}" id="search-input" style="min-width:180px;flex:1">
+
+        {{-- Status --}}
         <div class="select-wrap">
             <select name="status" onchange="this.form.submit()">
                 <option value="">Todos os status</option>
-                <option value="pending"     {{ request('status') === 'pending'     ? 'selected' : '' }}>Pendente</option>
-                <option value="in_progress" {{ request('status') === 'in_progress' ? 'selected' : '' }}>Em progresso</option>
-                <option value="completed"   {{ request('status') === 'completed'   ? 'selected' : '' }}>Concluída</option>
-                <option value="cancelled"   {{ request('status') === 'cancelled'   ? 'selected' : '' }}>Cancelada</option>
+                <option value="pending"     {{ request('status') === 'pending'     ? 'selected' : '' }}>⏳ Pendente</option>
+                <option value="in_progress" {{ request('status') === 'in_progress' ? 'selected' : '' }}>⚡ Em progresso</option>
+                <option value="completed"   {{ request('status') === 'completed'   ? 'selected' : '' }}>✅ Concluída</option>
+                <option value="cancelled"   {{ request('status') === 'cancelled'   ? 'selected' : '' }}>❌ Cancelada</option>
             </select>
         </div>
+
+        {{-- Priority --}}
         <div class="select-wrap">
             <select name="priority" onchange="this.form.submit()">
                 <option value="">Todas as prioridades</option>
-                <option value="low"    {{ request('priority') === 'low'    ? 'selected' : '' }}>Baixa</option>
-                <option value="medium" {{ request('priority') === 'medium' ? 'selected' : '' }}>Média</option>
-                <option value="high"   {{ request('priority') === 'high'   ? 'selected' : '' }}>Alta</option>
-                <option value="urgent" {{ request('priority') === 'urgent' ? 'selected' : '' }}>Urgente</option>
+                <option value="low"    {{ request('priority') === 'low'    ? 'selected' : '' }}>🟢 Baixa</option>
+                <option value="medium" {{ request('priority') === 'medium' ? 'selected' : '' }}>🟡 Média</option>
+                <option value="high"   {{ request('priority') === 'high'   ? 'selected' : '' }}>🟠 Alta</option>
+                <option value="urgent" {{ request('priority') === 'urgent' ? 'selected' : '' }}>🔴 Urgente</option>
             </select>
         </div>
-        <label class="check-label">
+
+        {{-- Category --}}
+        @if(isset($categories) && $categories->isNotEmpty())
+        <div class="select-wrap">
+            <select name="category" onchange="this.form.submit()">
+                <option value="">Todas as categorias</option>
+                @foreach($categories as $cat)
+                    <option value="{{ $cat->name }}" {{ request('category') === $cat->name ? 'selected' : '' }}>
+                        {{ $cat->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        @endif
+
+        {{-- Created at period --}}
+        <div class="select-wrap">
+            <select name="quick" onchange="this.form.submit()">
+                <option value="">Criadas: qualquer data</option>
+                <option value="created_today" {{ request('quick') === 'created_today' ? 'selected' : '' }}>🆕 Criadas hoje ({{ $stats['created_today'] ?? 0 }})</option>
+                <option value="created_week"  {{ request('quick') === 'created_week'  ? 'selected' : '' }}>📆 Esta semana ({{ $stats['created_week'] ?? 0 }})</option>
+                <option value="created_month" {{ request('quick') === 'created_month' ? 'selected' : '' }}>🗓 Este mês ({{ $stats['created_month'] ?? 0 }})</option>
+            </select>
+        </div>
+
+        {{-- Due date range --}}
+        <div class="filter-date-range">
+            <span class="filter-date-label">Vence:</span>
+            <div class="select-wrap">
+                <input type="date" name="date_from" value="{{ request('date_from') }}" onchange="this.form.submit()" title="A partir de" placeholder="dd/mm/aaaa">
+            </div>
+            <span class="filter-date-sep">→</span>
+            <div class="select-wrap">
+                <input type="date" name="date_to" value="{{ request('date_to') }}" onchange="this.form.submit()" title="Até" placeholder="dd/mm/aaaa">
+            </div>
+        </div>
+
+        {{-- Toggles --}}
+        <label class="check-label" title="Mostrar apenas tarefas com prazo vencido">
             <input type="checkbox" name="overdue" value="1" onchange="this.form.submit()" {{ request('overdue') ? 'checked' : '' }}>
             <span class="toggle-track"></span>
-            Apenas atrasadas
+            Atrasadas
         </label>
-        @if(request()->anyFilled(['search','status','priority','overdue','quick']))
-            <a href="/tasks" class="btn btn-ghost btn-sm">✕ Limpar</a>
-        @endif
-        <button type="submit" class="btn btn-ghost btn-sm">Filtrar</button>
+        <label class="check-label" title="Esconder tarefas concluídas e canceladas">
+            <input type="checkbox" name="hide_completed" value="1" onchange="this.form.submit()" {{ request('hide_completed') ? 'checked' : '' }}>
+            <span class="toggle-track"></span>
+            Ocultar concluídas
+        </label>
+
+        {{-- Active filter chips --}}
+        @php
+            $activeFilters = array_filter([
+                'status'         => request('status'),
+                'priority'       => request('priority'),
+                'category'       => request('category'),
+                'search'         => request('search'),
+                'overdue'        => request('overdue') ? 'Atrasadas' : null,
+                'hide_completed' => request('hide_completed') ? 'Ocultar concluídas' : null,
+                'date_from'      => request('date_from') ? 'De '.request('date_from') : null,
+                'date_to'        => request('date_to')   ? 'Até '.request('date_to') : null,
+                'quick'          => request('quick'),
+            ]);
+        @endphp
+
+        <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
+            @if(count($activeFilters) > 0)
+                <span style="font-size:11px;color:var(--muted)">{{ count($activeFilters) }} filtro(s) ativo(s)</span>
+                <a href="/tasks" class="btn btn-ghost btn-sm" style="color:var(--danger);border-color:var(--danger)">✕ Limpar tudo</a>
+            @endif
+            <button type="submit" class="btn btn-ghost btn-sm">Filtrar</button>
+        </div>
+
     </form>
 </div>
 
@@ -271,6 +341,53 @@
 .qf-count { background: rgba(0,0,0,.2); border-radius: 10px; padding: 0 5px; font-family: 'DM Mono',monospace; font-size: 10px; }
 .qf.active .qf-count { background: rgba(0,0,0,.15); }
 .qf-danger { background: rgba(224,84,84,.3) !important; color: var(--danger) !important; }
+
+/* Full filter bar */
+.filter-bar-full {
+    display: flex; align-items: center; gap: 8px;
+    flex-wrap: wrap;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 4px;
+}
+.filter-bar-full input[type="text"] {
+    padding: 6px 10px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--surface2);
+    color: var(--text); font-size: 13px; outline: none;
+}
+.filter-bar-full input[type="text"]:focus { border-color: var(--accent); }
+.filter-date-range {
+    display: flex; align-items: center; gap: 5px;
+    white-space: nowrap;
+}
+.filter-date-label {
+    font-size: 12px; color: var(--muted);
+}
+.filter-date-sep {
+    font-size: 12px; color: var(--muted);
+}
+.filter-date-range input[type="date"] {
+    padding: 5px 8px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--surface2);
+    color: var(--text); font-size: 12px; cursor: pointer;
+    outline: none;
+}
+.filter-date-range input[type="date"]:focus { border-color: var(--accent); }
+.filter-date-range input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor: pointer; }
+.select-wrap input[type="date"] {
+    appearance: none;
+    width: 100%; height: 100%;
+    padding: 0 10px;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+}
+.select-wrap input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.6); cursor: pointer; }
 
 /* Bulk bar */
 .bulk-bar {
@@ -660,8 +777,7 @@ document.addEventListener('keydown', e => {
             break;
         case '/':
             e.preventDefault();
-            document.getElementById('advanced-filters').style.display = 'block';
-            setTimeout(() => document.querySelector('[name=search]')?.focus(), 50);
+            document.getElementById('search-input')?.focus();
             break;
         case 'r': case 'R':
             document.getElementById('drag-toggle')?.click();
@@ -693,19 +809,16 @@ document.getElementById('btn-empty-new')?.addEventListener('click', () => {
     document.getElementById('modal-new-task').classList.add('open');
 });
 
-// Advanced filters toggle on search shortcut
+// Focus search on Ctrl+F
 document.addEventListener('keydown', e => {
     if (e.key === 'f' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        document.getElementById('advanced-filters').style.display = 'block';
-        document.querySelector('[name=search]')?.focus();
+        document.getElementById('search-input')?.focus();
     }
 });
 
 // Show advanced filters if any active
-@if(request()->anyFilled(['search','status','priority','overdue']))
-document.getElementById('advanced-filters').style.display = 'block';
-@endif
+// (filter bar is always visible now)
 
 // ── Modal Nova Tarefa ──────────────────────────────────────────────────────
 document.getElementById('btn-save-task').addEventListener('click', async function() {

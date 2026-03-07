@@ -20,20 +20,51 @@ class TaskWebController extends Controller
                     'urgent' => $query->where('priority', 'urgent')->whereNotIn('status', ['completed', 'cancelled']),
                     'today' => $query->whereDate('due_date', today())->whereNotIn('status', ['completed', 'cancelled']),
                     'overdue' => $query->overdue(),
+                    'created_today' => $query->whereDate('created_at', today()),
+                    'created_week' => $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]),
+                    'created_month' => $query->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year),
                     default => null,
                 };
         }
 
-        // Advanced filters
-        if ($request->filled('status'))
-            $query->where('status', $request->status);
-        if ($request->filled('priority'))
-            $query->where('priority', $request->priority);
-        if ($request->filled('category'))
-            $query->byCategory($request->category);
-        if ($request->boolean('overdue'))
-            $query->overdue();
+        // Filter by status
+        if ($request->filled('status')) {
+            $status = \App\Enums\TaskStatus::tryFrom($request->status);
+            if ($status)
+                $query->where('status', $status);
+        }
 
+        // Filter by priority
+        if ($request->filled('priority')) {
+            $priority = \App\Enums\TaskPriority::tryFrom($request->priority);
+            if ($priority)
+                $query->where('priority', $priority);
+        }
+
+        // Filter by category
+        if ($request->filled('category')) {
+            $query->byCategory($request->category);
+        }
+
+        // Filter: overdue only
+        if ($request->boolean('overdue')) {
+            $query->overdue();
+        }
+
+        // Filter: hide/show completed
+        if ($request->boolean('hide_completed')) {
+            $query->whereNotIn('status', ['completed', 'cancelled']);
+        }
+
+        // Filter: date range (due_date)
+        if ($request->filled('date_from')) {
+            $query->whereDate('due_date', '>=', $request->date_from);
+        }
+        if ($request->filled('date_to')) {
+            $query->whereDate('due_date', '<=', $request->date_to);
+        }
+
+        // Full-text search
         if ($request->filled('search')) {
             $term = $request->search;
             $query->where(fn($q) => $q->where('title', 'like', "%{$term}%")
@@ -63,8 +94,10 @@ class TaskWebController extends Controller
                 'by_priority' => $byPriority->toArray(),
                 'overdue' => Task::overdue()->count(),
                 'due_today' => Task::whereDate('due_date', today())
-                ->whereNotIn('status', ['completed', 'cancelled'])
-                ->count(),
+                ->whereNotIn('status', ['completed', 'cancelled'])->count(),
+                'created_today' => Task::whereDate('created_at', today())->count(),
+                'created_week' => Task::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
+                'created_month' => Task::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count(),
             ],
         ]);
     }
