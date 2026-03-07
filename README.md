@@ -10,12 +10,15 @@
 [![NativePHP](https://img.shields.io/badge/NativePHP-Desktop-ff914d?style=flat-square)](https://nativephp.com)
 [![License](https://img.shields.io/badge/License-MIT-4ade80?style=flat-square)](LICENSE)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker&logoColor=white)](docker-compose.yml)
+[![Website](https://img.shields.io/badge/Website-lbonavina.github.io/taskletto-ff914d?style=flat-square&logo=github&logoColor=white)](https://lbonavina.github.io/taskletto)
 
 <br/>
 
 ![Taskletto Screenshot](https://github.com/lbonavina/taskletto/blob/main/public/screenshot.png)
 
 <br/>
+
+### [🌐 lbonavina.github.io/taskletto](https://lbonavina.github.io/taskletto)
 
 ### [⬇️ Download for Windows (.exe)](https://github.com/lbonavina/taskletto/releases/latest)
 
@@ -109,6 +112,7 @@ Visit **http://localhost:8000**
 ---
 
 ## 🐳 Docker
+
 ```bash
 docker compose up -d
 docker compose exec app php artisan migrate
@@ -139,5 +143,7 @@ MIT — see [`LICENSE`](LICENSE).
 <div align="center">
 
 Made with ❤️ using **Laravel**, **Tiptap** and **NativePHP**
+
+[🌐 Website](https://lbonavina.github.io/taskletto) · [⬇️ Download](https://github.com/lbonavina/taskletto/releases/latest) · [☕ Ko-fi](https://ko-fi.com/lbonavina)
 
 </div>
