@@ -17,7 +17,7 @@
 
 <br/>
 
-![Taskletto Screenshot](https://github.com/lbonavina/taskletto/main/public/screenshot.png)
+![Taskletto Screenshot](https://github.com/lbonavina/taskletto/blob/main/public/screenshot.png)
 
 </div>
 
