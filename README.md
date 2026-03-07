@@ -3,6 +3,8 @@
 <img src="https://img.shields.io/badge/Taskletto-v1.0-ff914d?style=for-the-badge&logoColor=white" alt="Taskletto">
 
 # Taskletto
+![TasklettoLight](https://github.com/lbonavina/taskletto/blob/main/public/logo-taskletto.png)
+![TasklettoLight](https://github.com/lbonavina/taskletto/blob/main/public/logo-taskletto-light.png)
 
 **Gerenciador de tarefas e notas moderno, construído com Laravel + Tiptap**
 
