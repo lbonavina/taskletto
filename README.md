@@ -14,10 +14,6 @@
 
 <br/>
 
-![Taskletto Screenshot](https://github.com/lbonavina/taskletto/blob/main/public/screenshot.png)
-
-<br/>
-
 ### [🌐 lbonavina.github.io/taskletto](https://lbonavina.github.io/taskletto)
 
 ### [⬇️ Download for Windows (.exe)](https://github.com/lbonavina/taskletto/releases/latest)
