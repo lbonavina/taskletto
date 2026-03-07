@@ -157,7 +157,7 @@
 }
 .emoji-btn:hover { background: rgba(255,145,77,.12); transform: scale(1.15); }
 .emoji-btn.selected { background: rgba(255,145,77,.22); }
-.emoji-empty { color: var(--muted); font-size: 13px; padding: 20px; text-align: center; }
+.emoji-empty { color: var(--muted); font-size: 13px; padding: 20px; text-align: center; grid-column: 4 / -4; width: 300px; }
 </style>
 
 <script>
@@ -180,6 +180,136 @@ const EMOJI_CATS = [
     { id: 'travel',  label: '✈️', name: 'Viagem',    emojis: ['✈️','🚀','🛸','🚁','🛥','🚢','🚂','🚗','🚕','🛻','🚙','🏎','🛵','🚲','🛴','🏍','🚦','🗺','🌍','🏖','🏝','🏔','🗼','🗽','🏰','🏯','⛩','🕌','🕍','🎡','🎢','🎠','🎪','🏟','🎭'] },
     { id: 'symbols', label: '✨', name: 'Símbolos',  emojis: ['✨','⭐','🌟','💫','⚡','🔥','❄️','🌊','💥','🎯','✅','❌','⚠️','🔔','💬','💭','❓','❗','♾','🔁','🔀','▶️','⏸','⏹','⏺','🔼','🔽','⬆️','⬇️','➡️','⬅️','🔐','🔓','🏆','🥇','🎖','🏅','🎗','🎀','🎁','💝','💖','❤️','🖤','🤍','🤎','💛','💚','💙','💜'] },
 ];
+
+// ── Emoji keywords (for search) ──────────────────────────────────────────────
+const EMOJI_KEYWORDS = {
+    '📁':['pasta','folder','arquivo','file'],'📂':['pasta aberta','open folder'],'🗂':['fichario','index','organizar'],
+    '💼':['trabalho','work','maleta','briefcase','negocio','business'],'🏠':['casa','home','residencia','house'],
+    '🏢':['empresa','office','edificio','building','trabalho'],'🎯':['alvo','goal','meta','target','foco'],
+    '✅':['concluido','done','check','tarefa','task'],'📌':['fixar','pin','importante','mark'],
+    '🔖':['marcador','bookmark','salvar'],'💡':['ideia','idea','luz','light','dica','tip'],
+    '🚀':['foguete','rocket','lancamento','launch','rapido'],'🎨':['arte','art','design','criativo','pintura'],
+    '🛠':['ferramenta','tool','construir','build','configurar'],'💰':['dinheiro','money','financas','grana'],
+    '📊':['grafico','chart','dados','data','relatorio'],'📈':['crescimento','growth','aumento','grafico'],
+    '📋':['lista','list','clipboard','tarefas'],'🔔':['notificacao','notification','alerta','sino'],
+    '❤️':['amor','love','coracao','heart','favorito'],'⭐':['estrela','star','favorito','destaque'],
+    '🌟':['estrela','star','especial','destaque'],'🔥':['fogo','fire','urgente','urgent','quente','hot'],
+    '💪':['forca','strength','fitness','exercicio','strong'],'🎓':['formatura','graduation','educacao','estudo'],
+    '🏆':['trofeu','trophy','vitoria','premio','award'],'📝':['nota','note','escrever','write','anotacao'],
+    '🔍':['busca','search','lupa','pesquisa','find'],'💬':['mensagem','message','chat','conversa','comment'],
+    '🌐':['internet','web','global','mundo','rede','network'],'📉':['baixa','down','queda','grafico'],
+    '💹':['mercado','market','financas'],'📅':['calendario','calendar','data','agenda'],
+    '🗓':['agenda','calendar','data','planejamento'],'⏰':['alarme','alarm','horario','time','relogio','lembrete'],
+    '📧':['email','correio','mail','mensagem'],'📨':['email','envelope','mensagem'],
+    '🔑':['chave','key','acesso','senha','password'],'🔒':['cadeado','lock','seguranca','security'],
+    '🖥':['computador','computer','desktop','monitor','tela'],'💻':['notebook','laptop','computador','codigo','code'],
+    '🖱':['mouse','cursor'],'⌨️':['teclado','keyboard','digitar'],'📞':['telefone','phone','ligar','call'],
+    '☎️':['telefone','phone','fixo','ligar'],'🔧':['chave','wrench','ferramenta','consertar','fix'],
+    '🔨':['martelo','hammer','construir','ferramenta'],'⚙️':['engrenagem','gear','configuracao','settings'],
+    '📐':['esquadro','ruler','medir','geometria'],'📏':['regua','ruler','medir'],
+    '✏️':['lapis','pencil','escrever','write','editar'],'🖊':['caneta','pen','escrever','write'],
+    '🖋':['caneta','pen','assinar','sign'],'📓':['caderno','notebook','notas','notes'],
+    '📔':['caderno','notebook','diario','diary'],'📒':['caderno','notebook','amarelo','notas'],
+    '📕':['livro','book','vermelho','ler'],'📗':['livro','book','verde','ler'],
+    '📘':['livro','book','azul','ler'],'📙':['livro','book','laranja','ler'],
+    '📚':['livros','books','biblioteca','library','estudar'],'🗃':['arquivo','organizar','caixas'],
+    '🗄':['arquivo','cabinet','gaveta','organizar'],'🗑':['lixo','trash','deletar','remover'],
+    '🏡':['casa','home','residencia','confortavel'],'🛒':['carrinho','cart','compras','shopping'],
+    '🛍':['sacola','bag','compras','shopping','loja'],'🍽':['prato','plate','comida','food','refeicao'],
+    '🍳':['frigideira','pan','cozinhar','cook','ovos'],'🥗':['salada','salad','saudavel','healthy','dieta'],
+    '🏃':['correr','run','exercicio','exercise','atividade'],'🏋':['academia','gym','treino','workout'],
+    '🧘':['yoga','meditacao','meditation','relaxar','paz'],'🚗':['carro','car','transporte','dirigir'],
+    '✈️':['aviao','plane','viagem','travel','voo','flight'],'🏖':['praia','beach','ferias','vacation','mar'],
+    '🎮':['jogo','game','videogame','jogar','play','controle'],'🎬':['filme','movie','cinema','video'],
+    '🎵':['musica','music','som','sound','nota'],'🎁':['presente','gift','surpresa','surprise'],
+    '🐶':['cachorro','dog','pet','animal','cao'],'🐱':['gato','cat','pet','animal','felino'],
+    '🌱':['planta','plant','crescimento','natureza'],'🌺':['flor','flower','natureza','bonito'],
+    '☀️':['sol','sun','verao','summer','calor','brilho'],'🌙':['lua','moon','noite','night','dormir'],
+    '🌈':['arco-iris','rainbow','colorido','esperanca'],'🏥':['hospital','saude','health','medico'],
+    '💊':['remedio','medicine','pill','saude'],'🩺':['estetoscopio','doctor','medico','consulta'],
+    '💉':['seringa','syringe','vacina','vaccine'],'🧬':['dna','genetica','ciencia','biologia'],
+    '🦷':['dente','tooth','dentista','saude'],'💧':['agua','water','hidratacao','beber'],
+    '😴':['dormir','sleep','descanso','rest','cansado'],'🧠':['cerebro','brain','mente','inteligencia'],
+    '🚴':['bicicleta','bike','ciclismo','exercicio'],'🥦':['brocolis','broccoli','vegetal','saudavel'],
+    '🍎':['maca','apple','fruta','fruit','saudavel'],'💵':['dolar','dollar','dinheiro','money'],
+    '💳':['cartao','card','credito','pagamento'],'🏦':['banco','bank','financas'],
+    '🪙':['moeda','coin','dinheiro','money'],'💎':['diamante','diamond','joia','valor'],
+    '🧾':['recibo','receipt','nota fiscal','compra'],'🤝':['aperto','handshake','acordo','parceria'],
+    '🔐':['cadeado','lock','seguranca','protegido'],'⚖️':['balanca','balance','justica','lei'],
+    '📦':['caixa','box','pacote','entrega'],'🛡':['escudo','shield','protecao','seguranca'],
+    '📖':['livro aberto','ler','estudar'],'🔬':['microscopio','microscope','ciencia'],
+    '🔭':['telescopio','telescope','astronomia','espaco'],'🧪':['tubo de ensaio','experimento'],
+    '🧫':['placa de petri','biologia'],'🏫':['escola','school','colegio','educacao'],
+    '🗒':['bloco de notas','rascunho','anotacao'],'📄':['documento','paper','arquivo'],
+    '📱':['celular','phone','smartphone','mobile','app'],'📡':['antena','sinal','transmissao'],
+    '🔋':['bateria','battery','energia','carga'],'💾':['disquete','salvar','save'],
+    '💿':['cd','disco','musica'],'📀':['dvd','disco','backup'],'🤖':['robo','robot','ia','ai','automatico'],
+    '👾':['alien','game','jogo','pixel'],'🕹':['joystick','controle','game','jogo'],
+    '📺':['televisao','tv','video','assistir'],'📻':['radio','musica','am','fm'],
+    '🔌':['tomada','plug','energia','conectar'],'🔦':['lanterna','flashlight','luz'],
+    '🖌':['pincel','brush','pintar','arte'],'🖍':['giz de cera','crayon','colorir','desenhar'],
+    '📸':['camera','foto','photo','fotografia','imagem'],'🎭':['teatro','theater','arte','performance'],
+    '🎸':['guitarra','guitar','musica','rock'],'🎹':['piano','teclado','musica'],
+    '🎺':['trompete','trumpet','musica'],'🎻':['violino','violin','musica'],
+    '🥁':['bateria','drums','musica','ritmo'],'🎤':['microfone','microphone','cantar','apresentar'],
+    '🎧':['fone','headphone','musica','ouvir'],'🎼':['partitura','sheet music','musica'],
+    '♟':['xadrez','chess','estrategia','pensar'],'🎲':['dado','dice','jogo','sorte'],
+    '🎪':['circo','circus','festival','evento'],'🖼':['quadro','picture','arte','galeria'],
+    '🌿':['planta','plant','natureza','verde'],'🌲':['arvore','tree','floresta','natureza'],
+    '🌳':['arvore','tree','parque','natureza'],'🌴':['palmeira','palm','tropical','praia'],
+    '🌵':['cacto','cactus','deserto','seco'],'🌾':['trigo','wheat','campo','fazenda'],
+    '🍀':['trevo','clover','sorte','verde'],'🍁':['folha','leaf','outono'],
+    '🍂':['folha caida','outono'],'🍃':['folha','leaf','vento','natureza'],
+    '🌸':['flor de cerejeira','japao','primavera'],'🌼':['flor','flower','amarela','jardim'],
+    '🌻':['girassol','sunflower','sol','amarelo'],'🌹':['rosa','rose','amor','flor'],
+    '🌷':['tulipa','tulip','flor','primavera'],'☘':['trevo','clover','irlanda','sorte'],
+    '🪴':['vaso de planta','decoracao','interior'],'🌍':['terra','earth','mundo','world','global'],
+    '🌊':['onda','wave','mar','sea','oceano'],'🏔':['montanha','mountain','neve','trilha'],
+    '⛰':['montanha','mountain','colina'],'🌋':['vulcao','volcano','erupcao'],
+    '🏜':['deserto','desert','arido','quente'],'🏕':['acampamento','camping','barraca','natureza'],
+    '🌅':['nascer do sol','sunrise','manha','amanhecer'],'🌄':['paisagem','landscape','montanha'],
+    '❄️':['neve','snow','frio','cold','inverno'],'🍕':['pizza','comida','food','italiana','jantar'],
+    '🍔':['hamburguer','burger','comida','lanche'],'🌮':['taco','comida','mexicana'],
+    '🍜':['macarrao','noodles','sopa','asiatico'],'🍣':['sushi','japones','comida'],
+    '🍱':['bento','japones','comida','almoco'],'🥘':['ensopado','stew','panela','comida'],
+    '🥩':['carne','meat','proteina','churrasco'],'🍗':['frango','chicken','comida'],
+    '🥚':['ovo','egg','cafe da manha','proteina'],'🧀':['queijo','cheese','lanche','pizza'],
+    '🥓':['bacon','carne','cafe da manha'],'🥞':['panqueca','pancake','cafe da manha'],
+    '🍞':['pao','bread','padaria','cafe'],'🥖':['baguete','baguette','pao','frances'],
+    '🧁':['cupcake','bolo','doce','aniversario'],'🎂':['bolo','cake','aniversario','celebracao'],
+    '🍰':['fatia de bolo','sobremesa','doce'],'🍩':['rosquinha','donut','doce'],
+    '🍪':['biscoito','cookie','doce','lanche'],'🍫':['chocolate','doce','cacau'],
+    '☕':['cafe','coffee','quente','manha'],'🍵':['cha','tea','xicara','quente'],
+    '🧋':['bubble tea','boba','bebida'],'🥤':['refrigerante','soda','bebida','gelado'],
+    '🏎':['carro de corrida','race car','rapido','formula'],'🛻':['picape','pickup','transporte'],
+    '🛵':['scooter','moto','transporte'],'🚲':['bicicleta','bike','pedalar','transporte'],
+    '🛴':['patinete','scooter','transporte'],'🏍':['moto','motorcycle','transporte'],
+    '🗺':['mapa','map','viagem','localizacao'],'🏝':['ilha','island','tropical','praia'],
+    '🗼':['torre','tower','paris','eiffel','turismo'],'🗽':['estatua','liberdade','new york'],
+    '🏰':['castelo','castle','medieval','historia'],'🏯':['castelo japones','samurai'],
+    '⛩':['portao','gate','japao','templo'],'🕌':['mesquita','mosque','islamico'],
+    '🕍':['sinagoga','judaico','religiao'],'🎡':['roda gigante','parque','amusement'],
+    '🎢':['montanha russa','parque','amusement'],'🎠':['carrossel','parque','divertimento'],
+    '🏟':['estadio','stadium','esporte','arena'],'✨':['brilho','sparkle','magico','especial'],
+    '💫':['estrela cadente','vertigem'],'⚡':['raio','lightning','energia','eletrico'],
+    '💥':['explosao','explosion','impacto','boom'],'❌':['errado','wrong','deletar','fechar'],
+    '⚠️':['aviso','warning','cuidado','alerta'],'💭':['pensamento','thought','ideia'],
+    '❓':['pergunta','question','duvida','help'],'❗':['exclamacao','importante'],
+    '♾':['infinito','infinite','loop','eterno'],'🔁':['repetir','repeat','loop','reload'],
+    '🔀':['embaralhar','shuffle','aleatorio'],'🎖':['medalha','medal','premio','conquista'],
+    '🏅':['medalha','medal','esporte','competicao'],'🎗':['fita','ribbon','apoio'],
+    '🎀':['laco','bow','presente','decoracao'],'💝':['coracao','heart','amor','presente'],
+    '💖':['coracao brilhante','amor','love'],'🖤':['coracao preto','elegante'],
+    '🤍':['coracao branco','puro'],'💛':['coracao amarelo','amizade'],
+    '💚':['coracao verde','natureza','saude'],'💙':['coracao azul','confianca'],
+    '💜':['coracao roxo','espiritualidade'],'👨‍👩‍👧':['familia','family','pais','filhos'],
+    '🫁':['pulmao','lung','respiracao','saude'],'🫀':['coracao','heart','cardiaco','saude'],
+    '🦴':['osso','bone','saude','esqueleto'],'🩹':['curativo','bandaid','ferida','saude'],
+    '🩼':['muleta','crutch','saude'],'🏊':['nadar','swim','piscina','exercicio'],
+    '⚽':['futebol','soccer','esporte','bola'],'🎾':['tenis','tennis','esporte','raquete'],
+    '🏓':['ping pong','table tennis','esporte'],'🧗':['escalada','climbing','aventura'],
+    '💱':['cambio','exchange','moeda','financas'],'🤎':['coracao marrom','terra'],
+};
 
 // ── Color picker ──────────────────────────────────────────────────────────────
 const PRESETS = ['#ff914d','#e05454','#4ade80','#60a5fa','#c084fc','#f0a05a','#f472b6','#34d399','#facc15','#94a3b8'];
@@ -269,19 +399,27 @@ function buildEmojiPicker(initial) {
     function renderGrid(query = '') {
         const inner = grid.querySelector('.emoji-grid') || grid;
         inner.innerHTML = '';
-        const cat = EMOJI_CATS.find(c => c.id === activeTab);
-        let emojis = cat ? [...cat.emojis] : [];
+
+        let emojis = [];
 
         if (query) {
+            const q = query.toLowerCase().trim();
             const seen = new Set();
-            emojis = [];
             EMOJI_CATS.forEach(c => {
-                c.emojis.forEach(e => { if (!seen.has(e)) { seen.add(e); emojis.push(e); } });
+                c.emojis.forEach(e => {
+                    if (seen.has(e)) return;
+                    const keywords = EMOJI_KEYWORDS[e] || [];
+                    const matches = keywords.some(k => k.includes(q)) || e === q;
+                    if (matches) { seen.add(e); emojis.push(e); }
+                });
             });
+        } else {
+            const cat = EMOJI_CATS.find(c => c.id === activeTab);
+            emojis = cat ? [...cat.emojis] : [];
         }
 
         if (!emojis.length) {
-            inner.innerHTML = '<div class="emoji-empty">Nenhum emoji encontrado</div>';
+            inner.innerHTML = '<div class="emoji-empty">Nenhum emoji encontrado para \"' + query + '\"</div>';
             return;
         }
 
@@ -290,6 +428,7 @@ function buildEmojiPicker(initial) {
             btn.type      = 'button';
             btn.className = 'emoji-btn' + (e === currentEmoji ? ' selected' : '');
             btn.textContent = e;
+            btn.title = (EMOJI_KEYWORDS[e] || [e])[0];
             btn.addEventListener('click', () => selectEmoji(e));
             inner.appendChild(btn);
         });
