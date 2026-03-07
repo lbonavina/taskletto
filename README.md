@@ -3,7 +3,7 @@
 ![Taskletto](https://github.com/lbonavina/taskletto/blob/main/public/logo-taskletto-light.png#gh-dark-mode-only)
 ![Taskletto](https://github.com/lbonavina/taskletto/blob/main/public/logo-taskletto.png#gh-light-mode-only)
 
-**Gerenciador de tarefas e notas moderno**
+**Modern task and notes manager**
 
 [![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com)
 [![PHP](https://img.shields.io/badge/PHP-8.4+-777BB4?style=flat-square&logo=php&logoColor=white)](https://php.net)
@@ -17,40 +17,40 @@
 
 <br/>
 
-### [⬇️ Download para Windows (.exe)](https://github.com/lbonavina/taskletto/releases/latest)
+### [⬇️ Download for Windows (.exe)](https://github.com/lbonavina/taskletto/releases/latest)
 
 </div>
 
 ---
 
-## ✨ Funcionalidades
+## ✨ Features
 
 <table>
 <tr>
 <td width="50%">
 
-**📝 Notas**
-- Editor rico com Tiptap — headings, listas, checklists, código
-- Comandos slash `/`, auto-save, fixar notas
-- Cores e categorias personalizáveis
+**📝 Notes**
+- Rich editor with Tiptap — headings, lists, checklists, code
+- Slash `/` commands, auto-save, pin notes
+- Customizable colors and categories
 
-**✅ Tarefas**
-- Prioridades, status e categorias
-- Busca e filtros em tempo real
-- Indicador de tarefas vencidas
+**✅ Tasks**
+- Priorities, statuses and categories
+- Real-time search and filters
+- Overdue task indicator
 
 </td>
 <td width="50%">
 
 **🎨 Interface**
-- Tema escuro e claro
-- Atalhos de teclado com painel de busca
-- App desktop nativo para Windows
+- Dark and light theme
+- Keyboard shortcuts with search panel
+- Native desktop app for Windows
 
-**⚙️ Técnico**
-- API REST com documentação Swagger
-- Docker pronto para uso
-- SQLite por padrão, suporte a MySQL
+**⚙️ Technical**
+- REST API with Swagger documentation
+- Docker ready
+- SQLite by default, MySQL support
 
 </td>
 </tr>
@@ -58,8 +58,7 @@
 
 ---
 
-## 🚀 Rodar localmente
-
+## 🚀 Run locally
 ```bash
 git clone https://github.com/lbonavina/taskletto.git
 cd taskletto
@@ -69,41 +68,40 @@ php artisan migrate
 npm run dev & php artisan serve
 ```
 
-Acesse **http://localhost:8000**
+Visit **http://localhost:8000**
 
 ---
 
 ## 🐳 Docker
-
 ```bash
 docker compose up -d
 docker compose exec app php artisan migrate
 ```
 
-Acesse **http://localhost:8000**
+Visit **http://localhost:8000**
 
 ---
 
 ## 🔮 Roadmap
 
-- [ ] Sincronização em nuvem (Google Drive / GitHub)
-- [ ] Exportar notas em PDF e Markdown
-- [ ] Notificações desktop para tarefas vencidas
-- [ ] App para macOS
-- [ ] Temas customizáveis
+- [ ] Cloud sync (Google Drive / GitHub)
+- [ ] Export notes as PDF and Markdown
+- [ ] Desktop notifications for overdue tasks
+- [ ] macOS app
+- [ ] Customizable themes
 
-> **ℹ️** No momento os dados são armazenados localmente. Sync em nuvem está planejado para versões futuras.
+> **ℹ️** Data is currently stored locally. Cloud sync is planned for future releases.
 
 ---
 
-## 📄 Licença
+## 📄 License
 
-MIT — veja [`LICENSE`](LICENSE).
+MIT — see [`LICENSE`](LICENSE).
 
 ---
 
 <div align="center">
 
-Feito com ❤️ usando **Laravel**, **Tiptap** e **NativePHP**
+Made with ❤️ using **Laravel**, **Tiptap** and **NativePHP**
 
 </div>
