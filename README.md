@@ -58,14 +58,50 @@
 
 ---
 
-## 🚀 Run locally
+## 🖥️ Desktop app (NativePHP)
+
+> **Requirements:** PHP 8.2+, Composer, Node.js 18+, npm
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/lbonavina/taskletto.git
+cd taskletto
+
+# 2. Install PHP dependencies
+composer install
+
+# 3. Set up environment
+cp .env.example .env
+php artisan key:generate
+
+# 4. Create the database and run migrations
+touch database/database.sqlite
+php artisan migrate
+
+# 5. Install JS dependencies
+npm install
+
+# 6. Install NativePHP (downloads Electron)
+php artisan native:install
+
+# 7. Launch the desktop app
+composer run native:dev
+```
+
+The app will open as a native desktop window. ✅
+
+---
+
+## 🚀 Run locally (web)
+
 ```bash
 git clone https://github.com/lbonavina/taskletto.git
 cd taskletto
 composer install && npm install
 cp .env.example .env && php artisan key:generate
+touch database/database.sqlite
 php artisan migrate
-npm run dev & php artisan serve
+composer run dev
 ```
 
 Visit **http://localhost:8000**
