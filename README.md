@@ -1,7 +1,7 @@
 <div align="center">
 
-![Taskletto](https://github.com/lbonavina/taskletto/blob/main/public/logo-taskletto.png#gh-dark-mode-only)
-![Taskletto](https://github.com/lbonavina/taskletto/blob/main/public/logo-taskletto-light.png#gh-light-mode-only)
+![Taskletto](https://github.com/lbonavina/taskletto/blob/main/public/logo-taskletto-light.png#gh-dark-mode-only)
+![Taskletto](https://github.com/lbonavina/taskletto/blob/main/public/logo-taskletto.png#gh-light-mode-only)
 
 **Gerenciador de tarefas e notas moderno**
 
