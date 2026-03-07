@@ -1,0 +1,36 @@
+<?php
+
+use App\Http\Controllers\Web\CategoryController;
+use App\Http\Controllers\Web\DashboardController;
+use App\Http\Controllers\Web\SettingsController;
+use App\Http\Controllers\Web\TaskDetailController;
+use App\Http\Controllers\Web\TaskSortController;
+use App\Http\Controllers\Web\TaskWebController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', fn() => redirect()->route('dashboard'));
+
+Route::get('/dashboard', [DashboardController::class , 'index'])->name('dashboard');
+
+Route::prefix('tasks')->name('tasks.')->group(function () {
+    Route::get('/', [TaskWebController::class , 'index'])->name('index');
+    Route::post('/sort', [TaskSortController::class , 'update'])->name('sort');
+    Route::get('/{task}', [TaskDetailController::class , 'show'])->name('show');
+});
+
+Route::prefix('categories')->name('categories.')->group(function () {
+    Route::get('/', [CategoryController::class , 'index'])->name('index');
+    Route::post('/', [CategoryController::class , 'store'])->name('store');
+    Route::put('/{category}', [CategoryController::class , 'update'])->name('update');
+    Route::delete('/{category}', [CategoryController::class , 'destroy'])->name('destroy');
+});
+
+Route::get('/settings', [SettingsController::class , 'index'])->name('settings');
+
+Route::prefix('notes')->name('notes.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\Web\NoteController::class , 'index'])->name('index');
+    Route::post('/', [\App\Http\Controllers\Web\NoteController::class , 'store'])->name('store');
+    Route::get('/{note}', [\App\Http\Controllers\Web\NoteController::class , 'show'])->name('show');
+    Route::put('/{note}', [\App\Http\Controllers\Web\NoteController::class , 'update'])->name('update');
+    Route::delete('/{note}', [\App\Http\Controllers\Web\NoteController::class , 'destroy'])->name('destroy');
+});
