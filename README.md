@@ -122,7 +122,7 @@ Visit **http://localhost:8000**
 
 - [ ] Cloud sync (Google Drive / GitHub)
 - [x] Export notes as PDF and Markdown
-- [ ] Desktop notifications for overdue tasks
+- [x] Desktop notifications for overdue tasks
 - [ ] macOS app
 - [ ] Customizable themes
 
