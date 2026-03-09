@@ -6,7 +6,65 @@
 
 <div style="max-width:640px;display:flex;flex-direction:column;gap:16px">
 
-    {{-- Language --}}
+    {{-- Backup & Restore --}}
+    <div class="card">
+        <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:6px">
+            Backup & Restauração
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6">
+            Exporte todos os seus dados (tasks, notas, categorias, comentários e histórico de tempo) num arquivo <code style="background:var(--surface2);padding:1px 5px;border-radius:4px;font-family:'DM Sans',monospace;color:var(--accent)">.json</code>. Para restaurar em outro computador, basta importar o arquivo.
+        </p>
+
+        {{-- Alert --}}
+        <div id="portability-alert" style="display:none;margin-bottom:14px"></div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+
+            {{-- Export --}}
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;align-items:center;gap:10px">
+                    <div style="width:34px;height:34px;border-radius:9px;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="rgba(74,222,128,.9)" stroke-width="1.8"><path d="M8 2v8M5 7l3 3 3-3M2 12v1a1 1 0 001 1h10a1 1 0 001-1v-1"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size:13px;font-weight:600;color:var(--text)">Exportar dados</div>
+                        <div style="font-size:11px;color:var(--muted);margin-top:1px">Baixa um arquivo .json completo</div>
+                    </div>
+                </div>
+                <a href="{{ route('settings.export') }}" class="btn btn-ghost btn-sm" style="justify-content:center;gap:7px;color:var(--success);border-color:rgba(74,222,128,.25)" id="btn-export">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M5 7l3 3 3-3M2 12v1a1 1 0 001 1h10a1 1 0 001-1v-1"/></svg>
+                    Exportar agora
+                </a>
+            </div>
+
+            {{-- Import --}}
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;align-items:center;gap:10px">
+                    <div style="width:34px;height:34px;border-radius:9px;background:rgba(255,145,77,.1);border:1px solid rgba(255,145,77,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="rgba(255,145,77,.9)" stroke-width="1.8"><path d="M8 11V3M5 6l3-3 3 3M2 12v1a1 1 0 001 1h10a1 1 0 001-1v-1"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-size:13px;font-weight:600;color:var(--text)">Importar dados</div>
+                        <div style="font-size:11px;color:var(--muted);margin-top:1px">Restaura a partir de um backup</div>
+                    </div>
+                </div>
+                <label style="cursor:pointer">
+                    <input type="file" id="import-file" accept=".json" style="display:none" onchange="handleImport(this)">
+                    <div class="btn btn-ghost btn-sm" style="justify-content:center;gap:7px;color:var(--accent);border-color:rgba(255,145,77,.25);pointer-events:none">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 11V3M5 6l3-3 3 3M2 12v1a1 1 0 001 1h10a1 1 0 001-1v-1"/></svg>
+                        <span id="import-label">Selecionar arquivo</span>
+                    </div>
+                </label>
+            </div>
+
+        </div>
+
+        {{-- Import warning --}}
+        <div style="display:flex;align-items:flex-start;gap:8px;margin-top:12px;padding:10px 12px;border-radius:8px;background:rgba(224,84,84,.06);border:1px solid rgba(224,84,84,.15)">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--danger)" stroke-width="1.8" style="flex-shrink:0;margin-top:1px"><path d="M8 2L1 14h14L8 2zM8 7v3M8 12v.5"/></svg>
+            <span style="font-size:11.5px;color:var(--muted);line-height:1.5">A importação <strong style="color:var(--text)">adiciona</strong> os dados ao banco atual — não apaga os existentes. Para uma restauração limpa, exclua os dados manualmente antes de importar.</span>
+        </div>
+    </div>
     <div class="card">
         <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:16px">{{ __('app.settings_language') }}</div>
         <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">{{ __('app.settings_lang_desc') }}</p>
@@ -100,3 +158,51 @@
 
 </div>
 @endsection
+
+@push('scripts')
+<script>
+async function handleImport(input) {
+    const file = input.files[0];
+    if (!file) return;
+
+    const label    = document.getElementById('import-label');
+    const alertEl  = document.getElementById('portability-alert');
+
+    label.textContent = '⏳ Importando...';
+    alertEl.style.display = 'none';
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('_token', document.querySelector('meta[name=csrf-token]').content);
+
+    try {
+        const res  = await fetch('{{ route('settings.import') }}', { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if (res.ok) {
+            alertEl.innerHTML = `
+                <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);color:var(--success);font-size:13px">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8l4 4 8-8"/></svg>
+                    ${data.message}
+                </div>`;
+        } else {
+            alertEl.innerHTML = `
+                <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:rgba(224,84,84,.08);border:1px solid rgba(224,84,84,.2);color:var(--danger);font-size:13px">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 2l12 12M14 2L2 14"/></svg>
+                    ${data.message || 'Erro ao importar.'}
+                </div>`;
+        }
+        alertEl.style.display = 'block';
+    } catch (e) {
+        alertEl.innerHTML = `
+            <div style="padding:10px 14px;border-radius:10px;background:rgba(224,84,84,.08);border:1px solid rgba(224,84,84,.2);color:var(--danger);font-size:13px">
+                Erro de conexão ao importar.
+            </div>`;
+        alertEl.style.display = 'block';
+    } finally {
+        label.textContent = 'Selecionar arquivo';
+        input.value = '';
+    }
+}
+</script>
+@endpush
