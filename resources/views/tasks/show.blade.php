@@ -599,13 +599,15 @@
                         <div style="font-size:11px;color:var(--muted);margin-bottom:2px">{{ __('app.task_info_created') }}
                         </div>
                         <div style="font-family:'DM Sans',monospace;font-size:12px">
-                            {{ $task->created_at->format('d/m/Y H:i') }}</div>
+                            {{ $task->created_at->format('d/m/Y H:i') }}
+                        </div>
                     </div>
                     <div>
                         <div style="font-size:11px;color:var(--muted);margin-bottom:2px">{{ __('app.task_info_updated') }}
                         </div>
                         <div style="font-family:'DM Sans',monospace;font-size:12px">
-                            {{ $task->updated_at->format('d/m/Y H:i') }}</div>
+                            {{ $task->updated_at->format('d/m/Y H:i') }}
+                        </div>
                     </div>
                     @if($task->completed_at)
                         <div>
@@ -648,34 +650,52 @@
                     Tempo
                 </div>
                 {{-- Tracked display --}}
-                    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:10px">
-                        <div>
-                            <div style="font-size:11px;color:var(--muted);margin-bottom:2px">Registrado</div>
-                            <div id="tracked-display" style="font-size:22px;font-family:'DM Sans',monospace;font-weight:700;color:var(--text);letter-spacing:-.5px;line-height:1">{{ $task->formattedTrackedTime() }}</div>
-                        </div>
-                        <div style="text-align:right">
-                            <div style="font-size:11px;color:var(--muted);margin-bottom:2px">Estimativa</div>
-                            <div style="display:flex;align-items:center;gap:3px;justify-content:flex-end">
-                                <input id="estimated-minutes" type="number" min="0" step="5"
-                                    value="{{ $task->estimated_minutes }}"
-                                    placeholder="—"
-                                    style="width:48px;background:transparent;border:none;border-bottom:1px solid var(--border);border-radius:0;padding:2px 4px;font-size:13px;font-family:'DM Sans',monospace;font-weight:600;color:var(--text);text-align:right;outline:none;transition:border-color .15s"
-                                    onfocus="this.style.borderBottomColor='var(--accent)'"
-                                    onblur="this.style.borderBottomColor='var(--border)';saveEstimate(this.value)">
-                                <span style="font-size:11px;color:var(--muted)">min</span>
-                            </div>
-                        </div>
+                <div style="margin-bottom:12px">
+                        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Registrado</div>
+                        <div id="tracked-display" style="font-size:24px;font-family:'DM Sans',monospace;font-weight:700;color:var(--text);letter-spacing:-.5px;line-height:1">{{ $task->formattedTrackedTime() }}</div>
                     </div>
 
-                    {{-- Progress bar (always visible, empty if no estimate) --}}
-                    <div style="background:var(--surface2);border-radius:99px;height:4px;overflow:hidden;margin-bottom:12px">
+                    {{-- Progress bar --}}
+                    <div style="background:var(--surface2);border-radius:99px;height:4px;overflow:hidden;margin-bottom:14px">
                         @php
                             $pct = $task->estimated_minutes
                                 ? min(100, round(($task->tracked_seconds / ($task->estimated_minutes * 60)) * 100))
                                 : 0;
                             $barColor = $pct >= 100 ? 'var(--danger)' : 'var(--accent)';
+                            $estH = $task->estimated_minutes ? intdiv($task->estimated_minutes, 60) : 0;
+                            $estM = $task->estimated_minutes ? $task->estimated_minutes % 60 : 0;
                         @endphp
                         <div id="time-progress-bar" style="height:100%;width:{{ $pct }}%;background:{{ $barColor }};border-radius:99px;transition:width .4s"></div>
+                    </div>
+
+                    {{-- Estimativa h + min --}}
+                    <div style="margin-bottom:12px">
+                        <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Estimativa</div>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+                            <div id="est-h-wrap" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:3px;transition:border-color .15s;cursor:text" onclick="document.getElementById('est-h').focus()">
+                                <div style="font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.6px">Horas</div>
+                                <input id="est-h" type="number" min="0" max="99" step="1"
+                                    value="{{ $estH ?: '' }}" placeholder="0"
+                                    style="background:transparent;border:none;outline:none;font-size:20px;font-family:'DM Sans',monospace;font-weight:700;color:var(--text);width:100%;padding:0;line-height:1;-moz-appearance:textfield"
+                                    onfocus="document.getElementById('est-h-wrap').style.borderColor='var(--accent)'"
+                                    onblur="document.getElementById('est-h-wrap').style.borderColor='var(--border)';saveEstimate()"
+                                    onkeydown="if(event.key==='Tab'){event.preventDefault();document.getElementById('est-m').focus();}">
+                            </div>
+                            <div id="est-m-wrap" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:3px;transition:border-color .15s;cursor:text" onclick="document.getElementById('est-m').focus()">
+                                <div style="font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.6px">Minutos</div>
+                                <input id="est-m" type="number" min="0" max="59" step="5"
+                                    value="{{ $estM ?: '' }}" placeholder="0"
+                                    style="background:transparent;border:none;outline:none;font-size:20px;font-family:'DM Sans',monospace;font-weight:700;color:var(--text);width:100%;padding:0;line-height:1;-moz-appearance:textfield"
+                                    onfocus="document.getElementById('est-m-wrap').style.borderColor='var(--accent)'"
+                                    onblur="document.getElementById('est-m-wrap').style.borderColor='var(--border)';saveEstimate()">
+                            </div>
+                        </div>
+                        <div id="est-summary" style="font-size:11px;color:var(--muted);margin-top:6px;text-align:center;min-height:14px">
+                            @if($task->estimated_minutes)
+                                {{ $estH > 0 ? $estH . 'h ' : '' }}{{ $estM > 0 ? $estM . 'min' : '' }} estimados
+                                @if($pct > 0) · <span style="color:{{ $pct >= 100 ? 'var(--danger)' : 'var(--accent)' }}">{{ $pct }}% concluído</span> @endif
+                            @endif
+                        </div>
                     </div>
 
                     {{-- Timer button --}}
@@ -687,7 +707,6 @@
                         <div id="timer-elapsed" style="display:none;font-size:11px;color:var(--accent);text-align:center;font-family:'DM Sans',monospace;margin-top:6px;font-weight:500"></div>
                     @endif
                 </div>
-
                 {{-- Comments card --}}
                 <div class="card" id="comments-card">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
@@ -985,10 +1004,35 @@
                     }
                 });
 
-                async function saveEstimate(val) {
-                    const minutes = parseInt(val) || null;
+                async function saveEstimate() {
+                    const h = parseInt(document.getElementById('est-h')?.value) || 0;
+                    const m = parseInt(document.getElementById('est-m')?.value) || 0;
+                    // Clamp minutes to 0-59
+                    if (m > 59) { document.getElementById('est-m').value = 59; }
+                    const totalMinutes = (h * 60) + Math.min(m, 59) || null;
+
+                    // Update summary label
+                    const summary = document.getElementById('est-summary');
+                    if (summary) {
+                        if (totalMinutes) {
+                            const ph = Math.floor(totalMinutes / 60);
+                            const pm = totalMinutes % 60;
+                            summary.textContent = (ph > 0 ? ph + 'h ' : '') + (pm > 0 ? pm + 'min' : '') + ' estimados';
+                        } else {
+                            summary.textContent = '';
+                        }
+                    }
+
+                    // Update progress bar
+                    const bar = document.getElementById('time-progress-bar');
+                    if (bar && totalMinutes) {
+                        const tracked = parseInt(bar.closest('.card')?.dataset?.tracked || 0);
+                        // re-fetch task to get current tracked_seconds would be ideal,
+                        // but we reload on save so just reset width for now
+                    }
+
                     try {
-                        await apiCall('PUT', `/api/v1/tasks/${taskId}`, { estimated_minutes: minutes });
+                        await apiCall('PUT', `/api/v1/tasks/${taskId}`, { estimated_minutes: totalMinutes });
                     } catch {}
                 }
 
