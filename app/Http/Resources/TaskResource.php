@@ -28,11 +28,16 @@ class TaskResource extends JsonResource
                 'icon' => $this->category?->icon,
             ]),
             'category_id' => $this->category_id,
-            'due_date' => $this->due_date?->toDateString(),
-            'is_overdue' => $this->isOverdue(),
-            'completed_at' => $this->completed_at?->toIso8601String(),
-            'created_at' => $this->created_at->toIso8601String(),
-            'updated_at' => $this->updated_at->toIso8601String(),
+            'due_date'           => $this->due_date?->toDateString(),
+            'is_overdue'         => $this->isOverdue(),
+            'recurrence'         => [
+                'value' => $this->recurrence->value,
+                'label' => $this->recurrence->label(),
+            ],
+            'recurrence_ends_at' => $this->recurrence_ends_at?->toDateString(),
+            'completed_at'       => $this->completed_at?->toIso8601String(),
+            'created_at'         => $this->created_at->toIso8601String(),
+            'updated_at'         => $this->updated_at->toIso8601String(),
         ];
     }
 }

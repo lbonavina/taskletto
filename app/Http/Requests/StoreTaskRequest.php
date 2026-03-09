@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\TaskPriority;
+use App\Enums\TaskRecurrence;
 use App\Enums\TaskStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
@@ -22,7 +23,9 @@ class StoreTaskRequest extends FormRequest
             'status' => ['sometimes', new Enum(TaskStatus::class)],
             'priority' => ['sometimes', new Enum(TaskPriority::class)],
             'category_id' => ['nullable', 'integer', 'exists:categories,id'],
-            'due_date' => ['nullable', 'date', 'after_or_equal:today'],
+            'due_date'           => ['nullable', 'date', 'after_or_equal:today'],
+            'recurrence'         => ['sometimes', new Enum(TaskRecurrence::class)],
+            'recurrence_ends_at' => ['nullable', 'date', 'after:due_date'],
         ];
     }
 

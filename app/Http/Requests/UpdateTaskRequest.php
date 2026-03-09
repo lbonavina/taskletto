@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\TaskPriority;
+use App\Enums\TaskRecurrence;
 use App\Enums\TaskStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
@@ -22,7 +23,10 @@ class UpdateTaskRequest extends FormRequest
             'status' => ['sometimes', new Enum(TaskStatus::class)],
             'priority' => ['sometimes', new Enum(TaskPriority::class)],
             'category_id' => ['sometimes', 'nullable', 'integer', 'exists:categories,id'],
-            'due_date' => ['sometimes', 'nullable', 'date'],
+            'due_date'           => ['sometimes', 'nullable', 'date'],
+            'recurrence'         => ['sometimes', new Enum(TaskRecurrence::class)],
+            'recurrence_ends_at' => ['sometimes', 'nullable', 'date'],
+            'estimated_minutes'  => ['sometimes', 'nullable', 'integer', 'min:0', 'max:99999'],
         ];
     }
 

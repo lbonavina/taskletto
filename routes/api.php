@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TaskCommentController;
+use App\Http\Controllers\TaskTimeController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->name('api.')->group(function () {
@@ -14,4 +15,8 @@ Route::prefix('v1')->name('api.')->group(function () {
     Route::post('tasks/{task}/comments', [TaskCommentController::class, 'store'])->name('tasks.comments.store');
     Route::patch('tasks/{task}/comments/{comment}', [TaskCommentController::class, 'update'])->name('tasks.comments.update');
     Route::delete('tasks/{task}/comments/{comment}', [TaskCommentController::class, 'destroy'])->name('tasks.comments.destroy');
+
+    Route::get('tasks/{task}/time/status', [TaskTimeController::class, 'status'])->name('tasks.time.status');
+    Route::post('tasks/{task}/time/start',  [TaskTimeController::class, 'start'])->name('tasks.time.start');
+    Route::post('tasks/{task}/time/stop',   [TaskTimeController::class, 'stop'])->name('tasks.time.stop');
 });
