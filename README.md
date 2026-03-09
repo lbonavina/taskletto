@@ -1,8 +1,11 @@
 <div align="center">
-![Taskletto](https://github.com/lbonavina/taskletto/blob/main/public/logo-taskletto-light.png#gh-dark-mode-only)
-![Taskletto](https://github.com/lbonavina/taskletto/blob/main/public/logo-taskletto.png#gh-light-mode-only)
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/lbonavina/taskletto/main/public/logo-taskletto-light.png">
+    <img src="https://raw.githubusercontent.com/lbonavina/taskletto/main/public/logo-taskletto.png" alt="Taskletto" width="300">
+  </picture>
 
-**Modern task and notes manager**
+  <p><strong>Modern task and notes manager</strong></p>
+</div>
 
 [![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com)
 [![PHP](https://img.shields.io/badge/PHP-8.4+-777BB4?style=flat-square&logo=php&logoColor=white)](https://php.net)
