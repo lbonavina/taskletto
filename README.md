@@ -33,6 +33,7 @@
 - Rich editor with Tiptap — headings, lists, checklists, code
 - Slash `/` commands, auto-save, pin notes
 - Customizable colors and categories
+- Callout blocks (Info, Success, Warning, Danger, Tip, Note)
 
 **✅ Tasks**
 - Priorities, statuses and categories
@@ -63,6 +64,13 @@
 </td>
 </tr>
 </table>
+
+---
+
+## 🆕 What's new in v1.3.0
+
+### 📣 Callout Blocks
+Notion-style highlight boxes directly in the notes editor. Available via the slash `/` menu or the new toolbar button, with **6 types**: Info, Success, Warning, Danger, Tip, and Note. Each block has its own color and icon, and the type can be changed by clicking the block's icon.
 
 ---
 
@@ -159,6 +167,7 @@ Visit **http://localhost:8000**
 - [x] Task recurrence (daily, weekly, monthly)
 - [x] Time tracking with progress bar
 - [x] Desktop notifications for overdue tasks
+- [x] Callout blocks in the notes editor
 - [ ] macOS app
 - [ ] Customizable themes
 
