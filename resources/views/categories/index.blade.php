@@ -229,7 +229,11 @@
 
         .emoji-panel {
             display: none;
-            margin-top: 6px;
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            z-index: 99999;
             background: #1a1a22;
             border: 1px solid var(--border);
             border-radius: 12px;
@@ -692,7 +696,7 @@
 
     {{-- Portal --}}
     <div id="modal-cat-portal">
-        <div class="modal" style="max-width:500px;width:100%">
+        <div class="modal" style="max-width:500px;width:100%;overflow:visible">
             <button class="modal-close" onclick="closeModal()">×</button>
             <div class="modal-title" id="modal-cat-title">{{ __('app.cat_new_title') }}</div>
 
@@ -722,7 +726,7 @@
 
                     <div class="form-group">
                         <label>{{ __('app.cat_label_icon') }}</label>
-                        <div style="position:relative">
+                        <div style="position:relative;overflow:visible">
                             <div id="emoji-trigger" class="emoji-trigger" tabindex="0">
                                 <span id="emoji-preview" class="emoji-trigger-preview">📁</span>
                                 <span class="emoji-trigger-label">{{ __('app.cat_choose_emoji') }}</span>

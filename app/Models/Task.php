@@ -97,6 +97,11 @@ class Task extends Model
         return $this->hasMany(TaskHistory::class);
     }
 
+    public function comments(): HasMany
+    {
+        return $this->hasMany(TaskComment::class)->latest();
+    }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);

@@ -10,7 +10,7 @@ class TaskDetailController extends Controller
 {
     public function show(Task $task): View
     {
-        $task->load('histories', 'category');
+        $task->load('histories', 'category', 'comments');
         $categories = Category::orderBy('name')->get();
         $overdueCount = Task::overdue()->count();
         return view('tasks.show', compact('task', 'categories', 'overdueCount'));
