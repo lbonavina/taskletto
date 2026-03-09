@@ -121,8 +121,8 @@ Visit **http://localhost:8000**
 ## 🔮 Roadmap
 
 - [ ] Cloud sync (Google Drive / GitHub)
-- [ ] Export notes as PDF and Markdown
-- [ ] Desktop notifications for overdue tasks
+- [x] Export notes as PDF and Markdown
+- [x] Desktop notifications for overdue tasks
 - [ ] macOS app
 - [ ] Customizable themes
 
