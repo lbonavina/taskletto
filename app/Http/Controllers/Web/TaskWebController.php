@@ -12,19 +12,19 @@ class TaskWebController extends Controller
 {
     public function index(Request $request): View
     {
-        $query = Task::query();
+        $query = Task::with('category');
 
         // Quick filters
         if ($request->filled('quick')) {
             match ($request->quick) {
-                    'urgent' => $query->where('priority', 'urgent')->whereNotIn('status', ['completed', 'cancelled']),
-                    'today' => $query->whereDate('due_date', today())->whereNotIn('status', ['completed', 'cancelled']),
-                    'overdue' => $query->overdue(),
-                    'created_today' => $query->whereDate('created_at', today()),
-                    'created_week' => $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]),
-                    'created_month' => $query->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year),
-                    default => null,
-                };
+                'urgent' => $query->where('priority', 'urgent')->whereNotIn('status', ['completed', 'cancelled']),
+                'today' => $query->whereDate('due_date', today())->whereNotIn('status', ['completed', 'cancelled']),
+                'overdue' => $query->overdue(),
+                'created_today' => $query->whereDate('created_at', today()),
+                'created_week' => $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]),
+                'created_month' => $query->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year),
+                default => null,
+            };
         }
 
         // Filter by status
@@ -43,7 +43,7 @@ class TaskWebController extends Controller
 
         // Filter by category
         if ($request->filled('category')) {
-            $query->byCategory($request->category);
+            $query->where('category_id', $request->category);
         }
 
         // Filter: overdue only
@@ -68,7 +68,7 @@ class TaskWebController extends Controller
         if ($request->filled('search')) {
             $term = $request->search;
             $query->where(fn($q) => $q->where('title', 'like', "%{$term}%")
-            ->orWhere('description', 'like', "%{$term}%"));
+                ->orWhere('description', 'like', "%{$term}%"));
         }
 
         $tasks = $query
@@ -83,7 +83,12 @@ class TaskWebController extends Controller
             ->whereNotIn('status', ['completed', 'cancelled'])
             ->groupBy('priority')->pluck('count', 'priority');
 
-        $categories = Category::orderBy('name')->get();
+        $categories = Category::withCount([
+            'tasks',
+            'tasks as active_tasks_count' => function ($q) {
+                $q->whereNotIn('status', ['completed', 'cancelled']);
+            }
+        ])->orderBy('name')->get();
 
         return view('tasks.index', [
             'tasks' => $tasks,
@@ -94,7 +99,7 @@ class TaskWebController extends Controller
                 'by_priority' => $byPriority->toArray(),
                 'overdue' => Task::overdue()->count(),
                 'due_today' => Task::whereDate('due_date', today())
-                ->whereNotIn('status', ['completed', 'cancelled'])->count(),
+                    ->whereNotIn('status', ['completed', 'cancelled'])->count(),
                 'created_today' => Task::whereDate('created_at', today())->count(),
                 'created_week' => Task::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
                 'created_month' => Task::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count(),

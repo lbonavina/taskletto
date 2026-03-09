@@ -185,7 +185,14 @@
                                 </span>
                             </td>
                             <td style="color:var(--muted);font-size:13px" onclick="window.location='/tasks/{{ $task->id }}'">
-                                {{ $task->category ?? '—' }}
+                                @if($task->category)
+                                    <span style="display:inline-flex;align-items:center;gap:4px">
+                                        <span style="width:8px;height:8px;border-radius:50%;background:{{ $task->category->color }};display:inline-block;flex-shrink:0"></span>
+                                        {{ $task->category->name }}
+                                    </span>
+                                @else
+                                    —
+                                @endif
                             </td>
                             <td onclick="window.location='/tasks/{{ $task->id }}'">
                                 @if($dueLabel)

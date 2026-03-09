@@ -21,7 +21,7 @@ class StoreTaskRequest extends FormRequest
             'description' => ['nullable', 'string', 'max:65535'],
             'status' => ['sometimes', new Enum(TaskStatus::class)],
             'priority' => ['sometimes', new Enum(TaskPriority::class)],
-            'category' => ['nullable', 'string', 'max:100'],
+            'category_id' => ['nullable', 'integer', 'exists:categories,id'],
             'due_date' => ['nullable', 'date', 'after_or_equal:today'],
         ];
     }
@@ -33,7 +33,7 @@ class StoreTaskRequest extends FormRequest
             'description' => 'descrição',
             'status' => 'status',
             'priority' => 'prioridade',
-            'category' => 'categoria',
+            'category_id' => 'categoria',
             'due_date' => 'data de vencimento',
         ];
     }

@@ -130,7 +130,7 @@ class TaskController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $query = Task::query();
+        $query = Task::with('category');
 
         // Filtro por status
         if ($request->filled('status')) {
@@ -143,8 +143,8 @@ class TaskController extends Controller
         }
 
         // Filtro por categoria
-        if ($request->filled('category')) {
-            $query->byCategory($request->category);
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
         }
 
         // Filtro: apenas atrasadas

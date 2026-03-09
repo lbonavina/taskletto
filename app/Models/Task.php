@@ -6,6 +6,8 @@ use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
@@ -17,15 +19,15 @@ class Task extends Model
         'description',
         'status',
         'priority',
-        'category',
+        'category_id',
         'due_date',
         'completed_at',
         'sort_order',
     ];
 
     protected $casts = [
-        'status' => TaskStatus::class ,
-        'priority' => TaskPriority::class ,
+        'status' => TaskStatus::class,
+        'priority' => TaskPriority::class,
         'due_date' => 'date',
         'completed_at' => 'datetime',
     ];
@@ -47,9 +49,9 @@ class Task extends Model
         return $query->where('priority', $priority);
     }
 
-    public function scopeByCategory($query, string $category)
+    public function scopeByCategory($query, int $categoryId)
     {
-        return $query->where('category', $category);
+        return $query->where('category_id', $categoryId);
     }
 
     public function scopeOverdue($query)
@@ -90,13 +92,13 @@ class Task extends Model
 
     // ─── Relationships ────────────────────────────────────────────────────────
 
-    public function histories(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function histories(): HasMany
     {
         return $this->hasMany(TaskHistory::class);
     }
 
-    public function categoryModel(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class , 'category', 'name');
+        return $this->belongsTo(Category::class);
     }
 }

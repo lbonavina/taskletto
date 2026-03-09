@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
+use App\Models\Category;
 use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -21,10 +22,10 @@ class TaskControllerTest extends TestCase
         $response = $this->getJson('/api/v1/tasks');
 
         $response->assertOk()
-                 ->assertJsonStructure([
-                     'data' => [['id', 'title', 'status', 'priority', 'created_at']],
-                     'meta' => ['current_page', 'last_page', 'per_page', 'total'],
-                 ]);
+            ->assertJsonStructure([
+                'data' => [['id', 'title', 'status', 'priority', 'created_at']],
+                'meta' => ['current_page', 'last_page', 'per_page', 'total'],
+            ]);
     }
 
     public function test_can_filter_tasks_by_status(): void
@@ -49,6 +50,18 @@ class TaskControllerTest extends TestCase
         $this->assertCount(2, $response->json('data'));
     }
 
+    public function test_can_filter_tasks_by_category(): void
+    {
+        $category = Category::factory()->create();
+        Task::factory(2)->create(['category_id' => $category->id]);
+        Task::factory(3)->create(['category_id' => null]);
+
+        $response = $this->getJson("/api/v1/tasks?category_id={$category->id}");
+
+        $response->assertOk();
+        $this->assertCount(2, $response->json('data'));
+    }
+
     public function test_can_search_tasks_by_title(): void
     {
         Task::factory()->create(['title' => 'Tarefa especial de teste']);
@@ -64,18 +77,20 @@ class TaskControllerTest extends TestCase
 
     public function test_can_create_task(): void
     {
+        $category = Category::factory()->create();
+
         $payload = [
-            'title'    => 'Nova tarefa de teste',
+            'title' => 'Nova tarefa de teste',
             'priority' => 'high',
-            'category' => 'Testes',
+            'category_id' => $category->id,
             'due_date' => now()->addDays(7)->toDateString(),
         ];
 
         $response = $this->postJson('/api/v1/tasks', $payload);
 
         $response->assertCreated()
-                 ->assertJsonPath('data.title', $payload['title'])
-                 ->assertJsonPath('data.status.value', 'pending'); // default
+            ->assertJsonPath('data.title', $payload['title'])
+            ->assertJsonPath('data.status.value', 'pending'); // default
 
         $this->assertDatabaseHas('tasks', ['title' => $payload['title']]);
     }
@@ -85,18 +100,29 @@ class TaskControllerTest extends TestCase
         $response = $this->postJson('/api/v1/tasks', ['priority' => 'high']);
 
         $response->assertUnprocessable()
-                 ->assertJsonValidationErrors(['title']);
+            ->assertJsonValidationErrors(['title']);
     }
 
     public function test_cannot_create_task_with_invalid_status(): void
     {
         $response = $this->postJson('/api/v1/tasks', [
-            'title'  => 'Tarefa inválida',
+            'title' => 'Tarefa inválida',
             'status' => 'invalid_status',
         ]);
 
         $response->assertUnprocessable()
-                 ->assertJsonValidationErrors(['status']);
+            ->assertJsonValidationErrors(['status']);
+    }
+
+    public function test_cannot_create_task_with_invalid_category_id(): void
+    {
+        $response = $this->postJson('/api/v1/tasks', [
+            'title' => 'Tarefa com categoria inválida',
+            'category_id' => 9999,
+        ]);
+
+        $response->assertUnprocessable()
+            ->assertJsonValidationErrors(['category_id']);
     }
 
     // ─── SHOW ─────────────────────────────────────────────────────────────────
@@ -108,14 +134,13 @@ class TaskControllerTest extends TestCase
         $response = $this->getJson("/api/v1/tasks/{$task->id}");
 
         $response->assertOk()
-                 ->assertJsonPath('data.id', $task->id);
+            ->assertJsonPath('data.id', $task->id);
     }
 
     public function test_returns_404_for_nonexistent_task(): void
     {
         $this->getJson('/api/v1/tasks/9999')
-             ->assertNotFound()
-             ->assertJsonPath('error', 'not_found');
+            ->assertNotFound();
     }
 
     // ─── UPDATE ───────────────────────────────────────────────────────────────
@@ -125,13 +150,26 @@ class TaskControllerTest extends TestCase
         $task = Task::factory()->create(['title' => 'Título antigo']);
 
         $response = $this->putJson("/api/v1/tasks/{$task->id}", [
-            'title'    => 'Título atualizado',
+            'title' => 'Título atualizado',
             'priority' => 'urgent',
         ]);
 
         $response->assertOk()
-                 ->assertJsonPath('data.title', 'Título atualizado')
-                 ->assertJsonPath('data.priority.value', 'urgent');
+            ->assertJsonPath('data.title', 'Título atualizado')
+            ->assertJsonPath('data.priority.value', 'urgent');
+    }
+
+    public function test_can_update_task_category(): void
+    {
+        $task = Task::factory()->create();
+        $newCategory = Category::factory()->create();
+
+        $response = $this->putJson("/api/v1/tasks/{$task->id}", [
+            'category_id' => $newCategory->id,
+        ]);
+
+        $response->assertOk()
+            ->assertJsonPath('data.category_id', $newCategory->id);
     }
 
     // ─── DESTROY ──────────────────────────────────────────────────────────────
@@ -141,7 +179,7 @@ class TaskControllerTest extends TestCase
         $task = Task::factory()->create();
 
         $this->deleteJson("/api/v1/tasks/{$task->id}")
-             ->assertNoContent();
+            ->assertNoContent();
 
         $this->assertSoftDeleted('tasks', ['id' => $task->id]);
     }
@@ -155,7 +193,7 @@ class TaskControllerTest extends TestCase
         $response = $this->patchJson("/api/v1/tasks/{$task->id}/complete");
 
         $response->assertOk()
-                 ->assertJsonPath('data.status.value', 'completed');
+            ->assertJsonPath('data.status.value', 'completed');
 
         $this->assertNotNull($task->fresh()->completed_at);
     }
@@ -165,8 +203,8 @@ class TaskControllerTest extends TestCase
         $task = Task::factory()->completed()->create();
 
         $this->patchJson("/api/v1/tasks/{$task->id}/complete")
-             ->assertStatus(409)
-             ->assertJsonPath('error', 'already_completed');
+            ->assertStatus(409)
+            ->assertJsonPath('error', 'already_completed');
     }
 
     public function test_can_reopen_completed_task(): void
@@ -176,7 +214,7 @@ class TaskControllerTest extends TestCase
         $response = $this->patchJson("/api/v1/tasks/{$task->id}/reopen");
 
         $response->assertOk()
-                 ->assertJsonPath('data.status.value', 'pending');
+            ->assertJsonPath('data.status.value', 'pending');
 
         $this->assertNull($task->fresh()->completed_at);
     }
@@ -191,9 +229,9 @@ class TaskControllerTest extends TestCase
         $response = $this->getJson('/api/v1/tasks/stats');
 
         $response->assertOk()
-                 ->assertJsonStructure([
-                     'data' => ['total', 'by_status', 'by_priority', 'overdue', 'completion_rate'],
-                 ]);
+            ->assertJsonStructure([
+                'data' => ['total', 'by_status', 'by_priority', 'overdue', 'completion_rate'],
+            ]);
 
         $this->assertEquals(8, $response->json('data.total'));
     }
@@ -203,7 +241,7 @@ class TaskControllerTest extends TestCase
     public function test_health_endpoint(): void
     {
         $this->getJson('/api/v1/health')
-             ->assertOk()
-             ->assertJsonPath('status', 'ok');
+            ->assertOk()
+            ->assertJsonPath('status', 'ok');
     }
 }

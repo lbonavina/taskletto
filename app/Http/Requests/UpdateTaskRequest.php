@@ -21,7 +21,7 @@ class UpdateTaskRequest extends FormRequest
             'description' => ['sometimes', 'nullable', 'string', 'max:65535'],
             'status' => ['sometimes', new Enum(TaskStatus::class)],
             'priority' => ['sometimes', new Enum(TaskPriority::class)],
-            'category' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'category_id' => ['sometimes', 'nullable', 'integer', 'exists:categories,id'],
             'due_date' => ['sometimes', 'nullable', 'date'],
         ];
     }
@@ -33,7 +33,7 @@ class UpdateTaskRequest extends FormRequest
             'description' => 'descrição',
             'status' => 'status',
             'priority' => 'prioridade',
-            'category' => 'categoria',
+            'category_id' => 'categoria',
             'due_date' => 'data de vencimento',
         ];
     }

@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
+use App\Models\Category;
 use App\Models\Task;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -16,14 +17,12 @@ class TaskFactory extends Factory
         $status = $this->faker->randomElement(TaskStatus::cases());
 
         return [
-            'title'        => $this->faker->sentence(rand(3, 8), false),
-            'description'  => $this->faker->optional(0.7)->paragraph(),
-            'status'       => $status,
-            'priority'     => $this->faker->randomElement(TaskPriority::cases()),
-            'category'     => $this->faker->optional(0.6)->randomElement([
-                'Trabalho', 'Pessoal', 'Estudos', 'Saúde', 'Finanças', 'Projetos',
-            ]),
-            'due_date'     => $this->faker->optional(0.5)->dateTimeBetween('-1 week', '+1 month'),
+            'title' => $this->faker->sentence(rand(3, 8), false),
+            'description' => $this->faker->optional(0.7)->paragraph(),
+            'status' => $status,
+            'priority' => $this->faker->randomElement(TaskPriority::cases()),
+            'category_id' => $this->faker->optional(0.6) ? Category::inRandomOrder()->first()?->id ?? Category::factory() : null,
+            'due_date' => $this->faker->optional(0.5)->dateTimeBetween('-1 week', '+1 month'),
             'completed_at' => $status === TaskStatus::Completed ? now() : null,
         ];
     }
@@ -47,7 +46,12 @@ class TaskFactory extends Factory
     {
         return $this->state([
             'due_date' => now()->subDays(rand(1, 30)),
-            'status'   => TaskStatus::Pending,
+            'status' => TaskStatus::Pending,
         ]);
+    }
+
+    public function withCategory(?Category $category = null): static
+    {
+        return $this->state(['category_id' => $category?->id ?? Category::factory()]);
     }
 }
