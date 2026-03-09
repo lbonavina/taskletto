@@ -1,5 +1,4 @@
 <div align="center">
-
 ![Taskletto](https://github.com/lbonavina/taskletto/blob/main/public/logo-taskletto-light.png#gh-dark-mode-only)
 ![Taskletto](https://github.com/lbonavina/taskletto/blob/main/public/logo-taskletto.png#gh-light-mode-only)
 
@@ -15,7 +14,6 @@
 <br/>
 
 ### [🌐 lbonavina.github.io/taskletto](https://lbonavina.github.io/taskletto)
-
 ### [⬇️ Download for Windows (.exe)](https://github.com/lbonavina/taskletto/releases/latest)
 
 </div>
@@ -35,11 +33,18 @@
 
 **✅ Tasks**
 - Priorities, statuses and categories
+- Recurrence: daily, weekly, monthly — auto-spawns on completion
+- Time tracking: start/stop timer, estimated vs. tracked time, progress bar
 - Real-time search and filters
 - Overdue task indicator
 
 </td>
 <td width="50%">
+
+**📊 Dashboard**
+- KPI cards with daily overview
+- Today's tasks section and streak tracker
+- Interactive chart with tooltips
 
 **🎨 Interface**
 - Dark and light theme
@@ -48,6 +53,7 @@
 
 **⚙️ Technical**
 - REST API with Swagger documentation
+- Export/import JSON for backup and device migration
 - Docker ready
 - SQLite by default, MySQL support
 
@@ -57,10 +63,36 @@
 
 ---
 
+## 🆕 What's new in v1.2.0
+
+### ✅ Task Recurrence
+Tasks can now repeat automatically — choose **daily**, **weekly**, or **monthly**. When you complete a recurring task, the next occurrence is spawned automatically.
+
+### ⏱️ Time Tracking
+- Start/stop timer directly from the task sidebar
+- Set `estimated_minutes` displayed as hours + minutes
+- Visual progress bar comparing tracked vs. estimated time
+
+### 📊 Redesigned Dashboard
+- KPI cards with background highlights
+- **Today** section showing what's due now
+- Streak counter to keep you motivated
+- Tooltip support on the activity chart
+
+### 💾 JSON Export / Import
+Back up all your tasks and notes to a JSON file, or migrate data between devices with a single import.
+
+### 💬 Improved Comments
+- Pagination for long comment threads
+- Inline editing with Markdown preview
+- Comment count displayed per task
+- Task sidebar reorganized into stacked cards: Info, Time, and Comments
+
+---
+
 ## 🖥️ Desktop app (NativePHP)
 
 > **Requirements:** PHP 8.2+, Composer, Node.js 18+, npm
-
 ```bash
 # 1. Clone the repository
 git clone https://github.com/lbonavina/taskletto.git
@@ -92,7 +124,6 @@ The app will open as a native desktop window. ✅
 ---
 
 ## 🚀 Run locally (web)
-
 ```bash
 git clone https://github.com/lbonavina/taskletto.git
 cd taskletto
@@ -108,7 +139,6 @@ Visit **http://localhost:8000**
 ---
 
 ## 🐳 Docker
-
 ```bash
 docker compose up -d
 docker compose exec app php artisan migrate
@@ -121,7 +151,10 @@ Visit **http://localhost:8000**
 ## 🔮 Roadmap
 
 - [ ] Cloud sync (Google Drive / GitHub)
+- [x] Export / import JSON for backup and migration
 - [x] Export notes as PDF and Markdown
+- [x] Task recurrence (daily, weekly, monthly)
+- [x] Time tracking with progress bar
 - [x] Desktop notifications for overdue tasks
 - [ ] macOS app
 - [ ] Customizable themes
