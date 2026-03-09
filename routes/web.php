@@ -39,6 +39,7 @@ Route::prefix('categories')->name('categories.')->group(function () {
 
 Route::get('/settings', [SettingsController::class, 'index'])->name('settings');
 Route::post('/settings/locale', [SettingsController::class, 'setLocale'])->name('settings.locale');
+Route::post('/settings/timezone', [SettingsController::class, 'setTimezone'])->name('settings.timezone');
 
 Route::get('/settings/export', [\App\Http\Controllers\Web\DataPortabilityController::class, 'export'])->name('settings.export');
 Route::post('/settings/import', [\App\Http\Controllers\Web\DataPortabilityController::class, 'import'])->name('settings.import');

@@ -320,7 +320,7 @@
             font-weight: 600;
             padding: 1px 6px;
             border-radius: 20px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'DM Sans', monospace;
             animation: pulse-badge 2s infinite;
         }
 
@@ -363,7 +363,7 @@
         .sidebar-version-badge {
             font-size: 10px;
             font-weight: 600;
-            font-family: 'DM Mono', monospace;
+            font-family: 'DM Sans', monospace;
             padding: 2px 7px;
             border-radius: 20px;
             background: rgba(255, 145, 77, .12);
@@ -419,7 +419,7 @@
 
         .sidebar-footer-btn .sfb-hint {
             font-size: 10px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'DM Sans', monospace;
             opacity: .35;
             letter-spacing: .3px;
         }
@@ -694,7 +694,7 @@
             border-bottom: 2px solid color-mix(in srgb, var(--border) 150%, black);
             border-radius: 6px;
             font-size: 10.5px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'DM Sans', monospace;
             color: var(--text);
             font-weight: 600;
             white-space: nowrap;
@@ -909,7 +909,7 @@
         }
 
         .stat-value {
-            font-family: 'DM Mono', monospace;
+            font-family: 'DM Sans', monospace;
             font-size: 28px;
             font-weight: 500;
             color: var(--text);
@@ -931,7 +931,7 @@
             border-radius: 20px;
             font-size: 11px;
             font-weight: 500;
-            font-family: 'DM Mono', monospace;
+            font-family: 'DM Sans', monospace;
         }
 
         .badge-dot {
@@ -1568,7 +1568,7 @@
             background: transparent;
             transition: all .15s;
             line-height: 1;
-            font-family: 'DM Mono', monospace;
+            font-family: 'DM Sans', monospace;
         }
 
         .pagination .page-item .page-link:hover {
@@ -1804,7 +1804,7 @@
             <div class="sidebar-footer">
                 <div class="sidebar-version">
                     <span class="sidebar-version-name">Taskletto</span>
-                    <span class="sidebar-version-badge">v1.1</span>
+                    <span class="sidebar-version-badge">v{{ config('app.version') }}</span>
                 </div>
 
                 <button id="theme-toggle" onclick="toggleTheme()" class="sidebar-footer-btn" title="Alternar tema">

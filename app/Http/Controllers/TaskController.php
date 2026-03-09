@@ -15,7 +15,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 /**
  * @OA\Info(
  *     title="Taskletto",
- *     version="1.1.1",
+ *     version="1.2.0",
  *     description="API RESTful para gerenciamento de tarefas com suporte a prioridades, categorias e status.",
  *     @OA\Contact(
  *         email="seu@email.com",

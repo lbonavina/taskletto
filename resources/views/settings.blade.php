@@ -90,6 +90,66 @@
 
     {{-- About --}}
     <div class="card">
+        <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:16px">🕐 Fuso Horário</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">
+            Define o horário usado em datas e notificações. Selecione o fuso da sua região para que os horários do app coincidam com o seu relógio.
+        </p>
+
+        @if(session('timezone_saved'))
+            <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);color:var(--success);font-size:13px;margin-bottom:16px">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8l4 4 8-8"/></svg>
+                Fuso horário salvo com sucesso.
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('settings.timezone') }}" id="timezone-form">
+            @csrf
+            @php $currentTz = \App\Models\AppSetting::get('timezone', config('app.timezone')); @endphp
+            <div class="select-wrap" style="width:320px">
+                <select name="timezone" onchange="document.getElementById('timezone-form').submit()">
+                    @foreach([
+                        'UTC'                         => 'UTC',
+                        'America/Sao_Paulo'           => 'América/São Paulo (BRT, UTC-3)',
+                        'America/Manaus'              => 'América/Manaus (AMT, UTC-4)',
+                        'America/Belem'               => 'América/Belém (BRT, UTC-3)',
+                        'America/Fortaleza'           => 'América/Fortaleza (BRT, UTC-3)',
+                        'America/Recife'              => 'América/Recife (BRT, UTC-3)',
+                        'America/Noronha'             => 'América/Noronha (FNT, UTC-2)',
+                        'America/New_York'            => 'América/New York (EST, UTC-5)',
+                        'America/Chicago'             => 'América/Chicago (CST, UTC-6)',
+                        'America/Denver'              => 'América/Denver (MST, UTC-7)',
+                        'America/Los_Angeles'         => 'América/Los Angeles (PST, UTC-8)',
+                        'America/Buenos_Aires'        => 'América/Buenos Aires (ART, UTC-3)',
+                        'America/Santiago'            => 'América/Santiago (CLT, UTC-4)',
+                        'America/Bogota'              => 'América/Bogotá (COT, UTC-5)',
+                        'America/Lima'                => 'América/Lima (PET, UTC-5)',
+                        'America/Mexico_City'         => 'América/Cidade do México (CST, UTC-6)',
+                        'Europe/Lisbon'               => 'Europa/Lisboa (WET, UTC+0)',
+                        'Europe/London'               => 'Europa/Londres (GMT, UTC+0)',
+                        'Europe/Madrid'               => 'Europa/Madrid (CET, UTC+1)',
+                        'Europe/Paris'                => 'Europa/Paris (CET, UTC+1)',
+                        'Europe/Berlin'               => 'Europa/Berlim (CET, UTC+1)',
+                        'Europe/Moscow'               => 'Europa/Moscou (MSK, UTC+3)',
+                        'Asia/Tokyo'                  => 'Ásia/Tóquio (JST, UTC+9)',
+                        'Asia/Shanghai'               => 'Ásia/Xangai (CST, UTC+8)',
+                        'Asia/Kolkata'                => 'Ásia/Calcutá (IST, UTC+5:30)',
+                        'Asia/Dubai'                  => 'Ásia/Dubai (GST, UTC+4)',
+                        'Australia/Sydney'            => 'Austrália/Sydney (AEDT, UTC+11)',
+                    ] as $tzKey => $tzLabel)
+                        <option value="{{ $tzKey }}" {{ $currentTz === $tzKey ? 'selected' : '' }}>
+                            {{ $tzLabel }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <p style="font-size:11px;color:var(--muted);margin-top:8px">
+                Horário atual do servidor: <strong style="font-family:'DM Sans',monospace">{{ now()->format('d/m/Y H:i:s') }}</strong>
+            </p>
+        </form>
+    </div>
+
+    {{-- About --}}
+    <div class="card">
         <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:16px">{{ __('app.settings_about') }}</div>
         <div style="display:flex;flex-direction:column;gap:12px;font-size:13px">
             <div style="display:flex;justify-content:space-between;padding-bottom:10px;border-bottom:1px solid var(--border)">

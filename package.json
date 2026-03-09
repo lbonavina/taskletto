@@ -1,7 +1,7 @@
 {
     "name": "taskletto",
     "productName": "Taskletto",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "description": "Gerenciador de tarefas e notas",
     "$schema": "https://www.schemastore.org/package.json",
     "private": true,
@@ -29,16 +29,26 @@
         },
         "nsis": {
             "oneClick": false,
+            "perMachine": false,
+            "allowElevation": true,
             "allowToChangeInstallationDirectory": true,
             "installerIcon": "public/icon.ico",
             "uninstallerIcon": "public/icon.ico",
             "installerHeaderIcon": "public/icon.ico",
+            "installerHeader": "public/installer-header.bmp",
+            "installerSidebar": "public/installer-sidebar.bmp",
             "createDesktopShortcut": true,
             "createStartMenuShortcut": true,
+            "menuCategory": "Taskletto",
             "shortcutName": "Taskletto",
-            "installationDirectory": "$PROGRAMFILES\\Taskletto",
+            "license": "installer/LICENSE.rtf",
             "displayLanguageSelector": false,
-            "license": null
+            "language": "1046",
+            "runAfterFinish": true,
+            "deleteAppDataOnUninstall": false,
+            "uninstallDisplayName": "Taskletto ${version}",
+            "artifactName": "Taskletto-Setup-${version}.${ext}",
+            "include": "installer/installer.nsh"
         },
         "mac": {
             "icon": "public/icon.ico",

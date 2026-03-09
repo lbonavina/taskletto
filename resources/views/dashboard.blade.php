@@ -36,7 +36,7 @@
             letter-spacing: 1.4px;
             text-transform: uppercase;
             color: var(--muted);
-            font-family: 'DM Mono', monospace;
+            font-family: 'DM Sans', monospace;
             margin-bottom: 8px;
         }
 
@@ -151,7 +151,7 @@
             font-size: 10px;
             padding: 1px 7px;
             border-radius: 20px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'DM Sans', monospace;
             font-weight: 700;
         }
 
@@ -241,7 +241,7 @@
             padding: 2px 7px;
             border-radius: 20px;
             font-weight: 600;
-            font-family: 'DM Mono', monospace;
+            font-family: 'DM Sans', monospace;
             background: var(--surface2);
             color: var(--muted);
         }
@@ -347,7 +347,7 @@
         .nl-time {
             font-size: 10px;
             color: var(--muted);
-            font-family: 'DM Mono', monospace;
+            font-family: 'DM Sans', monospace;
             flex-shrink: 0;
         }
 
@@ -409,7 +409,7 @@
         }
 
         .sc-pct {
-            font-family: 'DM Mono', monospace;
+            font-family: 'DM Sans', monospace;
             font-size: 12px;
             color: var(--accent);
             font-weight: 600;
@@ -446,7 +446,7 @@
         }
 
         .ring-big {
-            font-family: 'DM Mono', monospace;
+            font-family: 'DM Sans', monospace;
             font-size: 24px;
             font-weight: 600;
             color: var(--text);
@@ -476,7 +476,7 @@
 
         .sbar-cnt {
             font-size: 11px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'DM Sans', monospace;
             color: var(--muted);
         }
 
@@ -510,7 +510,7 @@
         }
 
         .ms-val {
-            font-family: 'DM Mono', monospace;
+            font-family: 'DM Sans', monospace;
             font-size: 20px;
             font-weight: 700;
             color: var(--text);
@@ -567,7 +567,7 @@
         .chart-lbl {
             font-size: 9px;
             color: var(--muted);
-            font-family: 'DM Mono', monospace;
+            font-family: 'DM Sans', monospace;
         }
 
         .chart-leg {
@@ -653,7 +653,7 @@
 
         .cat-cnt {
             font-size: 11px;
-            font-family: 'DM Mono', monospace;
+            font-family: 'DM Sans', monospace;
             color: var(--muted);
             width: 18px;
             text-align: right;

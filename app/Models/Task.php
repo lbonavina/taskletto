@@ -66,7 +66,7 @@ class Task extends Model
 
     public function scopeOverdue($query)
     {
-        return $query->where('due_date', '<', now())
+        return $query->whereDate('due_date', '<', today())
             ->where('status', '!=', TaskStatus::Completed);
     }
 
@@ -80,7 +80,7 @@ class Task extends Model
     public function isOverdue(): bool
     {
         return $this->due_date
-            && $this->due_date->isPast()
+            && $this->due_date->startOfDay()->lt(today())
             && !$this->isCompleted();
     }
 

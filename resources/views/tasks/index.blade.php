@@ -36,6 +36,9 @@
     <a href="/tasks?status=in_progress" class="qf {{ request('status') === 'in_progress' ? 'active' : '' }}">
         {{ __('app.tasks_in_progress_filter') }}
     </a>
+    <a href="/tasks?quick=recurring" class="qf {{ request('quick') === 'recurring' ? 'active' : '' }}" style="color:#a78bfa;border-color:rgba(167,139,250,.2);background:rgba(167,139,250,.06)">
+        ↻ Recorrentes
+    </a>
     <div style="flex:1"></div>
 </div>
 
@@ -165,6 +168,9 @@
                             <td class="td-title" onclick="window.location='/tasks/{{ $task->id }}'">
                                 <span class="task-title-text">{{ $task->title }}</span>
                                 @if($isOverdue)<span class="overdue-chip"> ⚠</span>@endif
+                                @if($task->isRecurring())
+                                    <span title="{{ $task->recurrence->label() }}" style="display:inline-flex;align-items:center;margin-left:5px;font-size:10px;color:#a78bfa;background:rgba(167,139,250,.12);border-radius:4px;padding:1px 5px;font-family:'DM Sans',monospace;vertical-align:middle;line-height:1.4">↻ {{ $task->recurrence->label() }}</span>
+                                @endif
                             </td>
                             <td onclick="event.stopPropagation()">
                                 <span class="badge status-{{ $task->status->value }} inline-edit-trigger"
@@ -191,7 +197,7 @@
                             </td>
                             <td onclick="window.location='/tasks/{{ $task->id }}'">
                                 @if($dueLabel)
-                                    <span style="font-family:'DM Mono',monospace;font-size:12px;color:{{ $dueLabel['color'] }}">
+                                    <span style="font-family:'DM Sans',monospace;font-size:12px;color:{{ $dueLabel['color'] }}">
                                         {{ $dueLabel['text'] }}
                                     </span>
                                 @else
@@ -270,7 +276,7 @@
 }
 .qf:hover { color: var(--text); border-color: #3a3a46; }
 .qf.active { background: var(--accent); color: #0f0f11; border-color: var(--accent); font-weight: 600; }
-.qf-count { background: rgba(0,0,0,.2); border-radius: 10px; padding: 0 5px; font-family: 'DM Mono',monospace; font-size: 10px; }
+.qf-count { background: rgba(0,0,0,.2); border-radius: 10px; padding: 0 5px; font-family: 'DM Sans',monospace; font-size: 10px; }
 .qf.active .qf-count { background: rgba(0,0,0,.15); }
 .qf-danger { background: rgba(224,84,84,.3) !important; color: var(--danger) !important; }
 
@@ -367,7 +373,7 @@ kbd {
     display: inline-flex; align-items: center; justify-content: center;
     min-width: 28px; height: 22px; padding: 0 6px;
     background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 5px; font-family: 'DM Mono',monospace; font-size: 11px;
+    border-radius: 5px; font-family: 'DM Sans',monospace; font-size: 11px;
     color: var(--text); font-weight: 600; flex-shrink: 0;
 }
 

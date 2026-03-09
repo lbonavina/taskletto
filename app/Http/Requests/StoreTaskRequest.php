@@ -44,8 +44,9 @@ class StoreTaskRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->mergeIfMissing([
-            'status' => TaskStatus::Pending->value,
-            'priority' => TaskPriority::Medium->value,
+            'status'     => TaskStatus::Pending->value,
+            'priority'   => TaskPriority::Medium->value,
+            'recurrence' => 'none',
         ]);
     }
 }

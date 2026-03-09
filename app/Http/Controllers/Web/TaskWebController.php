@@ -20,6 +20,7 @@ class TaskWebController extends Controller
                 'urgent' => $query->where('priority', 'urgent')->whereNotIn('status', ['completed', 'cancelled']),
                 'today' => $query->whereDate('due_date', today())->whereNotIn('status', ['completed', 'cancelled']),
                 'overdue' => $query->overdue(),
+                'recurring' => $query->where('recurrence', '!=', 'none')->whereNotIn('status', ['completed', 'cancelled']),
                 'created_today' => $query->whereDate('created_at', today()),
                 'created_week' => $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]),
                 'created_month' => $query->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year),

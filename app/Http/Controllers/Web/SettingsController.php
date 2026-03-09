@@ -31,4 +31,15 @@ class SettingsController extends Controller
 
         return redirect()->route('settings')->with('locale_saved', true);
     }
+
+    public function setTimezone(Request $request)
+    {
+        $tz = $request->input('timezone', 'UTC');
+
+        if (in_array($tz, timezone_identifiers_list())) {
+            AppSetting::set('timezone', $tz);
+        }
+
+        return redirect()->route('settings')->with('timezone_saved', true);
+    }
 }
