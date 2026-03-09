@@ -48,6 +48,7 @@ Route::prefix('notes')->name('notes.')->group(function () {
     Route::get('/', [\App\Http\Controllers\Web\NoteController::class , 'index'])->name('index');
     Route::post('/', [\App\Http\Controllers\Web\NoteController::class , 'store'])->name('store');
     Route::get('/{note}/export', [\App\Http\Controllers\Web\NoteController::class , 'export'])->name('export');
+    Route::get('/{note}/export-pdf', [\App\Http\Controllers\Web\NoteController::class , 'exportPdf'])->name('export.pdf');
     Route::get('/{note}', [\App\Http\Controllers\Web\NoteController::class , 'show'])->name('show');
     Route::put('/{note}', [\App\Http\Controllers\Web\NoteController::class , 'update'])->name('update');
     Route::delete('/{note}', [\App\Http\Controllers\Web\NoteController::class , 'destroy'])->name('destroy');

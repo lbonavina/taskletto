@@ -75,6 +75,9 @@ return [
     'filter_due_today' => '📅 Vence hoje',
     'filter_overdue' => '⚠ Atrasadas',
     'filter_in_progress' => '⚡ Em progresso',
+    'filter_pending' => '🕐 Pendentes',
+    'filter_cancelled' => '✕ Canceladas',
+    'filter_recurring' => '↻ Recorrentes',
     'filter_created_today' => '🆕 Criadas hoje',
     'filter_this_week' => '📆 Esta semana',
     'filter_this_month' => '🗓 Este mês',
@@ -211,6 +214,49 @@ return [
     'dash_completed_legend' => 'Concluídas',
     'dash_categories' => 'Categorias',
     'dash_manage' => 'gerenciar →',
+
+    // ── Dashboard – strings hardcoded
+    'dash_in_progress_kpi'    => 'Em andamento',
+    'dash_due_today_kpi'      => 'Vencem hoje',
+    'dash_tracked_today_kpi'  => 'Rastreado hoje',
+    'dash_today_section'      => 'Hoje',
+    'dash_productivity'       => 'Produtividade',
+    'dash_streak_day'         => 'dia seguido',
+    'dash_streak_days'        => 'dias seguidos',
+    'dash_recurring_label'    => 'Recorrentes',
+    'dash_tracked_label'      => 'rastreado hoje',
+    'dash_chart_tooltip_created'   => 'Criadas',
+    'dash_chart_tooltip_completed' => 'Concluídas',
+
+    // ── Settings – timezone section
+    'settings_timezone'       => 'Fuso Horário',
+    'settings_tz_desc'        => 'Define o horário usado em datas e notificações. Selecione o fuso da sua região para que os horários do app coincidam com o seu relógio.',
+    'settings_tz_saved'       => 'Fuso horário salvo com sucesso.',
+    'settings_tz_current'     => 'Horário atual do servidor',
+
+    // ── Settings – backup section
+    'settings_backup'         => 'Backup & Restauração',
+    'settings_backup_desc'    => 'Exporte todos os seus dados (tasks, notas, categorias, comentários e histórico de tempo) num arquivo .json. Para restaurar em outro computador, basta importar o arquivo.',
+    'settings_export_title'   => 'Exportar dados',
+    'settings_export_sub'     => 'Baixa um arquivo .json completo',
+    'settings_export_btn'     => 'Exportar agora',
+    'settings_import_title'   => 'Importar dados',
+    'settings_import_sub'     => 'Restaura a partir de um backup',
+    'settings_import_btn'     => 'Selecionar arquivo',
+    'settings_import_warn'    => 'A importação <strong>adiciona</strong> os dados ao banco atual — não apaga os existentes. Para uma restauração limpa, exclua os dados manualmente antes de importar.',
+    'settings_import_loading' => '⏳ Importando...',
+    'settings_import_err'     => 'Erro ao importar.',
+    'settings_import_err_conn'=> 'Erro de conexão ao importar.',
+
+    // ── Settings – API endpoints descriptions
+    'api_list_tasks'    => 'Listar tarefas',
+    'api_create_task'   => 'Criar tarefa',
+    'api_get_task'      => 'Buscar tarefa',
+    'api_update_task'   => 'Atualizar tarefa',
+    'api_delete_task'   => 'Excluir tarefa',
+    'api_complete_task' => 'Concluir tarefa',
+    'api_reopen_task'   => 'Reabrir tarefa',
+    'api_stats'         => 'Estatísticas',
 
     // ── Layout / Sidebar ──────────────────────────────────────────────────────
     'layout_confirm_title' => 'Confirmar',
@@ -364,6 +410,7 @@ return [
     'note_unpin_title' => 'Desafixar nota',
     'note_pin_title' => 'Fixar nota',
     'note_export_title' => 'Exportar como Markdown',
+    'note_export_pdf_title' => 'Imprimir / Exportar como PDF',
     'note_img_url_ph' => 'https://exemplo.com/imagem.jpg',
     'note_img_alt_ph' => 'Texto alternativo (opcional)',
     'note_no_category' => '— Nenhuma —',

@@ -9,7 +9,7 @@ class Note extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['title', 'content', 'color', 'pinned', 'category'];
+    protected $fillable = ['title', 'content', 'color', 'pinned', 'category', 'tags'];
 
     protected $casts = [
         'pinned' => 'boolean',
@@ -25,5 +25,34 @@ class Note extends Model
         $text = strip_tags($this->content ?? '');
         $text = preg_replace('/\s+/', ' ', trim($text));
         return mb_strlen($text) > $chars ? mb_substr($text, 0, $chars) . '…' : $text;
+    }
+
+    /** Returns tags as a clean array. */
+    public function getTagsArrayAttribute(): array
+    {
+        if (!$this->tags) return [];
+        return array_values(array_filter(
+            array_map('trim', explode(',', $this->tags))
+        ));
+    }
+
+    /** Returns all distinct tags across all notes with counts. */
+    public static function allTags(): array
+    {
+        try {
+            $rows = static::whereNotNull('tags')->pluck('tags');
+        } catch (\Exception $e) {
+            // Column 'tags' may not exist yet if migration hasn't run
+            return [];
+        }
+        $counts = [];
+        foreach ($rows as $raw) {
+            foreach (array_filter(array_map('trim', explode(',', $raw))) as $tag) {
+                $counts[$tag] = ($counts[$tag] ?? 0) + 1;
+            }
+        }
+        arsort($counts);
+        return array_map(fn($tag, $count) => ['tag' => $tag, 'count' => $count],
+            array_keys($counts), array_values($counts));
     }
 }

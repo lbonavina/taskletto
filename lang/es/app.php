@@ -364,6 +364,7 @@ return [
     'note_unpin_title' => 'Desfijar nota',
     'note_pin_title' => 'Fijar nota',
     'note_export_title' => 'Exportar como Markdown',
+    'note_export_pdf_title' => 'Imprimir / Exportar como PDF',
     'note_img_url_ph' => 'https://ejemplo.com/imagen.jpg',
     'note_img_alt_ph' => 'Texto alternativo (opcional)',
     'note_no_category' => '— Ninguna —',

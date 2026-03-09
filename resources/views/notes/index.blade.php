@@ -128,31 +128,42 @@ html[data-theme=light] .skeleton-line {
 }
 .note-card {
     background: var(--surface); border: 1px solid var(--border);
-    border-radius: 14px; padding: 18px; cursor: pointer;
-    transition: transform .15s, box-shadow .15s, border-color .15s;
-    text-decoration: none; display: block;
+    border-radius: 14px; padding: 0; cursor: pointer;
+    transition: transform .18s, box-shadow .18s, border-color .18s;
+    text-decoration: none; display: flex; flex-direction: column;
     position: relative; overflow: hidden;
-    animation: cardIn .18s ease both;
+    animation: cardIn .2s ease both;
 }
 @keyframes cardIn {
-    from { opacity: 0; transform: translateY(5px); }
+    from { opacity: 0; transform: translateY(6px); }
     to   { opacity: 1; transform: translateY(0); }
 }
+/* Color accent strip — left border + top glow */
 .note-card::before {
     content: ''; position: absolute;
-    top: 0; left: 0; right: 0; height: 3px;
-    background: var(--note-color, var(--accent)); opacity: .8;
+    top: 0; left: 0; bottom: 0; width: 3px;
+    background: var(--note-color, var(--accent));
+    border-radius: 14px 0 0 14px;
+}
+.note-card::after {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 60px;
+    background: linear-gradient(180deg, rgba(var(--note-color-rgb, 255,145,77),.07) 0%, transparent 100%);
+    pointer-events: none;
 }
 .note-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0,0,0,.25);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,.3), 0 0 0 1px var(--note-color, var(--accent));
     border-color: var(--note-color, var(--accent));
 }
-.note-card-pin { position: absolute; top: 14px; right: 14px; font-size: 13px; opacity: .6; }
+.note-card-body {
+    padding: 16px 18px 12px 20px; flex: 1;
+}
+.note-card-pin { position: absolute; top: 12px; right: 12px; font-size: 12px; opacity: .7; }
 .note-card-title {
-    font-family: 'Codec Pro', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: -0.2px;
-    color: var(--text); margin-bottom: 8px; line-height: 1.3;
-    padding-right: 20px; white-space: nowrap;
+    font-family: 'Codec Pro', sans-serif; font-size: 14.5px; font-weight: 700; letter-spacing: -0.2px;
+    color: var(--text); margin-bottom: 7px; line-height: 1.3;
+    padding-right: 22px; white-space: nowrap;
     overflow: hidden; text-overflow: ellipsis;
 }
 .note-card-title mark, .note-card-excerpt mark {
@@ -160,19 +171,49 @@ html[data-theme=light] .skeleton-line {
     border-radius: 2px; padding: 0 2px; font-style: normal;
 }
 .note-card-excerpt {
-    font-size: 12.5px; color: var(--muted); line-height: 1.55;
+    font-size: 12.5px; color: var(--muted); line-height: 1.6;
     margin-bottom: 12px; display: -webkit-box;
     -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
 }
+.note-card-footer {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+    padding: 8px 18px 12px 20px;
+    border-top: 1px solid var(--border);
+    gap: 5px;
+}
 .note-card-meta {
-    display: flex; align-items: center; justify-content: space-between;
-    font-size: 11px; color: var(--muted); font-family: 'DM Sans', monospace;
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: var(--muted); font-family: 'DM Mono', monospace;
 }
 .note-cat-badge {
-    font-size: 11px; padding: 2px 8px;
-    border-radius: 20px; border: 1px solid var(--border);
+    font-size: 11px; padding: 2px 9px;
+    border-radius: 20px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
     color: var(--muted); white-space: nowrap;
 }
+
+/* Card tags row */
+.note-card-tags {
+    display: flex; flex-wrap: wrap; gap: 4px;
+    margin-top: 8px;
+}
+.note-card-tag {
+    font-size: 10.5px; padding: 1px 7px;
+    border-radius: 4px; font-weight: 600;
+    letter-spacing: .1px;
+    border: 1px solid transparent;
+    line-height: 1.6;
+}
+.note-card-tag:nth-child(4n+1) { background: rgba(96,165,250,.12); color: #60a5fa; border-color: rgba(96,165,250,.25); }
+.note-card-tag:nth-child(4n+2) { background: rgba(74,222,128,.11); color: #4ade80; border-color: rgba(74,222,128,.25); }
+.note-card-tag:nth-child(4n+3) { background: rgba(192,132,252,.12); color: #c084fc; border-color: rgba(192,132,252,.25); }
+.note-card-tag:nth-child(4n+4) { background: rgba(255,145,77,.12); color: var(--accent); border-color: rgba(255,145,77,.25); }
+html[data-theme=light] .note-card-tag:nth-child(4n+1) { background: rgba(59,130,246,.1); color: #2563eb; border-color: rgba(59,130,246,.25); }
+html[data-theme=light] .note-card-tag:nth-child(4n+2) { background: rgba(34,197,94,.1); color: #16a34a; border-color: rgba(34,197,94,.25); }
+html[data-theme=light] .note-card-tag:nth-child(4n+3) { background: rgba(168,85,247,.1); color: #7c3aed; border-color: rgba(168,85,247,.25); }
+html[data-theme=light] .note-card-tag:nth-child(4n+4) { background: rgba(234,88,12,.1); color: #c2410c; border-color: rgba(234,88,12,.25); }
+
 .notes-section-label {
     font-size: 11px; font-weight: 600; letter-spacing: .7px;
     text-transform: uppercase; color: var(--muted); margin: 24px 0 12px;
@@ -251,11 +292,23 @@ html[data-theme=light] .skeleton-line {
             <div class="notes-grid">
                 @foreach($pinned as $note)
                 <a href="/notes/{{ $note->id }}" class="note-card" style="--note-color:{{ $note->color }}">
-                    <span class="note-card-pin">📌</span>
-                    <div class="note-card-title">{{ $note->title ?: __('app.notes_untitled') }}</div>
-                    <div class="note-card-excerpt">{{ $note->excerpt() ?: __('app.notes_blank') }}</div>
-                    <div class="note-card-meta">
-                        <span>{{ $note->updated_at->diffForHumans() }}</span>
+                    <div class="note-card-body">
+                        <span class="note-card-pin">📌</span>
+                        <div class="note-card-title">{{ $note->title ?: __('app.notes_untitled') }}</div>
+                        <div class="note-card-excerpt">{{ $note->excerpt() ?: __('app.notes_blank') }}</div>
+                        @if(count($note->tags_array ?? []))
+                        <div class="note-card-tags">
+                            @foreach(array_slice($note->tags_array, 0, 4) as $tag)
+                                <span class="note-card-tag">#{{ $tag }}</span>
+                            @endforeach
+                        </div>
+                        @endif
+                    </div>
+                    <div class="note-card-footer">
+                        <span class="note-card-meta">
+                            <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="7"/><path d="M8 4v4l3 2"/></svg>
+                            {{ $note->updated_at->diffForHumans() }}
+                        </span>
                         @if($note->category)<span class="note-cat-badge">{{ $note->category }}</span>@endif
                     </div>
                 </a>
@@ -267,10 +320,22 @@ html[data-theme=light] .skeleton-line {
             <div class="notes-grid">
                 @foreach($others as $note)
                 <a href="/notes/{{ $note->id }}" class="note-card" style="--note-color:{{ $note->color }}">
-                    <div class="note-card-title">{{ $note->title ?: __('app.notes_untitled') }}</div>
-                    <div class="note-card-excerpt">{{ $note->excerpt() ?: __('app.notes_blank') }}</div>
-                    <div class="note-card-meta">
-                        <span>{{ $note->updated_at->diffForHumans() }}</span>
+                    <div class="note-card-body">
+                        <div class="note-card-title">{{ $note->title ?: __('app.notes_untitled') }}</div>
+                        <div class="note-card-excerpt">{{ $note->excerpt() ?: __('app.notes_blank') }}</div>
+                        @if(count($note->tags_array ?? []))
+                        <div class="note-card-tags">
+                            @foreach(array_slice($note->tags_array, 0, 4) as $tag)
+                                <span class="note-card-tag">#{{ $tag }}</span>
+                            @endforeach
+                        </div>
+                        @endif
+                    </div>
+                    <div class="note-card-footer">
+                        <span class="note-card-meta">
+                            <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="7"/><path d="M8 4v4l3 2"/></svg>
+                            {{ $note->updated_at->diffForHumans() }}
+                        </span>
                         @if($note->category)<span class="note-cat-badge">{{ $note->category }}</span>@endif
                     </div>
                 </a>
@@ -326,11 +391,23 @@ document.getElementById('btn-new-note-empty')?.addEventListener('click', createN
     function buildCard(note, term) {
         const pin = note.pinned ? '<span class="note-card-pin">📌</span>' : '';
         const cat = note.category ? `<span class="note-cat-badge">${esc(note.category)}</span>` : '';
+        const tagsHtml = (note.tags && note.tags.length)
+            ? `<div class="note-card-tags">${note.tags.slice(0,4).map(t => `<span class="note-card-tag">#${esc(t)}</span>`).join('')}</div>`
+            : '';
         return `<a href="/notes/${note.id}" class="note-card" style="--note-color:${esc(note.color)}">
-            ${pin}
-            <div class="note-card-title">${highlight(note.title, term)}</div>
-            <div class="note-card-excerpt">${highlight(note.excerpt, term)}</div>
-            <div class="note-card-meta"><span>${esc(note.updated_at)}</span>${cat}</div>
+            <div class="note-card-body">
+                ${pin}
+                <div class="note-card-title">${highlight(note.title, term)}</div>
+                <div class="note-card-excerpt">${highlight(note.excerpt, term)}</div>
+                ${tagsHtml}
+            </div>
+            <div class="note-card-footer">
+                <span class="note-card-meta">
+                    <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="7"/><path d="M8 4v4l3 2"/></svg>
+                    ${esc(note.updated_at)}
+                </span>
+                ${cat}
+            </div>
         </a>`;
     }
 

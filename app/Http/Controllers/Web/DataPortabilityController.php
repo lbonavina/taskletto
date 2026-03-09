@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Validator;
 
 class DataPortabilityController extends Controller
 {
-    private const EXPORT_VERSION = '1.2';
+    private const EXPORT_VERSION = '1.3';
 
     // ── Export ────────────────────────────────────────────────────────────────
 

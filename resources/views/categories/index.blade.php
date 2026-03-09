@@ -27,35 +27,39 @@
     @else
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px">
             @foreach($categories as $cat)
-                <div class="card" style="border-left:3px solid {{ $cat->color }}">
-                    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px">
-                        <div style="display:flex;align-items:center;gap:10px">
-                            <span style="font-size:22px">{{ $cat->icon }}</span>
-                            <div>
-                                <div style="font-weight:600;font-size:14px">{{ $cat->name }}</div>
-                                <div style="font-size:11px;color:var(--muted);font-family:'DM Sans',monospace">
-                                    {{ $cat->tasks_count }} {{ __('app.cat_tasks_count') }}</div>
+                <div class="cat-card" style="--cat-color:{{ $cat->color }}">
+                    <div class="cat-card-body">
+                        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+                            <div style="display:flex;align-items:center;gap:10px">
+                                <span style="font-size:22px;line-height:1">{{ $cat->icon }}</span>
+                                <div>
+                                    <div class="cat-card-title">{{ $cat->name }}</div>
+                                    <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px">
+                                        {{ $cat->tasks_count }} {{ __('app.cat_tasks_count') }}</div>
+                                </div>
+                            </div>
+                            <div style="display:flex;gap:4px;flex-shrink:0">
+                                <button class="btn btn-ghost btn-sm"
+                                    onclick="openEdit({{ $cat->id }}, '{{ addslashes($cat->name) }}', '{{ $cat->color }}', '{{ addslashes($cat->icon) }}', '{{ addslashes($cat->description ?? '') }}')">
+                                    {{ __('app.cat_edit_btn') }}
+                                </button>
+                                <form method="POST" action="/categories/{{ $cat->id }}"
+                                    onsubmit="return confirm('{{ __('app.cat_delete_confirm') }}')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">✕</button>
+                                </form>
                             </div>
                         </div>
-                        <div style="display:flex;gap:4px">
-                            <button class="btn btn-ghost btn-sm"
-                                onclick="openEdit({{ $cat->id }}, '{{ addslashes($cat->name) }}', '{{ $cat->color }}', '{{ addslashes($cat->icon) }}', '{{ addslashes($cat->description ?? '') }}')">
-                                {{ __('app.cat_edit_btn') }}
-                            </button>
-                            <form method="POST" action="/categories/{{ $cat->id }}"
-                                onsubmit="return confirm('{{ __('app.cat_delete_confirm') }}')">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">✕</button>
-                            </form>
-                        </div>
+                        @if($cat->description)
+                            <p style="font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:10px">{{ $cat->description }}</p>
+                        @endif
                     </div>
-                    @if($cat->description)
-                        <p style="font-size:12px;color:var(--muted);line-height:1.5">{{ $cat->description }}</p>
-                    @endif
-                    <a href="/tasks?category={{ $cat->id }}"
-                        style="font-size:11px;color:var(--accent);text-decoration:none;display:inline-block;margin-top:10px;font-weight:500">
-                        {{ __('app.cat_view_tasks') }}
-                    </a>
+                    <div class="cat-card-footer">
+                        <a href="/tasks?category={{ $cat->id }}" class="cat-card-link">
+                            {{ __('app.cat_view_tasks') }}
+                            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg>
+                        </a>
+                    </div>
                 </div>
             @endforeach
         </div>
@@ -65,6 +69,54 @@
 
 @push('scripts')
     <style>
+        /* ── Category card — mirrors note-card style ─────────────────────── */
+        .cat-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 14px; padding: 0;
+            display: flex; flex-direction: column;
+            position: relative; overflow: hidden;
+            transition: transform .18s, box-shadow .18s, border-color .18s;
+            animation: catCardIn .2s ease both;
+        }
+        @keyframes catCardIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .cat-card::before {
+            content: ''; position: absolute;
+            top: 0; left: 0; bottom: 0; width: 3px;
+            background: var(--cat-color, var(--accent));
+            border-radius: 14px 0 0 14px;
+        }
+        .cat-card::after {
+            content: ''; position: absolute;
+            top: 0; left: 0; right: 0; height: 60px;
+            background: linear-gradient(180deg, color-mix(in srgb, var(--cat-color, var(--accent)) 10%, transparent) 0%, transparent 100%);
+            pointer-events: none;
+        }
+        .cat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(0,0,0,.3), 0 0 0 1px var(--cat-color, var(--accent));
+            border-color: var(--cat-color, var(--accent));
+        }
+        .cat-card-body { padding: 16px 18px 12px 20px; flex: 1; }
+        .cat-card-title {
+            font-family: 'Codec Pro', sans-serif; font-size: 14.5px;
+            font-weight: 700; letter-spacing: -0.2px;
+            color: var(--text); line-height: 1.3;
+        }
+        .cat-card-footer {
+            display: flex; align-items: center;
+            padding: 8px 18px 12px 20px;
+            border-top: 1px solid var(--border);
+        }
+        .cat-card-link {
+            font-size: 11px; color: var(--accent); text-decoration: none;
+            font-weight: 600; display: inline-flex; align-items: center; gap: 4px;
+            transition: gap .15s;
+        }
+        .cat-card-link:hover { gap: 7px; }
+
         #modal-cat-portal {
             display: none;
             position: fixed;
