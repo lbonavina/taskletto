@@ -7,314 +7,232 @@
 @endsection
 
 @push('styles')
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.snow.min.css" rel="stylesheet">
     <style>
-        /* ── Quill dark theme ─────────────────────────────────────────── */
-        #quill-editor-wrap .ql-toolbar {
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-bottom: none;
-            border-radius: 10px 10px 0 0;
-            padding: 8px 10px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2px;
-        }
+            /* ── Tiptap task editor ────────────────────────────────────────── */
+            #task-editor-wrap {
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                overflow: hidden;
+                transition: border-color .15s, box-shadow .15s;
+            }
 
-        #quill-editor-wrap .ql-container {
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-top: none;
-            border-radius: 0 0 10px 10px;
-            font-family: 'DM Sans', sans-serif;
-            font-size: 14px;
-            min-height: 160px;
-            color: var(--text);
-        }
+            #task-editor-wrap:focus-within {
+                border-color: var(--accent);
+                box-shadow: 0 0 0 3px rgba(255, 145, 77, .1);
+            }
 
-        #quill-editor-wrap .ql-editor {
-            min-height: 160px;
-            padding: 12px 14px;
-            line-height: 1.7;
-            color: var(--text);
-        }
+            #task-editor-toolbar {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 2px;
+                padding: 8px 10px;
+                background: var(--surface2);
+                border-bottom: 1px solid var(--border);
+            }
 
-        #quill-editor-wrap .ql-editor.ql-blank::before {
-            color: var(--muted);
-            font-style: normal;
-            font-size: 13.5px;
-        }
+            .ttb-task-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 28px;
+                height: 28px;
+                border: none;
+                border-radius: 5px;
+                background: none;
+                color: var(--muted);
+                cursor: pointer;
+                font-size: 13px;
+                font-weight: 600;
+                transition: background .12s, color .12s;
+                font-family: inherit;
+            }
 
-        #quill-editor-wrap .ql-editor p {
-            margin-bottom: 4px;
-        }
+            .ttb-task-btn:hover {
+                background: rgba(255, 145, 77, .1);
+                color: var(--text);
+            }
 
-        #quill-editor-wrap .ql-editor h1,
-        #quill-editor-wrap .ql-editor h2,
-        #quill-editor-wrap .ql-editor h3 {
-            font-family: 'Codec Pro', sans-serif;
-            font-weight: 700;
-            color: var(--text);
-            line-height: 1.25;
-            margin: 12px 0 4px;
-            letter-spacing: -0.3px;
-        }
+            .ttb-task-btn.active {
+                background: rgba(255, 145, 77, .15);
+                color: var(--accent);
+            }
 
-        #quill-editor-wrap .ql-editor h1 {
-            font-size: 22px;
-            letter-spacing: -0.4px;
-        }
+            .ttb-task-sep {
+                width: 1px;
+                height: 20px;
+                background: var(--border);
+                margin: 4px 3px;
+                align-self: center;
+            }
 
-        #quill-editor-wrap .ql-editor h2 {
-            font-size: 18px;
-        }
+            #task-tiptap-editor {
+                background: var(--surface2);
+                min-height: 160px;
+                padding: 12px 14px;
+                font-size: 14px;
+                font-family: 'DM Sans', sans-serif;
+                line-height: 1.7;
+                color: var(--text);
+                outline: none;
+                cursor: text;
+            }
 
-        #quill-editor-wrap .ql-editor h3 {
-            font-size: 15px;
-            letter-spacing: -0.1px;
-        }
+            #task-tiptap-editor .tiptap { outline: none; min-height: 136px; }
 
-        #quill-editor-wrap .ql-editor ul,
-        #quill-editor-wrap .ql-editor ol {
-            padding-left: 20px;
-        }
+            #task-tiptap-editor .tiptap p.is-editor-empty:first-child::before {
+                content: attr(data-placeholder);
+                color: var(--muted);
+                font-size: 13.5px;
+                pointer-events: none;
+                float: left;
+                height: 0;
+            }
 
-        #quill-editor-wrap .ql-editor li {
-            margin: 2px 0;
-        }
+            #task-tiptap-editor .tiptap > * + * { margin-top: 4px; }
+            #task-tiptap-editor .tiptap p { margin-bottom: 4px; }
 
-        #quill-editor-wrap .ql-editor blockquote {
-            border-left: 3px solid var(--accent);
-            padding-left: 12px;
-            color: var(--muted);
-            margin: 8px 0;
-        }
+            #task-tiptap-editor .tiptap h1,
+            #task-tiptap-editor .tiptap h2,
+            #task-tiptap-editor .tiptap h3 {
+                font-family: 'Codec Pro', sans-serif;
+                font-weight: 700;
+                color: var(--text);
+                line-height: 1.25;
+                margin: 12px 0 4px;
+                letter-spacing: -0.3px;
+            }
 
-        #quill-editor-wrap .ql-editor code,
-        #quill-editor-wrap .ql-editor pre {
-            background: rgba(0, 0, 0, .3);
-            border-radius: 6px;
-            font-family: 'DM Sans', monospace;
-            font-size: 12.5px;
-            color: var(--accent);
-        }
+            #task-tiptap-editor .tiptap h1 { font-size: 22px; letter-spacing: -0.4px; }
+            #task-tiptap-editor .tiptap h2 { font-size: 18px; }
+            #task-tiptap-editor .tiptap h3 { font-size: 15px; }
 
-        #quill-editor-wrap .ql-editor pre {
-            padding: 10px 14px;
-        }
+            #task-tiptap-editor .tiptap ul,
+            #task-tiptap-editor .tiptap ol { padding-left: 20px; }
 
-        #quill-editor-wrap .ql-editor code {
-            padding: 1px 5px;
-        }
+            #task-tiptap-editor .tiptap li { margin: 2px 0; }
 
-        #quill-editor-wrap:focus-within .ql-toolbar,
-        #quill-editor-wrap:focus-within .ql-container {
-            border-color: var(--accent);
-        }
+            #task-tiptap-editor .tiptap blockquote {
+                border-left: 3px solid var(--accent);
+                padding-left: 12px;
+                color: var(--muted);
+                margin: 8px 0;
+            }
 
-        #quill-editor-wrap:focus-within .ql-toolbar {
-            box-shadow: 0 0 0 3px rgba(255, 145, 77, .1);
-        }
+            #task-tiptap-editor .tiptap code {
+                background: rgba(0, 0, 0, .3);
+                border-radius: 4px;
+                font-family: 'DM Sans', monospace;
+                font-size: 12.5px;
+                color: var(--accent);
+                padding: 1px 5px;
+            }
 
-        #quill-editor-wrap:focus-within .ql-container {
-            box-shadow: 0 0 0 3px rgba(255, 145, 77, .1);
-        }
+            #task-tiptap-editor .tiptap pre {
+                background: rgba(0, 0, 0, .3);
+                border-radius: 8px;
+                padding: 10px 14px;
+                font-family: 'DM Sans', monospace;
+                font-size: 12.5px;
+                color: var(--accent);
+                margin: 6px 0;
+            }
 
-        /* Toolbar buttons */
-        #quill-editor-wrap .ql-toolbar .ql-stroke {
-            stroke: var(--muted);
-            transition: stroke .15s;
-        }
+            #task-tiptap-editor .tiptap pre code { background: none; padding: 0; font-size: inherit; }
+            #task-tiptap-editor .tiptap strong { font-weight: 600; }
+            #task-tiptap-editor .tiptap em { font-style: italic; }
+            #task-tiptap-editor .tiptap s { text-decoration: line-through; }
 
-        #quill-editor-wrap .ql-toolbar .ql-fill {
-            fill: var(--muted);
-            transition: fill .15s;
-        }
+            #task-tiptap-editor .tiptap a {
+                color: var(--accent);
+                text-decoration: underline;
+                text-underline-offset: 2px;
+            }
 
-        #quill-editor-wrap .ql-toolbar button:hover .ql-stroke,
-        #quill-editor-wrap .ql-toolbar .ql-picker-label:hover .ql-stroke {
-            stroke: var(--text);
-        }
+            html[data-theme=light] #task-tiptap-editor {
+                background: #ffffff;
+                color: #18181c;
+            }
 
-        #quill-editor-wrap .ql-toolbar button:hover .ql-fill,
-        #quill-editor-wrap .ql-toolbar .ql-picker-label:hover .ql-fill {
-            fill: var(--text);
-        }
+            html[data-theme=light] #task-tiptap-editor .tiptap code,
+            html[data-theme=light] #task-tiptap-editor .tiptap pre {
+                background: rgba(0, 0, 0, .06);
+            }
 
-        #quill-editor-wrap .ql-toolbar button.ql-active .ql-stroke,
-        #quill-editor-wrap .ql-toolbar .ql-picker-label.ql-active .ql-stroke {
-            stroke: var(--accent) !important;
-        }
+            /* Description display area */
+            .desc-display {
+                font-size: 14px;
+                line-height: 1.7;
+                color: var(--text);
+            }
 
-        #quill-editor-wrap .ql-toolbar button.ql-active .ql-fill {
-            fill: var(--accent) !important;
-        }
+            .desc-display h1,
+            .desc-display h2,
+            .desc-display h3 {
+                font-family: 'Codec Pro', sans-serif;
+                font-weight: 700;
+                letter-spacing: -0.3px;
+                margin: 10px 0 4px;
+            }
 
-        #quill-editor-wrap .ql-toolbar button {
-            border-radius: 5px;
-            padding: 3px 5px;
-            transition: background .12s;
-        }
+            .desc-display h1 {
+                font-size: 22px;
+            }
 
-        #quill-editor-wrap .ql-toolbar button:hover {
-            background: rgba(255, 145, 77, .1);
-        }
+            .desc-display h2 {
+                font-size: 18px;
+            }
 
-        #quill-editor-wrap .ql-toolbar button.ql-active {
-            background: rgba(255, 145, 77, .15);
-        }
+            .desc-display h3 {
+                font-size: 15px;
+            }
 
-        /* Picker dropdowns */
-        #quill-editor-wrap .ql-toolbar .ql-picker-label {
-            color: var(--muted);
-            border-color: var(--border) !important;
-            border-radius: 5px;
-        }
+            .desc-display p {
+                margin-bottom: 4px;
+            }
 
-        #quill-editor-wrap .ql-toolbar .ql-picker-label:hover {
-            color: var(--text);
-        }
+            .desc-display ul,
+            .desc-display ol {
+                padding-left: 20px;
+            }
 
-        #quill-editor-wrap .ql-toolbar .ql-picker-options {
-            background: #1e1e26;
-            border: 1px solid var(--border) !important;
-            border-radius: 8px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, .5);
-            padding: 4px;
-        }
+            .desc-display li {
+                margin: 2px 0;
+            }
 
-        #quill-editor-wrap .ql-toolbar .ql-picker-item {
-            color: var(--muted);
-            border-radius: 5px;
-            padding: 4px 8px;
-        }
+            .desc-display blockquote {
+                border-left: 3px solid var(--accent);
+                padding-left: 12px;
+                color: var(--muted);
+                margin: 8px 0;
+            }
 
-        #quill-editor-wrap .ql-toolbar .ql-picker-item:hover {
-            color: var(--text);
-            background: rgba(255, 145, 77, .08);
-        }
+            .desc-display code {
+                background: rgba(0, 0, 0, .3);
+                border-radius: 4px;
+                font-family: 'DM Sans', monospace;
+                font-size: 12.5px;
+                color: var(--accent);
+                padding: 1px 5px;
+            }
 
-        #quill-editor-wrap .ql-toolbar .ql-picker-item.ql-selected {
-            color: var(--accent);
-        }
+            .desc-display pre {
+                background: rgba(0, 0, 0, .3);
+                border-radius: 8px;
+                padding: 10px 14px;
+                font-family: 'DM Sans', monospace;
+                font-size: 12.5px;
+                color: var(--accent);
+                margin: 6px 0;
+            }
 
-        /* Tooltip */
-        #quill-editor-wrap .ql-tooltip {
-            background: #1e1e26;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, .4);
-        }
+            .desc-display strong {
+                font-weight: 600;
+            }
 
-        #quill-editor-wrap .ql-tooltip input {
-            background: var(--surface2);
-            border-color: var(--border);
-            color: var(--text);
-            border-radius: 6px;
-        }
-
-        /* Light theme */
-        html[data-theme=light] #quill-editor-wrap .ql-toolbar {
-            background: #f4f4f6;
-        }
-
-        html[data-theme=light] #quill-editor-wrap .ql-container {
-            background: #ffffff;
-            color: #18181c;
-        }
-
-        html[data-theme=light] #quill-editor-wrap .ql-editor {
-            color: #18181c;
-        }
-
-        html[data-theme=light] #quill-editor-wrap .ql-toolbar .ql-stroke {
-            stroke: #8888a0;
-        }
-
-        html[data-theme=light] #quill-editor-wrap .ql-toolbar .ql-fill {
-            fill: #8888a0;
-        }
-
-        html[data-theme=light] #quill-editor-wrap .ql-toolbar .ql-picker-options {
-            background: #ffffff;
-        }
-
-        /* Description display area */
-        .desc-display {
-            font-size: 14px;
-            line-height: 1.7;
-            color: var(--text);
-        }
-
-        .desc-display h1,
-        .desc-display h2,
-        .desc-display h3 {
-            font-family: 'Codec Pro', sans-serif;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            margin: 10px 0 4px;
-        }
-
-        .desc-display h1 {
-            font-size: 22px;
-        }
-
-        .desc-display h2 {
-            font-size: 18px;
-        }
-
-        .desc-display h3 {
-            font-size: 15px;
-        }
-
-        .desc-display p {
-            margin-bottom: 4px;
-        }
-
-        .desc-display ul,
-        .desc-display ol {
-            padding-left: 20px;
-        }
-
-        .desc-display li {
-            margin: 2px 0;
-        }
-
-        .desc-display blockquote {
-            border-left: 3px solid var(--accent);
-            padding-left: 12px;
-            color: var(--muted);
-            margin: 8px 0;
-        }
-
-        .desc-display code {
-            background: rgba(0, 0, 0, .3);
-            border-radius: 4px;
-            font-family: 'DM Sans', monospace;
-            font-size: 12.5px;
-            color: var(--accent);
-            padding: 1px 5px;
-        }
-
-        .desc-display pre {
-            background: rgba(0, 0, 0, .3);
-            border-radius: 8px;
-            padding: 10px 14px;
-            font-family: 'DM Sans', monospace;
-            font-size: 12.5px;
-            color: var(--accent);
-            margin: 6px 0;
-        }
-
-        .desc-display strong {
-            font-weight: 600;
-        }
-
-        .desc-display em {
-            font-style: italic;
-        }
-    </style>
+            .desc-display em {
+                font-style: italic;
+            }
+        </style>
 @endpush
 
 @section('content')
@@ -354,7 +272,7 @@
                         style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:8px">
                         {{ __('app.task_section_desc') }}</div>
                     @if($task->description)
-                        <div class="desc-display ql-editor" style="padding:0">
+                        <div class="desc-display">
                             {!! $task->description !!}
                         </div>
                     @else
@@ -376,8 +294,27 @@
                 </div>
                 <div class="form-group">
                     <label>{{ __('app.task_label_description') }}</label>
-                    <div id="quill-editor-wrap">
-                        <div id="quill-editor"></div>
+                    <div id="task-editor-wrap">
+                        <div id="task-editor-toolbar">
+                            <button class="ttb-task-btn" data-cmd="bold" title="Negrito (Ctrl+B)"><b>B</b></button>
+                            <button class="ttb-task-btn" data-cmd="italic" title="Itálico (Ctrl+I)"><i>I</i></button>
+                            <button class="ttb-task-btn" data-cmd="underline" title="Sublinhado" style="text-decoration:underline">U</button>
+                            <button class="ttb-task-btn" data-cmd="strike" title="Tachado" style="text-decoration:line-through">S</button>
+                            <div class="ttb-task-sep"></div>
+                            <button class="ttb-task-btn" data-cmd="h1" title="Título 1" style="font-size:11px">H1</button>
+                            <button class="ttb-task-btn" data-cmd="h2" title="Título 2" style="font-size:11px">H2</button>
+                            <button class="ttb-task-btn" data-cmd="h3" title="Título 3" style="font-size:11px">H3</button>
+                            <div class="ttb-task-sep"></div>
+                            <button class="ttb-task-btn" data-cmd="bulletList" title="Lista com marcadores">•≡</button>
+                            <button class="ttb-task-btn" data-cmd="orderedList" title="Lista numerada">1≡</button>
+                            <div class="ttb-task-sep"></div>
+                            <button class="ttb-task-btn" data-cmd="blockquote" title="Citação">"</button>
+                            <button class="ttb-task-btn" data-cmd="codeBlock" title="Bloco de código" style="font-family:monospace;font-size:11px">&lt;/&gt;</button>
+                            <div class="ttb-task-sep"></div>
+                            <button class="ttb-task-btn" data-cmd="undo" title="Desfazer (Ctrl+Z)">↩</button>
+                            <button class="ttb-task-btn" data-cmd="redo" title="Refazer">↪</button>
+                        </div>
+                        <div id="task-tiptap-editor"></div>
                     </div>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
@@ -501,10 +438,15 @@
     </div>
 
     @push('scripts')
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js"></script>
-        <script>
+        <script type="module">
+            import { Editor } from 'https://esm.sh/@tiptap/core@3';
+            import StarterKit from 'https://esm.sh/@tiptap/starter-kit@3';
+            import Underline from 'https://esm.sh/@tiptap/extension-underline@3';
+            import Placeholder from 'https://esm.sh/@tiptap/extension-placeholder@3';
+
             const taskId = {{ $task->id }};
             const csrf = document.querySelector('meta[name=csrf-token]').content;
+            const existingContent = @json($task->description);
 
             async function apiCall(method, path, body = null) {
                 const opts = { method, headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrf } };
@@ -512,27 +454,60 @@
                 return fetch(path, opts);
             }
 
-            // ── Quill init ───────────────────────────────────────────────────────────────
-            const quill = new Quill('#quill-editor', {
-                theme: 'snow',
-                placeholder: '{{ __('app.task_desc_ph') }}',
-                modules: {
-                    toolbar: [
-                        [{ header: [1, 2, 3, false] }],
-                        ['bold', 'italic', 'underline', 'strike'],
-                        [{ list: 'ordered' }, { list: 'bullet' }],
-                        ['blockquote', 'code-block'],
-                        ['link'],
-                        ['clean'],
-                    ]
-                }
+            // ── Tiptap init ──────────────────────────────────────────────────────────────
+            const editor = new Editor({
+                element: document.getElementById('task-tiptap-editor'),
+                extensions: [
+                    StarterKit.configure({ codeBlock: { languageClassPrefix: 'language-' } }),
+                    Underline,
+                    Placeholder.configure({ placeholder: '{{ __('app.task_desc_ph') }}' }),
+                ],
+                content: existingContent || '',
+                onSelectionUpdate() { updateToolbar(); },
+                onTransaction() { updateToolbar(); },
             });
 
-            // Load existing content
-            const existingContent = @json($task->description);
-            if (existingContent) {
-                quill.clipboard.dangerouslyPasteHTML(existingContent);
+            // ── Toolbar ───────────────────────────────────────────────────────────────────
+            function updateToolbar() {
+                document.querySelectorAll('.ttb-task-btn[data-cmd]').forEach(btn => {
+                    const isActive = ({
+                        bold: editor.isActive('bold'),
+                        italic: editor.isActive('italic'),
+                        underline: editor.isActive('underline'),
+                        strike: editor.isActive('strike'),
+                        bulletList: editor.isActive('bulletList'),
+                        orderedList: editor.isActive('orderedList'),
+                        blockquote: editor.isActive('blockquote'),
+                        codeBlock: editor.isActive('codeBlock'),
+                        h1: editor.isActive('heading', { level: 1 }),
+                        h2: editor.isActive('heading', { level: 2 }),
+                        h3: editor.isActive('heading', { level: 3 }),
+                    })[btn.dataset.cmd];
+                    btn.classList.toggle('active', !!isActive);
+                });
             }
+
+            document.querySelectorAll('.ttb-task-btn[data-cmd]').forEach(btn => {
+                btn.addEventListener('mousedown', e => {
+                    e.preventDefault();
+                    ({
+                        bold: () => editor.chain().focus().toggleBold().run(),
+                        italic: () => editor.chain().focus().toggleItalic().run(),
+                        underline: () => editor.chain().focus().toggleUnderline().run(),
+                        strike: () => editor.chain().focus().toggleStrike().run(),
+                        h1: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
+                        h2: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
+                        h3: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
+                        bulletList: () => editor.chain().focus().toggleBulletList().run(),
+                        orderedList: () => editor.chain().focus().toggleOrderedList().run(),
+                        blockquote: () => editor.chain().focus().toggleBlockquote().run(),
+                        codeBlock: () => editor.chain().focus().toggleCodeBlock().run(),
+                        undo: () => editor.chain().focus().undo().run(),
+                        redo: () => editor.chain().focus().redo().run(),
+                    })[btn.dataset.cmd]?.();
+                    updateToolbar();
+                });
+            });
 
             // ── Actions ──────────────────────────────────────────────────────────────────
             function launchConfetti() {
@@ -580,13 +555,14 @@
             });
 
             document.getElementById('btn-save-edit').addEventListener('click', async function () {
-                const btn = this; const alertEl = document.getElementById('edit-alert');
+                const btn = this;
+                const alertEl = document.getElementById('edit-alert');
                 alertEl.style.display = 'none';
-                btn.innerHTML = '<span class="spinner"></span> Salvando...'; btn.disabled = true;
+                btn.innerHTML = '<span class="spinner"></span> Salvando...';
+                btn.disabled = true;
 
-                // Get HTML from Quill — empty editor returns <p><br></p>
-                const rawHtml = quill.root.innerHTML;
-                const descValue = quill.getText().trim() ? rawHtml : null;
+                const html = editor.getHTML();
+                const descValue = editor.getText().trim() ? html : null;
 
                 const categoryVal = document.getElementById('edit-category').value;
                 const payload = {
@@ -597,16 +573,27 @@
                     due_date: document.getElementById('edit-due-date').value || null,
                     category_id: categoryVal ? parseInt(categoryVal) : null,
                 };
+
                 try {
                     const res = await apiCall('PUT', `/api/v1/tasks/${taskId}`, payload);
                     const data = await res.json();
-                    if (res.ok) { toast('{{ __('app.task_toast_saved') }}', 'success'); setTimeout(() => location.reload(), 700); }
-                    else {
-                        const msgs = data.errors ? Object.values(data.errors).flat().join(' ') : (data.message || 'Erro.');
-                        alertEl.className = 'alert alert-error'; alertEl.textContent = msgs; alertEl.style.display = 'block';
+                    if (res.ok) {
+                        toast('{{ __('app.task_toast_saved') }}', 'success');
+                        setTimeout(() => location.reload(), 700);
+                    } else {
+                        const msgs = data.errors
+                            ? Object.values(data.errors).flat().join(' ')
+                            : (data.message || 'Erro.');
+                        alertEl.className = 'alert alert-error';
+                        alertEl.textContent = msgs;
+                        alertEl.style.display = 'block';
                     }
-                } catch (e) { toast('{{ __('app.task_toast_err_save') }}', 'error'); }
-                finally { btn.innerHTML = '{{ __('app.task_save_changes') }}'; btn.disabled = false; }
+                } catch (e) {
+                    toast('{{ __('app.task_toast_err_save') }}', 'error');
+                } finally {
+                    btn.innerHTML = '{{ __('app.task_save_changes') }}';
+                    btn.disabled = false;
+                }
             });
         </script>
     @endpush
