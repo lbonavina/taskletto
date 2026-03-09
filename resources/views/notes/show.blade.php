@@ -1114,11 +1114,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (stats) _statObs.observe(stats, { childList: true, subtree: true, characterData: true });
 });
 </script>
-    words:   '{{ __('app.note_words') }}',
-    chars:   '{{ __('app.note_chars') }}',
-    read_min:'{{ __('app.note_read_min') }}',
-};
-</script>
 <script>
 window.__NOTE__ = {
     noteId:  {{ $note->id }},
