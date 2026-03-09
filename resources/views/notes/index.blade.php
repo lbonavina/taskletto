@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('page-title', 'Notas')
+@section('page-title', __('app.nav_notes'))
 
 @section('topbar-actions')
     <button class="btn btn-primary" id="btn-new-note">

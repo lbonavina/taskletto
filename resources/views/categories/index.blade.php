@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('page-title', 'Categorias')
+@section('page-title', __('app.nav_categories'))
 
 @section('topbar-actions')
     <button class="btn btn-primary" onclick="openModal()">

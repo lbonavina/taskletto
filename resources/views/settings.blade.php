@@ -90,15 +90,15 @@
 
     {{-- About --}}
     <div class="card">
-        <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:16px">🕐 Fuso Horário</div>
+        <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:16px">🕐 {{ __('app.settings_timezone') }}</div>
         <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">
-            Define o horário usado em datas e notificações. Selecione o fuso da sua região para que os horários do app coincidam com o seu relógio.
+            {{ __('app.settings_tz_desc') }}
         </p>
 
         @if(session('timezone_saved'))
             <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.2);color:var(--success);font-size:13px;margin-bottom:16px">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8l4 4 8-8"/></svg>
-                Fuso horário salvo com sucesso.
+                {{ __('app.settings_tz_saved') }}
             </div>
         @endif
 
@@ -143,7 +143,7 @@
                 </select>
             </div>
             <p style="font-size:11px;color:var(--muted);margin-top:8px">
-                Horário atual do servidor: <strong style="font-family:'DM Sans',monospace">{{ now()->format('d/m/Y H:i:s') }}</strong>
+                {{ __('app.settings_tz_current') }}: <strong style="font-family:'DM Sans',monospace">{{ now()->format('d/m/Y H:i:s') }}</strong>
             </p>
         </form>
     </div>

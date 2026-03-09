@@ -14,7 +14,6 @@ class TaskCommentController extends Controller
     public function index(Request $request, Task $task): JsonResponse
     {
         $paginator = $task->comments()
-            ->latest()
             ->paginate(self::PER_PAGE);
 
         return response()->json([

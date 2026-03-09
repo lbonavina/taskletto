@@ -34,9 +34,6 @@
             "allowToChangeInstallationDirectory": true,
             "installerIcon": "public/icon.ico",
             "uninstallerIcon": "public/icon.ico",
-            "installerHeaderIcon": "public/icon.ico",
-            "installerHeader": "public/installer-header.bmp",
-            "installerSidebar": "public/installer-sidebar.bmp",
             "createDesktopShortcut": true,
             "createStartMenuShortcut": true,
             "menuCategory": "Taskletto",
@@ -48,7 +45,9 @@
             "deleteAppDataOnUninstall": false,
             "uninstallDisplayName": "Taskletto ${version}",
             "artifactName": "Taskletto-Setup-${version}.${ext}",
-            "include": "installer/installer.nsh"
+            "include": "installer/installer.nsh",
+            "installerHeader": "public/installer-header.bmp",
+            "installerSidebar": "public/installer-sidebar.bmp"
         },
         "mac": {
             "icon": "public/icon.ico",

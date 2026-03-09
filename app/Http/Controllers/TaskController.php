@@ -370,6 +370,20 @@ class TaskController extends Controller
      *     )
      * )
      */
+    public function updateEstimate(Request $request, Task $task): JsonResponse
+    {
+        $request->validate([
+            'estimated_minutes' => ['required', 'integer', 'min:0', 'max:99999'],
+        ]);
+
+        $task->update(['estimated_minutes' => $request->estimated_minutes]);
+
+        return response()->json([
+            'message' => 'Estimativa atualizada.',
+            'data' => new TaskResource($task->fresh()),
+        ]);
+    }
+
     public function stats(): JsonResponse
     {
         $total = Task::count();

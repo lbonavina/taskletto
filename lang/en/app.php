@@ -440,4 +440,52 @@ Create your first note!',
     'note_edited' => 'Edited',
     'note_read_min' => 'min read',
     'note_row_delete' => 'Delete row',
+
+    // ── Quick filters (missing) ───────────────────────────────────────────────
+    'filter_pending'   => '🕐 Pending',
+    'filter_cancelled' => '✕ Cancelled',
+    'filter_recurring' => '↻ Recurring',
+
+    // ── Dashboard – new KPI / productivity strings ────────────────────────────
+    'dash_in_progress_kpi'         => 'In progress',
+    'dash_due_today_kpi'           => 'Due today',
+    'dash_tracked_today_kpi'       => 'Tracked today',
+    'dash_today_section'           => 'Today',
+    'dash_productivity'            => 'Productivity',
+    'dash_streak_day'              => 'day streak',
+    'dash_streak_days'             => 'day streak',
+    'dash_recurring_label'         => 'Recurring',
+    'dash_tracked_label'           => 'tracked today',
+    'dash_chart_tooltip_created'   => 'Created',
+    'dash_chart_tooltip_completed' => 'Completed',
+
+    // ── Settings – timezone section ───────────────────────────────────────────
+    'settings_timezone'   => 'Time Zone',
+    'settings_tz_desc'    => 'Sets the time used in dates and notifications. Select your region\'s time zone so the app times match your clock.',
+    'settings_tz_saved'   => 'Time zone saved successfully.',
+    'settings_tz_current' => 'Current server time',
+
+    // ── Settings – backup section ─────────────────────────────────────────────
+    'settings_backup'          => 'Backup & Restore',
+    'settings_backup_desc'     => 'Export all your data (tasks, notes, categories, comments and time history) to a .json file. To restore on another computer, simply import the file.',
+    'settings_export_title'    => 'Export data',
+    'settings_export_sub'      => 'Download a complete .json file',
+    'settings_export_btn'      => 'Export now',
+    'settings_import_title'    => 'Import data',
+    'settings_import_sub'      => 'Restore from a backup',
+    'settings_import_btn'      => 'Select file',
+    'settings_import_warn'     => 'Import <strong>adds</strong> data to the current database — it does not delete existing data. For a clean restore, delete the data manually before importing.',
+    'settings_import_loading'  => '⏳ Importing...',
+    'settings_import_err'      => 'Import error.',
+    'settings_import_err_conn' => 'Connection error while importing.',
+
+    // ── Settings – API endpoint descriptions ──────────────────────────────────
+    'api_list_tasks'    => 'List tasks',
+    'api_create_task'   => 'Create task',
+    'api_get_task'      => 'Get task',
+    'api_update_task'   => 'Update task',
+    'api_delete_task'   => 'Delete task',
+    'api_complete_task' => 'Complete task',
+    'api_reopen_task'   => 'Reopen task',
+    'api_stats'         => 'Statistics',
 ];

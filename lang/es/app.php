@@ -440,4 +440,52 @@ return [
     'note_edited' => 'Editada',
     'note_read_min' => 'min lectura',
     'note_row_delete' => 'Eliminar fila',
+
+    // ── Quick filters (missing) ───────────────────────────────────────────────
+    'filter_pending'   => '🕐 Pendientes',
+    'filter_cancelled' => '✕ Canceladas',
+    'filter_recurring' => '↻ Recurrentes',
+
+    // ── Dashboard – new KPI / productivity strings ────────────────────────────
+    'dash_in_progress_kpi'         => 'En progreso',
+    'dash_due_today_kpi'           => 'Vencen hoy',
+    'dash_tracked_today_kpi'       => 'Rastreado hoy',
+    'dash_today_section'           => 'Hoy',
+    'dash_productivity'            => 'Productividad',
+    'dash_streak_day'              => 'día seguido',
+    'dash_streak_days'             => 'días seguidos',
+    'dash_recurring_label'         => 'Recurrentes',
+    'dash_tracked_label'           => 'rastreado hoy',
+    'dash_chart_tooltip_created'   => 'Creadas',
+    'dash_chart_tooltip_completed' => 'Completadas',
+
+    // ── Settings – timezone section ───────────────────────────────────────────
+    'settings_timezone'   => 'Zona Horaria',
+    'settings_tz_desc'    => 'Define el horario usado en fechas y notificaciones. Selecciona la zona horaria de tu región para que los horarios de la app coincidan con tu reloj.',
+    'settings_tz_saved'   => 'Zona horaria guardada con éxito.',
+    'settings_tz_current' => 'Hora actual del servidor',
+
+    // ── Settings – backup section ─────────────────────────────────────────────
+    'settings_backup'          => 'Copia de seguridad & Restauración',
+    'settings_backup_desc'     => 'Exporta todos tus datos (tareas, notas, categorías, comentarios e historial de tiempo) en un archivo .json. Para restaurar en otro equipo, simplemente importa el archivo.',
+    'settings_export_title'    => 'Exportar datos',
+    'settings_export_sub'      => 'Descarga un archivo .json completo',
+    'settings_export_btn'      => 'Exportar ahora',
+    'settings_import_title'    => 'Importar datos',
+    'settings_import_sub'      => 'Restaurar desde una copia de seguridad',
+    'settings_import_btn'      => 'Seleccionar archivo',
+    'settings_import_warn'     => 'La importación <strong>agrega</strong> los datos a la base actual — no elimina los existentes. Para una restauración limpia, elimina los datos manualmente antes de importar.',
+    'settings_import_loading'  => '⏳ Importando...',
+    'settings_import_err'      => 'Error al importar.',
+    'settings_import_err_conn' => 'Error de conexión al importar.',
+
+    // ── Settings – API endpoint descriptions ──────────────────────────────────
+    'api_list_tasks'    => 'Listar tareas',
+    'api_create_task'   => 'Crear tarea',
+    'api_get_task'      => 'Obtener tarea',
+    'api_update_task'   => 'Actualizar tarea',
+    'api_delete_task'   => 'Eliminar tarea',
+    'api_complete_task' => 'Completar tarea',
+    'api_reopen_task'   => 'Reabrir tarea',
+    'api_stats'         => 'Estadísticas',
 ];

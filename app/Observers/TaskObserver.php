@@ -87,7 +87,7 @@ class TaskObserver
             'task_id' => $task->id,
             'field' => 'deleted',
             'old_value' => null,
-            'new_value' => true,
+            'new_value' => '1',
             'changed_by' => Auth::id(),
         ]);
     }
@@ -100,7 +100,7 @@ class TaskObserver
         TaskHistory::create([
             'task_id' => $task->id,
             'field' => 'restored',
-            'old_value' => true,
+            'old_value' => '1',
             'new_value' => null,
             'changed_by' => Auth::id(),
         ]);

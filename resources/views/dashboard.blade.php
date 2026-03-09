@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('page-title', 'Início')
+@section('page-title', __('app.nav_dashboard'))
 
 @section('topbar-actions')
     <button class="btn btn-ghost btn-sm" onclick="createNote()">
@@ -743,7 +743,7 @@
                 <div class="hk">
                     <div class="hk-val count-up" data-target="{{ $byStatus->get('in_progress', 0) }}"
                         style="color:var(--status-in_progress)">0</div>
-                    <div class="hk-label">Em andamento</div>
+                    <div class="hk-label">{{ __('app.dash_in_progress_kpi') }}</div>
                     <div class="hk-accent" style="background:var(--status-in_progress)"></div>
                 </div>
                 <div class="hk">
@@ -754,7 +754,7 @@
                 <div class="hk">
                     <div class="hk-val count-up" data-target="{{ $todayTasks->count() }}" style="color:var(--accent)">0
                     </div>
-                    <div class="hk-label">Vencem hoje</div>
+                    <div class="hk-label">{{ __('app.dash_due_today_kpi') }}</div>
                     <div class="hk-accent" style="background:var(--accent)"></div>
                 </div>
                 <div class="hk">
@@ -768,7 +768,7 @@
                     $ttStr = $tt < 60 ? $tt . 's' : ($tt < 3600 ? floor($tt / 60) . 'm' : floor($tt / 3600) . 'h ' . floor(($tt % 3600) / 60) . 'm'); @endphp
                     <div class="hk-val" style="color:var(--info);font-size:{{ strlen($ttStr) > 4 ? '18px' : '26px' }}">
                         {{ $ttStr ?: '0s' }}</div>
-                    <div class="hk-label">Rastreado hoje</div>
+                    <div class="hk-label">{{ __('app.dash_tracked_today_kpi') }}</div>
                     <div class="hk-accent" style="background:var(--info)"></div>
                 </div>
                 <div class="hk">
@@ -815,7 +815,7 @@
                                         </div>
                                     </div>
                                     <div class="tr-meta">
-                                        <span class="tr-tag today">hoje</span>
+                                        <span class="tr-tag today">{{ __('app.dash_tag_today') }}</span>
                                         <span class="badge priority-{{ $t->priority->value }}"
                                             style="font-size:9.5px;padding:1px 6px">{{ $t->priority->label() }}</span>
                                     </div>
@@ -1027,7 +1027,7 @@
                     <div class="mini-stats">
                         <div class="ms">
                             <div class="ms-val count-up" data-target="{{ $streak }}">0</div>
-                            <div class="ms-label">🔥 {{ $streak === 1 ? 'dia seguido' : 'dias seguidos' }}</div>
+                            <div class="ms-label">🔥 {{ $streak === 1 ? __('app.dash_streak_day') : __('app.dash_streak_days') }}</div>
                         </div>
                         <div class="ms">
                             <div class="ms-val count-up" data-target="{{ $recurringCount }}">0</div>
@@ -1036,7 +1036,7 @@
                         <div class="ms" style="grid-column:span 2">
                             @php $ttStr2 = $trackedToday < 60 ? $trackedToday . 's' : ($trackedToday < 3600 ? floor($trackedToday / 60) . 'm ' . ($trackedToday % 60) . 's' : floor($trackedToday / 3600) . 'h ' . floor(($trackedToday % 3600) / 60) . 'm'); @endphp
                             <div class="ms-val" style="color:var(--info);font-size:18px">{{ $ttStr2 ?: '0s' }}</div>
-                            <div class="ms-label">⏱ rastreado hoje</div>
+                            <div class="ms-label">⏱ {{ __('app.dash_tracked_label') }}</div>
                         </div>
                     </div>
                 </div>
