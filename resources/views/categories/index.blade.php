@@ -44,9 +44,11 @@
                                     {{ __('app.cat_edit_btn') }}
                                 </button>
                                 <form method="POST" action="/categories/{{ $cat->id }}"
-                                    onsubmit="return confirm('{{ __('app.cat_delete_confirm') }}')">
+                                    id="del-form-{{ $cat->id }}"
+                                    onsubmit="return false">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">✕</button>
+                                    <button type="button" class="btn btn-danger btn-sm"
+                                        onclick="confirmDelete({{ $cat->id }}, '{{ addslashes($cat->name) }}')">✕</button>
                                 </form>
                             </div>
                         </div>
@@ -813,4 +815,66 @@
             </form>
         </div>
     </div>
+
+    {{-- Delete confirmation modal --}}
+    <div id="del-confirm-portal" style="display:none;position:fixed;inset:0;z-index:10100;align-items:center;justify-content:center;background:rgba(0,0,0,.5);backdrop-filter:blur(4px)">
+        <div id="del-confirm-box" style="
+            background:var(--surface);border:1px solid var(--border);
+            border-radius:16px;padding:28px 28px 22px;
+            width:100%;max-width:360px;margin:16px;
+            box-shadow:0 24px 60px rgba(0,0,0,.5);
+            transform:scale(.95);opacity:0;
+            transition:transform .18s cubic-bezier(.34,1.4,.64,1),opacity .15s;
+        ">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+                <div style="width:36px;height:36px;border-radius:50%;background:rgba(239,68,68,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM7.25 5.5h1.5v3.5h-1.5V5.5zm0 4.5h1.5v1.5h-1.5V10z" fill="#ef4444"/></svg>
+                </div>
+                <div>
+                    <div style="font-weight:700;font-size:14px;color:var(--text)">{{ __('app.cat_delete_confirm') }}</div>
+                    <div id="del-confirm-name" style="font-size:12px;color:var(--muted);margin-top:2px"></div>
+                </div>
+            </div>
+            <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px">
+                <button class="btn btn-ghost" onclick="closeDeleteConfirm()">{{ __('app.cancel') }}</button>
+                <button class="btn btn-danger" id="del-confirm-btn">{{ __('app.cat_delete_btn') ?? 'Excluir' }}</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let _delFormId = null;
+
+        function confirmDelete(id, name) {
+            _delFormId = id;
+            const portal = document.getElementById('del-confirm-portal');
+            const box    = document.getElementById('del-confirm-box');
+            document.getElementById('del-confirm-name').textContent = name;
+            portal.style.display = 'flex';
+            requestAnimationFrame(() => {
+                box.style.transform = 'scale(1)';
+                box.style.opacity   = '1';
+            });
+        }
+
+        function closeDeleteConfirm() {
+            const portal = document.getElementById('del-confirm-portal');
+            const box    = document.getElementById('del-confirm-box');
+            box.style.transform = 'scale(.95)';
+            box.style.opacity   = '0';
+            setTimeout(() => { portal.style.display = 'none'; _delFormId = null; }, 160);
+        }
+
+        document.getElementById('del-confirm-btn').addEventListener('click', () => {
+            if (_delFormId) document.getElementById('del-form-' + _delFormId).submit();
+        });
+
+        document.getElementById('del-confirm-portal').addEventListener('mousedown', e => {
+            if (e.target === e.currentTarget) closeDeleteConfirm();
+        });
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeDeleteConfirm();
+        });
+    </script>
 @endpush

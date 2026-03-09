@@ -391,6 +391,7 @@ return [
 
     // ── Categories ────────────────────────────────────────────────────────────
     'cat_delete_confirm' => 'Excluir categoria?',
+    'cat_delete_btn'     => 'Excluir',
     'cat_popular' => 'Populares',
     'cat_work' => 'Trabalho',
     'cat_personal' => 'Pessoal',

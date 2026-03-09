@@ -345,6 +345,7 @@ return [
 
     // ── Categories ────────────────────────────────────────────────────────────
     'cat_delete_confirm' => 'Delete category?',
+    'cat_delete_btn'     => 'Delete',
     'cat_popular' => 'Popular',
     'cat_work' => 'Work',
     'cat_personal' => 'Personal',
