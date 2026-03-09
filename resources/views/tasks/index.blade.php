@@ -37,11 +37,6 @@
         {{ __('app.tasks_in_progress_filter') }}
     </a>
     <div style="flex:1"></div>
-    {{-- Drag toggle --}}
-    <button class="qf" id="drag-toggle" title="{{ __('app.tasks_reorder') }} (R)">
-        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 5h12M2 8h12M2 11h12"/></svg>
-        {{ __('app.tasks_reorder') }}
-    </button>
 </div>
 
 {{-- Advanced filters (collapsible) --}}
@@ -606,10 +601,6 @@ function setDragMode(active) {
     document.querySelectorAll('.task-row').forEach(r => r.classList.toggle('drag-mode', dragMode));
 }
 
-document.getElementById('drag-toggle')?.addEventListener('click', function() {
-    setDragMode(!dragMode);
-});
-
 // Enable drag mode on page load
 document.addEventListener('DOMContentLoaded', () => setDragMode(true));
 
@@ -669,9 +660,6 @@ document.addEventListener('keydown', e => {
             e.preventDefault();
             document.getElementById('advanced-filters').style.display = 'block';
             setTimeout(() => document.querySelector('[name=search]')?.focus(), 50);
-            break;
-        case 'r': case 'R':
-            document.getElementById('drag-toggle')?.click();
             break;
         case 'a': case 'A':
             document.getElementById('select-all')?.click();
