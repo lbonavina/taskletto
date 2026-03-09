@@ -379,7 +379,7 @@
         .s-pend { background: #60a5fa; }
         .s-done { background: #4ade80; }
 
-        /* ── WHAT'S NEW v1.2 SECTION ── */
+        /* ── WHAT'S NEW SECTION ── */
         .whats-new {
             padding: 100px 0;
             background: var(--surface);
@@ -448,6 +448,28 @@
             color: var(--muted);
             font-family: 'DM Mono', monospace;
             border: 1px solid var(--border);
+        }
+
+        /* version divider */
+        .version-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 48px 0 32px;
+        }
+        .version-divider-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+        .version-divider-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--muted);
+            font-family: 'DM Mono', monospace;
+            white-space: nowrap;
         }
 
         /* ── FEATURES ── */
@@ -590,7 +612,7 @@
         <div class="container">
             <div class="hero-badge">
                 <span class="dot"></span>
-                <span data-i18n="badge">v1.2 · Grátis e Open Source</span>
+                <span data-i18n="badge">v1.3 · Grátis e Open Source</span>
             </div>
             <h1>
                 <span data-i18n="hero_line1">Suas tarefas.</span><br>
@@ -719,7 +741,7 @@
                                 </div>
                                 <div class="mock-row">
                                     <div class="mock-status s-pend"></div>
-                                    <div class="mock-task-title" data-i18n="task6">Deploy da versão 1.2 em produção</div>
+                                    <div class="mock-task-title" data-i18n="task6">Deploy da versão 1.3 em produção</div>
                                     <div class="mock-priority p-high" data-i18n="pri_high">alta</div>
                                     <div class="mock-date" data-i18n="tomorrow_label">amanhã</div>
                                 </div>
@@ -739,6 +761,7 @@
             <div class="strip-item"><span>✦</span> <span data-i18n="strip3">Categorias personalizadas</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip_recur">Recorrência de tarefas</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip_time">Time tracking</span></div>
+            <div class="strip-item"><span>✦</span> <span data-i18n="strip_callout">Callout blocks</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip4">Filtros avançados</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip5">Modo claro e escuro</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip6">Atalhos de teclado</span></div>
@@ -752,6 +775,7 @@
             <div class="strip-item"><span>✦</span> <span data-i18n="strip3">Categorias personalizadas</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip_recur">Recorrência de tarefas</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip_time">Time tracking</span></div>
+            <div class="strip-item"><span>✦</span> <span data-i18n="strip_callout">Callout blocks</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip4">Filtros avançados</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip5">Modo claro e escuro</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip6">Atalhos de teclado</span></div>
@@ -762,14 +786,41 @@
         </div>
     </div>
 
-    <!-- WHAT'S NEW v1.2 -->
+    <!-- WHAT'S NEW -->
     <section class="whats-new" id="whats-new">
         <div class="container">
             <div class="reveal">
                 <div class="section-label">✦ <span data-i18n="new_label">Novidades</span></div>
-                <h2 class="section-title" data-i18n="new_title">O que há de novo na v1.2</h2>
-                <p class="section-sub" data-i18n="new_sub">Recorrência, time tracking, dashboard redesenhado e muito mais.</p>
+                <h2 class="section-title" data-i18n="new_title">O que há de novo na v1.3</h2>
+                <p class="section-sub" data-i18n="new_sub">Callout blocks no editor de notas — destaques estilo Notion com 6 tipos.</p>
             </div>
+
+            <!-- v1.3 cards -->
+            <div class="whats-new-grid reveal">
+                <div class="new-card" style="grid-column: 1 / -1;">
+                    <div class="new-card-tag tag-new" data-i18n="tag_new">✦ Novo</div>
+                    <span class="new-card-icon">📣</span>
+                    <div class="new-card-title" data-i18n="n5_title">Callout Blocks</div>
+                    <div class="new-card-desc" data-i18n="n5_desc">Caixas de destaque estilo Notion diretamente no editor de notas. Disponíveis via menu slash (/) ou pelo novo botão na toolbar, com 6 tipos: Info, Sucesso, Aviso, Perigo, Dica e Nota. Cada bloco tem cor e ícone próprios, e o tipo pode ser alterado clicando no ícone do bloco.</div>
+                    <div class="new-card-pills">
+                        <span class="new-pill">ℹ️ Info</span>
+                        <span class="new-pill">✅ <span data-i18n="callout_success">Sucesso</span></span>
+                        <span class="new-pill">⚠️ <span data-i18n="callout_warning">Aviso</span></span>
+                        <span class="new-pill">🚨 <span data-i18n="callout_danger">Perigo</span></span>
+                        <span class="new-pill">💡 <span data-i18n="callout_tip">Dica</span></span>
+                        <span class="new-pill">📝 <span data-i18n="callout_note">Nota</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- version divider -->
+            <div class="version-divider reveal">
+                <div class="version-divider-line"></div>
+                <div class="version-divider-label" data-i18n="prev_version">v1.2 — versão anterior</div>
+                <div class="version-divider-line"></div>
+            </div>
+
+            <!-- v1.2 cards -->
             <div class="whats-new-grid reveal">
                 <div class="new-card">
                     <div class="new-card-tag tag-new" data-i18n="tag_new">✦ Novo</div>
@@ -837,6 +888,11 @@
                     <div class="feature-icon">📝</div>
                     <div class="feature-title" data-i18n="f2_title">Editor de notas rico</div>
                     <div class="feature-desc" data-i18n="f2_desc">Baseado no Tiptap — suporta negrito, itálico, tabelas, checklists, blocos de código, links e muito mais.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📣</div>
+                    <div class="feature-title" data-i18n="f9_title">Callout blocks</div>
+                    <div class="feature-desc" data-i18n="f9_desc">Caixas de destaque estilo Notion no editor de notas. 6 tipos com cores e ícones próprios, inseríveis via slash (/) ou toolbar.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🔁</div>
@@ -944,7 +1000,7 @@
                 meta_title: 'Taskletto — Gerenciador de Tarefas e Notas para Desktop',
                 meta_desc: 'Taskletto é um app desktop gratuito para gerenciar tarefas e notas com foco em produtividade. Disponível para Windows.',
                 nav_features: 'Funcionalidades', nav_how: 'Como funciona', nav_download: '↓ Download grátis',
-                badge: 'v1.2 · Grátis e Open Source',
+                badge: 'v1.3 · Grátis e Open Source',
                 hero_line1: 'Suas tarefas.', hero_line2: 'Suas notas.', hero_line3: 'Tudo no desktop.',
                 hero_sub: 'Taskletto é um app desktop leve e focado para quem precisa organizar tarefas e escrever notas sem abrir o browser.',
                 btn_download: 'Baixar para Windows', btn_github: 'Ver no GitHub',
@@ -954,7 +1010,7 @@
                 mock_due_today: 'Vence hoje', mock_overdue: 'Atrasadas', mock_in_progress: 'Em progresso',
                 task1: 'Revisar documentação do projeto', task2: 'Reunião com cliente — preparar pauta',
                 task3: 'Atualizar dependências do repositório', task4: 'Escrever testes unitários',
-                task5: 'Configurar CI/CD pipeline', task6: 'Deploy da versão 1.2 em produção',
+                task5: 'Configurar CI/CD pipeline', task6: 'Deploy da versão 1.3 em produção',
                 pri_urgent: 'urgente', pri_high: 'alta', pri_medium: 'média', pri_low: 'baixa',
                 overdue: 'vencida', today_label: 'hoje', in3d: 'em 3 d', in7d: 'em 7 d',
                 completed_label: 'concluída', tomorrow_label: 'amanhã',
@@ -963,9 +1019,15 @@
                 strip4: 'Filtros avançados', strip5: 'Modo claro e escuro', strip6: 'Atalhos de teclado',
                 strip7: '100% offline', strip8: 'Open source',
                 strip_recur: 'Recorrência de tarefas', strip_time: 'Time tracking', strip_export: 'Export / Import JSON',
-                new_label: 'Novidades', new_title: 'O que há de novo na v1.2',
-                new_sub: 'Recorrência, time tracking, dashboard redesenhado e muito mais.',
+                strip_callout: 'Callout blocks',
+                new_label: 'Novidades', new_title: 'O que há de novo na v1.3',
+                new_sub: 'Callout blocks no editor de notas — destaques estilo Notion com 6 tipos.',
                 tag_new: '✦ Novo',
+                n5_title: 'Callout Blocks',
+                n5_desc: 'Caixas de destaque estilo Notion diretamente no editor de notas. Disponíveis via menu slash (/) ou pelo novo botão na toolbar, com 6 tipos: Info, Sucesso, Aviso, Perigo, Dica e Nota. Cada bloco tem cor e ícone próprios, e o tipo pode ser alterado clicando no ícone do bloco.',
+                callout_success: 'Sucesso', callout_warning: 'Aviso', callout_danger: 'Perigo',
+                callout_tip: 'Dica', callout_note: 'Nota',
+                prev_version: 'v1.2 — versão anterior',
                 n1_title: 'Recorrência de tarefas',
                 n1_desc: 'Tarefas que se repetem automaticamente. Ao concluir uma tarefa recorrente, a próxima ocorrência é criada na hora.',
                 n2_title: 'Time tracking',
@@ -987,6 +1049,7 @@
                 f6_title: '100% local e offline', f6_desc: 'Seus dados ficam no seu computador. Sem conta, sem servidor, sem nada sendo enviado para nenhum lugar.',
                 f7_title: 'Recorrência automática', f7_desc: 'Configure tarefas para repetirem diária, semanal ou mensalmente. A próxima ocorrência é criada automaticamente ao concluir.',
                 f8_title: 'Time tracking integrado', f8_desc: 'Meça quanto tempo você gasta em cada tarefa com timer embutido, tempo estimado e barra de progresso visual.',
+                f9_title: 'Callout blocks', f9_desc: 'Caixas de destaque estilo Notion no editor de notas. 6 tipos com cores e ícones próprios, inseríveis via slash (/) ou toolbar.',
                 how_label: 'Como funciona', how_title: 'Pronto em 3 passos.', how_sub: 'Sem cadastro, sem configuração complicada. Baixa e usa.',
                 step1_title: 'Baixe o instalador', step1_desc: 'Clique em Download, escolha Windows e execute o instalador. Leva menos de um minuto.',
                 step2_title: 'Crie suas categorias', step2_desc: 'Defina categorias com cores e emojis para organizar tarefas por projeto, área ou contexto.',
@@ -999,7 +1062,7 @@
                 meta_title: 'Taskletto — Desktop Task & Notes Manager',
                 meta_desc: 'Taskletto is a free desktop app to manage tasks and notes focused on productivity. Available for Windows.',
                 nav_features: 'Features', nav_how: 'How it works', nav_download: '↓ Free Download',
-                badge: 'v1.2 · Free & Open Source',
+                badge: 'v1.3 · Free & Open Source',
                 hero_line1: 'Your tasks.', hero_line2: 'Your notes.', hero_line3: 'All on the desktop.',
                 hero_sub: 'Taskletto is a lightweight, focused desktop app for people who need to organize tasks and write notes without opening a browser.',
                 btn_download: 'Download for Windows', btn_github: 'View on GitHub',
@@ -1009,7 +1072,7 @@
                 mock_due_today: 'Due today', mock_overdue: 'Overdue', mock_in_progress: 'In progress',
                 task1: 'Review project documentation', task2: 'Client meeting — prepare agenda',
                 task3: 'Update repository dependencies', task4: 'Write unit tests',
-                task5: 'Set up CI/CD pipeline', task6: 'Deploy version 1.2 to production',
+                task5: 'Set up CI/CD pipeline', task6: 'Deploy version 1.3 to production',
                 pri_urgent: 'urgent', pri_high: 'high', pri_medium: 'medium', pri_low: 'low',
                 overdue: 'overdue', today_label: 'today', in3d: 'in 3 d', in7d: 'in 7 d',
                 completed_label: 'done', tomorrow_label: 'tomorrow',
@@ -1018,9 +1081,15 @@
                 strip4: 'Advanced filters', strip5: 'Light & dark mode', strip6: 'Keyboard shortcuts',
                 strip7: '100% offline', strip8: 'Open source',
                 strip_recur: 'Task recurrence', strip_time: 'Time tracking', strip_export: 'Export / Import JSON',
-                new_label: "What's new", new_title: "What's new in v1.2",
-                new_sub: 'Recurrence, time tracking, redesigned dashboard and more.',
+                strip_callout: 'Callout blocks',
+                new_label: "What's new", new_title: "What's new in v1.3",
+                new_sub: 'Callout blocks in the notes editor — Notion-style highlights with 6 types.',
                 tag_new: '✦ New',
+                n5_title: 'Callout Blocks',
+                n5_desc: 'Notion-style highlight boxes directly in the notes editor. Available via the slash (/) menu or the new toolbar button, with 6 types: Info, Success, Warning, Danger, Tip, and Note. Each block has its own color and icon, and the type can be changed by clicking the block\'s icon.',
+                callout_success: 'Success', callout_warning: 'Warning', callout_danger: 'Danger',
+                callout_tip: 'Tip', callout_note: 'Note',
+                prev_version: 'v1.2 — previous version',
                 n1_title: 'Task recurrence',
                 n1_desc: 'Tasks that repeat automatically. When you complete a recurring task, the next occurrence is created instantly.',
                 n2_title: 'Time tracking',
@@ -1042,6 +1111,7 @@
                 f6_title: '100% local & offline', f6_desc: 'Your data stays on your computer. No account, no server, nothing is ever sent anywhere.',
                 f7_title: 'Automatic recurrence', f7_desc: 'Set tasks to repeat daily, weekly or monthly. The next occurrence is automatically created on completion.',
                 f8_title: 'Built-in time tracking', f8_desc: 'Measure how long you spend on each task with a built-in timer, estimated time and visual progress bar.',
+                f9_title: 'Callout blocks', f9_desc: 'Notion-style highlight boxes in the notes editor. 6 types with their own colors and icons, insertable via slash (/) or toolbar.',
                 how_label: 'How it works', how_title: 'Ready in 3 steps.', how_sub: 'No sign-up, no complex setup. Download and use.',
                 step1_title: 'Download the installer', step1_desc: 'Click Download, choose Windows and run the installer. Takes less than a minute.',
                 step2_title: 'Create your categories', step2_desc: 'Set up categories with colors and emojis to organize tasks by project, area or context.',
