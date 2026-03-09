@@ -83,23 +83,11 @@
             overflow-x: hidden;
         }
 
-        ::-webkit-scrollbar {
-            width: 5px;
-        }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
 
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 99px;
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
+        a { color: inherit; text-decoration: none; }
 
         body::before {
             content: '';
@@ -119,22 +107,8 @@
             z-index: 0;
             opacity: .12;
         }
-
-        .blob-1 {
-            width: 600px;
-            height: 600px;
-            background: var(--accent);
-            top: -200px;
-            left: -100px;
-        }
-
-        .blob-2 {
-            width: 400px;
-            height: 400px;
-            background: #6b5bff;
-            bottom: -100px;
-            right: -100px;
-        }
+        .blob-1 { width: 600px; height: 600px; background: var(--accent); top: -200px; left: -100px; }
+        .blob-2 { width: 400px; height: 400px; background: #6b5bff; bottom: -100px; right: -100px; }
 
         .container {
             max-width: 1100px;
@@ -147,36 +121,19 @@
         /* ── NAV ── */
         nav {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             z-index: 100;
             padding: 16px 0;
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, .04);
-            background: rgba(15, 15, 17, .7);
+            border-bottom: 1px solid rgba(255,255,255,.04);
+            background: rgba(15,15,17,.7);
         }
 
-        nav .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+        nav .container { display: flex; align-items: center; justify-content: space-between; }
 
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: -.3px;
-        }
+        .nav-logo { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; letter-spacing: -.3px; }
 
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+        .nav-links { display: flex; align-items: center; gap: 8px; }
 
         .nav-links a {
             padding: 7px 14px;
@@ -186,17 +143,9 @@
             color: var(--text);
             transition: color .15s, background .15s;
         }
+        .nav-links a:not(.btn-nav) { color: var(--muted); }
+        .nav-links a:not(.btn-nav):hover { color: var(--text); background: var(--surface2); }
 
-        .nav-links a:not(.btn-nav) {
-            color: var(--muted);
-        }
-
-        .nav-links a:not(.btn-nav):hover {
-            color: var(--text);
-            background: var(--surface2);
-        }
-
-        /* Language toggle */
         .lang-toggle {
             display: flex;
             align-items: center;
@@ -219,15 +168,8 @@
             transition: color .15s, background .15s;
             letter-spacing: .3px;
         }
-
-        .lang-btn.active {
-            background: var(--surface);
-            color: var(--accent);
-        }
-
-        .lang-btn:hover:not(.active) {
-            color: var(--text);
-        }
+        .lang-btn.active { background: var(--surface); color: var(--accent); }
+        .lang-btn:hover:not(.active) { color: var(--text); }
 
         .btn-nav {
             padding: 8px 18px;
@@ -237,20 +179,12 @@
             background: linear-gradient(135deg, var(--accent), var(--accent2));
             color: #fff;
             transition: box-shadow .2s, transform .15s;
-            box-shadow: 0 4px 16px rgba(255, 145, 77, .3);
+            box-shadow: 0 4px 16px rgba(255,145,77,.3);
         }
-
-        .btn-nav:hover {
-            color: #fff;
-            box-shadow: 0 6px 24px rgba(255, 145, 77, .5);
-            transform: translateY(-1px);
-        }
+        .btn-nav:hover { color: #fff; box-shadow: 0 6px 24px rgba(255,145,77,.5); transform: translateY(-1px); }
 
         /* ── HERO ── */
-        .hero {
-            padding: 160px 0 100px;
-            text-align: center;
-        }
+        .hero { padding: 160px 0 100px; text-align: center; }
 
         .hero-badge {
             display: inline-flex;
@@ -259,34 +193,21 @@
             padding: 6px 14px;
             border-radius: 99px;
             margin-bottom: 32px;
-            background: rgba(255, 145, 77, .08);
-            border: 1px solid rgba(255, 145, 77, .2);
+            background: rgba(255,145,77,.08);
+            border: 1px solid rgba(255,145,77,.2);
             font-size: 13px;
             font-weight: 500;
             color: var(--accent);
             font-family: 'DM Mono', monospace;
             animation: fadeUp .6s .1s both;
         }
-
         .hero-badge .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
+            width: 6px; height: 6px; border-radius: 50%;
             background: var(--accent);
             animation: pulse 2s infinite;
         }
 
-        @keyframes pulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: .3;
-            }
-        }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
 
         .hero h1 {
             font-size: clamp(42px, 7vw, 80px);
@@ -296,7 +217,6 @@
             margin-bottom: 24px;
             animation: fadeUp .6s .2s both;
         }
-
         .hero h1 .accent-word {
             background: linear-gradient(135deg, var(--accent), var(--accent2));
             -webkit-background-clip: text;
@@ -334,13 +254,9 @@
             background: linear-gradient(135deg, var(--accent), var(--accent2));
             color: #fff;
             transition: box-shadow .2s, transform .15s;
-            box-shadow: 0 4px 24px rgba(255, 145, 77, .3);
+            box-shadow: 0 4px 24px rgba(255,145,77,.3);
         }
-
-        .btn-primary:hover {
-            box-shadow: 0 6px 32px rgba(255, 145, 77, .5);
-            transform: translateY(-2px);
-        }
+        .btn-primary:hover { box-shadow: 0 6px 32px rgba(255,145,77,.5); transform: translateY(-2px); }
 
         .btn-ghost {
             display: inline-flex;
@@ -354,23 +270,10 @@
             color: var(--text);
             transition: border-color .15s, background .15s, transform .15s;
         }
+        .btn-ghost:hover { border-color: var(--muted); background: var(--surface2); transform: translateY(-2px); }
 
-        .btn-ghost:hover {
-            border-color: var(--muted);
-            background: var(--surface2);
-            transform: translateY(-2px);
-        }
-
-        .hero-note {
-            margin-top: 16px;
-            font-size: 13px;
-            color: var(--muted);
-            animation: fadeUp .6s .5s both;
-        }
-
-        .hero-note strong {
-            color: var(--success);
-        }
+        .hero-note { margin-top: 16px; font-size: 13px; color: var(--muted); animation: fadeUp .6s .5s both; }
+        .hero-note strong { color: var(--success); }
 
         /* ── MOCKUP ── */
         .mockup-wrap {
@@ -378,24 +281,21 @@
             position: relative;
             animation: fadeUp .8s .5s both;
         }
-
         .mockup-glow {
             position: absolute;
             inset: -40px;
             border-radius: 24px;
-            background: radial-gradient(ellipse at 50% 0%, rgba(255, 145, 77, .15) 100%, transparent 70%);
+            background: radial-gradient(ellipse at 50% 0%, rgba(255,145,77,.15) 100%, transparent 70%);
             pointer-events: none;
         }
-
         .mockup-window {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, .6), 0 0 0 1px rgba(255, 255, 255, .04);
+            box-shadow: 0 40px 100px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.04);
             position: relative;
         }
-
         .mockup-titlebar {
             display: flex;
             align-items: center;
@@ -404,42 +304,14 @@
             background: var(--surface2);
             border-bottom: 1px solid var(--border);
         }
+        .titlebar-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .titlebar-dots { display: flex; gap: 6px; }
+        .titlebar-dot:nth-child(1) { background: #ff5f57; }
+        .titlebar-dot:nth-child(2) { background: #febc2e; }
+        .titlebar-dot:nth-child(3) { background: #28c840; }
+        .titlebar-title { flex: 1; text-align: center; font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
 
-        .titlebar-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-
-        .titlebar-dots {
-            display: flex;
-            gap: 6px;
-        }
-
-        .titlebar-dot:nth-child(1) {
-            background: #ff5f57;
-        }
-
-        .titlebar-dot:nth-child(2) {
-            background: #febc2e;
-        }
-
-        .titlebar-dot:nth-child(3) {
-            background: #28c840;
-        }
-
-        .titlebar-title {
-            flex: 1;
-            text-align: center;
-            font-size: 12px;
-            color: var(--muted);
-            font-family: 'DM Mono', monospace;
-        }
-
-        .mockup-body {
-            display: flex;
-            height: 440px;
-        }
+        .mockup-body { display: flex; height: 440px; }
 
         .mock-sidebar {
             width: 200px;
@@ -448,7 +320,6 @@
             border-right: 1px solid var(--border);
             padding: 16px 0;
         }
-
         .mock-logo {
             padding: 0 16px 16px;
             border-bottom: 1px solid var(--border);
@@ -460,197 +331,124 @@
             align-items: center;
             gap: 8px;
         }
-
         .mock-logo-icon {
-            width: 26px;
-            height: 26px;
+            width: 26px; height: 26px;
             border-radius: 6px;
             background: linear-gradient(135deg, var(--accent), var(--accent2));
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-size: 12px;
         }
+        .mock-section { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); padding: 8px 16px 4px; }
+        .mock-item { display: flex; align-items: center; gap: 8px; padding: 7px 16px; font-size: 12px; color: var(--muted); cursor: default; }
+        .mock-item.active { color: var(--accent); background: rgba(255,145,77,.07); border-left: 2px solid var(--accent); }
+        .mock-icon { width: 14px; height: 14px; opacity: .7; flex-shrink: 0; }
+        .mock-badge { margin-left: auto; background: #e05454; color: #fff; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 20px; font-family: 'DM Mono', monospace; }
 
-        .mock-section {
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--muted);
-            padding: 8px 16px 4px;
-        }
+        .mock-main { flex: 1; overflow: hidden; }
+        .mock-topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border); }
+        .mock-topbar-title { font-size: 16px; font-weight: 700; letter-spacing: -.3px; }
+        .mock-btn { display: flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
 
-        .mock-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 7px 16px;
-            font-size: 12px;
-            color: var(--muted);
-            cursor: default;
-        }
+        .mock-filters { display: flex; gap: 6px; padding: 10px 20px; border-bottom: 1px solid var(--border); overflow: hidden; }
+        .mock-qf { padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 500; background: var(--surface2); color: var(--muted); white-space: nowrap; }
+        .mock-qf.active { background: rgba(255,145,77,.12); color: var(--accent); }
 
-        .mock-item.active {
-            color: var(--accent);
-            background: rgba(255, 145, 77, .07);
-            border-left: 2px solid var(--accent);
-        }
+        .mock-table { padding: 8px 0; }
+        .mock-row { display: flex; align-items: center; gap: 12px; padding: 8px 20px; border-bottom: 1px solid rgba(42,42,50,.6); font-size: 11px; }
+        .mock-row:hover { background: rgba(255,255,255,.02); }
+        .mock-status { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .mock-task-title { flex: 1; font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mock-priority { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; font-family: 'DM Mono', monospace; }
+        .mock-date { font-size: 10px; color: var(--muted); white-space: nowrap; }
 
-        .mock-icon {
-            width: 14px;
-            height: 14px;
-            opacity: .7;
-            flex-shrink: 0;
-        }
+        /* new: recurrence + time badges in mockup */
+        .mock-recur { font-size: 9px; color: #a78bfa; background: rgba(167,139,250,.1); border-radius: 4px; padding: 2px 5px; font-family: 'DM Mono', monospace; flex-shrink: 0; }
+        .mock-time-bar { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+        .mock-time-track { width: 36px; height: 3px; border-radius: 99px; background: var(--border); overflow: hidden; }
+        .mock-time-fill { height: 100%; background: var(--accent); border-radius: 99px; }
+        .mock-time-label { font-size: 9px; color: var(--muted); font-family: 'DM Mono', monospace; }
 
-        .mock-badge {
-            margin-left: auto;
-            background: #e05454;
-            color: #fff;
-            font-size: 9px;
-            font-weight: 700;
-            padding: 1px 5px;
-            border-radius: 20px;
-            font-family: 'DM Mono', monospace;
-        }
+        .p-urgent { background: rgba(224,84,84,.12); color: #e05454; }
+        .p-high { background: rgba(240,160,90,.12); color: #f0a05a; }
+        .p-medium { background: rgba(96,165,250,.12); color: #60a5fa; }
+        .p-low { background: rgba(74,222,128,.12); color: #4ade80; }
+        .s-prog { background: #f0a05a; }
+        .s-pend { background: #60a5fa; }
+        .s-done { background: #4ade80; }
 
-        .mock-main {
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .mock-topbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 20px;
+        /* ── WHAT'S NEW v1.2 SECTION ── */
+        .whats-new {
+            padding: 100px 0;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
         }
 
-        .mock-topbar-title {
-            font-size: 16px;
-            font-weight: 700;
-            letter-spacing: -.3px;
+        .whats-new-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 56px;
         }
 
-        .mock-btn {
-            display: flex;
+        .new-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px 32px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color .2s, transform .2s;
+        }
+        .new-card:hover { border-color: rgba(255,145,77,.3); transform: translateY(-2px); }
+
+        .new-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,145,77,.4), transparent);
+        }
+
+        .new-card-tag {
+            display: inline-flex;
             align-items: center;
-            gap: 5px;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            color: #fff;
-        }
-
-        .mock-filters {
-            display: flex;
             gap: 6px;
-            padding: 10px 20px;
-            border-bottom: 1px solid var(--border);
-            overflow: hidden;
-        }
-
-        .mock-qf {
-            padding: 4px 10px;
-            border-radius: 6px;
+            padding: 3px 10px;
+            border-radius: 99px;
             font-size: 10px;
+            font-weight: 700;
+            letter-spacing: .8px;
+            text-transform: uppercase;
+            font-family: 'DM Mono', monospace;
+            margin-bottom: 16px;
+        }
+        .tag-new { background: rgba(255,145,77,.1); color: var(--accent); border: 1px solid rgba(255,145,77,.2); }
+        .tag-improved { background: rgba(96,165,250,.1); color: var(--info); border: 1px solid rgba(96,165,250,.2); }
+
+        .new-card-icon { font-size: 28px; margin-bottom: 12px; display: block; }
+        .new-card-title { font-size: 17px; font-weight: 700; letter-spacing: -.3px; margin-bottom: 8px; }
+        .new-card-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+        .new-card-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 14px;
+        }
+        .new-pill {
+            padding: 3px 9px;
+            border-radius: 6px;
+            font-size: 11px;
             font-weight: 500;
             background: var(--surface2);
             color: var(--muted);
-            white-space: nowrap;
-        }
-
-        .mock-qf.active {
-            background: rgba(255, 145, 77, .12);
-            color: var(--accent);
-        }
-
-        .mock-table {
-            padding: 8px 0;
-        }
-
-        .mock-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 20px;
-            border-bottom: 1px solid rgba(42, 42, 50, .6);
-            font-size: 11px;
-        }
-
-        .mock-row:hover {
-            background: rgba(255, 255, 255, .02);
-        }
-
-        .mock-status {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .mock-task-title {
-            flex: 1;
-            font-size: 11.5px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .mock-priority {
-            font-size: 9px;
-            font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 4px;
             font-family: 'DM Mono', monospace;
-        }
-
-        .mock-date {
-            font-size: 10px;
-            color: var(--muted);
-            white-space: nowrap;
-        }
-
-        .p-urgent {
-            background: rgba(224, 84, 84, .12);
-            color: #e05454;
-        }
-
-        .p-high {
-            background: rgba(240, 160, 90, .12);
-            color: #f0a05a;
-        }
-
-        .p-medium {
-            background: rgba(96, 165, 250, .12);
-            color: #60a5fa;
-        }
-
-        .p-low {
-            background: rgba(74, 222, 128, .12);
-            color: #4ade80;
-        }
-
-        .s-prog {
-            background: #f0a05a;
-        }
-
-        .s-pend {
-            background: #60a5fa;
-        }
-
-        .s-done {
-            background: #4ade80;
+            border: 1px solid var(--border);
         }
 
         /* ── FEATURES ── */
-        .section {
-            padding: 100px 0;
-        }
+        .section { padding: 100px 0; }
 
         .section-label {
             display: inline-flex;
@@ -664,21 +462,8 @@
             margin-bottom: 16px;
             font-family: 'DM Mono', monospace;
         }
-
-        .section-title {
-            font-size: clamp(28px, 4vw, 44px);
-            font-weight: 700;
-            letter-spacing: -1.5px;
-            line-height: ;
-            margin-bottom: 16px;
-        }
-
-        .section-sub {
-            font-size: 17px;
-            color: var(--muted);
-            max-width: 500px;
-            line-height: 1.6;
-        }
+        .section-title { font-size: clamp(28px, 4vw, 44px); font-weight: 700; letter-spacing: -1.5px; margin-bottom: 16px; }
+        .section-sub { font-size: 17px; color: var(--muted); max-width: 500px; line-height: 1.6; }
 
         .features-grid {
             display: grid;
@@ -691,384 +476,85 @@
             margin-top: 64px;
         }
 
-        .feature-card {
-            background: var(--surface);
-            padding: 32px;
-            transition: background .2s;
-        }
-
-        .feature-card:hover {
-            background: var(--surface2);
-        }
-
-        .feature-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 145, 77, .1);
-            border: 1px solid rgba(255, 145, 77, .15);
-            font-size: 20px;
-        }
-
-        .feature-title {
-            font-size: 16px;
-            font-weight: 600;
-            letter-spacing: -.3px;
-            margin-bottom: 8px;
-        }
-
-        .feature-desc {
-            font-size: 14px;
-            color: var(--muted);
-            line-height: 1.6;
-        }
+        .feature-card { background: var(--surface); padding: 32px; transition: background .2s; }
+        .feature-card:hover { background: var(--surface2); }
+        .feature-icon { width: 44px; height: 44px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; background: rgba(255,145,77,.1); border: 1px solid rgba(255,145,77,.15); font-size: 20px; }
+        .feature-title { font-size: 16px; font-weight: 600; letter-spacing: -.3px; margin-bottom: 8px; }
+        .feature-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
 
         /* ── STRIP ── */
-        .strip {
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            padding: 24px 0;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .strip-inner {
-            display: flex;
-            gap: 40px;
-            white-space: nowrap;
-            animation: marquee 20s linear infinite;
-        }
-
-        .strip-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--muted);
-            flex-shrink: 0;
-        }
-
-        .strip-item span {
-            color: var(--accent);
-            font-size: 16px;
-        }
-
-        @keyframes marquee {
-            from {
-                transform: translateX(0);
-            }
-
-            to {
-                transform: translateX(-50%);
-            }
-        }
+        .strip { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 24px 0; overflow: hidden; position: relative; }
+        .strip-inner { display: flex; gap: 40px; white-space: nowrap; animation: marquee 20s linear infinite; }
+        .strip-item { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 500; color: var(--muted); flex-shrink: 0; }
+        .strip-item span { color: var(--accent); font-size: 16px; }
+        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
         /* ── STEPS ── */
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 40px;
-            margin-top: 64px;
-        }
-
-        .step {
-            position: relative;
-        }
-
-        .step-num {
-            font-size: 48px;
-            font-weight: 700;
-            font-family: 'DM Mono', monospace;
-            background: linear-gradient(135deg, var(--accent), transparent);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            line-height: 1;
-            margin-bottom: 16px;
-            opacity: .6;
-        }
-
-        .step-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            letter-spacing: -.3px;
-        }
-
-        .step-desc {
-            font-size: 14px;
-            color: var(--muted);
-            line-height: 1.6;
-        }
-
-        .step-connector {
-            position: absolute;
-            top: 24px;
-            right: -20px;
-            color: var(--border);
-            font-size: 20px;
-        }
+        .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 64px; }
+        .step { position: relative; }
+        .step-num { font-size: 48px; font-weight: 700; font-family: 'DM Mono', monospace; background: linear-gradient(135deg, var(--accent), transparent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; margin-bottom: 16px; opacity: .6; }
+        .step-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; letter-spacing: -.3px; }
+        .step-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+        .step-connector { position: absolute; top: 24px; right: -20px; color: var(--border); font-size: 20px; }
 
         /* ── CTA ── */
-        .cta-section {
-            padding: 100px 0;
-            text-align: center;
-        }
+        .cta-section { padding: 100px 0; text-align: center; }
+        .cta-box { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 72px 40px; position: relative; overflow: hidden; }
+        .cta-box::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% -20%, rgba(255,145,77,.12) 0%, transparent 60%); }
+        .cta-box h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 700; letter-spacing: -1.5px; margin-bottom: 16px; position: relative; }
+        .cta-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; position: relative; }
 
-        .cta-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 72px 40px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-box::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at 50% -20%, rgba(255, 145, 77, .12) 0%, transparent 60%);
-        }
-
-        .cta-box h2 {
-            font-size: clamp(28px, 4vw, 44px);
-            font-weight: 700;
-            letter-spacing: -1.5px;
-            margin-bottom: 16px;
-            position: relative;
-        }
-
-        .cta-btns {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            position: relative;
-        }
-
-        .os-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 5px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 500;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            color: var(--muted);
-            font-family: 'DM Mono', monospace;
-            margin-top: 20px;
-        }
+        .os-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 20px; }
 
         /* ── FOOTER ── */
-        footer {
-            border-top: 1px solid var(--border);
-            padding: 40px 0;
-        }
+        footer { border-top: 1px solid var(--border); padding: 40px 0; }
+        footer .container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+        .footer-logo { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .footer-links { display: flex; gap: 24px; }
+        .footer-links a { font-size: 13px; color: var(--muted); transition: color .15s; }
+        .footer-links a:hover { color: var(--text); }
+        .footer-copy { font-size: 13px; color: var(--muted); }
 
-        footer .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 
-        .footer-logo {
-            font-size: 15px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 24px;
-        }
-
-        .footer-links a {
-            font-size: 13px;
-            color: var(--muted);
-            transition: color .15s;
-        }
-
-        .footer-links a:hover {
-            color: var(--text);
-        }
-
-        .footer-copy {
-            font-size: 13px;
-            color: var(--muted);
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(24px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity .7s ease, transform .7s ease;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity .7s ease, transform .7s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
 
         @media (max-width: 768px) {
-
-            /* Nav */
-            .nav-links a:not(.btn-nav) {
-                display: none;
-            }
-
-            .lang-toggle {
-                display: flex !important;
-            }
-
-            .btn-nav {
-                padding: 7px 14px;
-                font-size: 13px;
-                color: #fff !important;
-            }
-
-            /* Hero */
-            .hero {
-                padding: 120px 0 60px;
-            }
-
-            .hero h1 {
-                letter-spacing: -1px;
-            }
-
-            .hero-ctas {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .hero-ctas .btn-primary,
-            .hero-ctas .btn-ghost {
-                justify-content: center;
-            }
-
-            /* Mockup — esconde no mobile, muito pequeno */
-            .mockup-wrap {
-                display: none;
-            }
-
-            /* Sections */
-            .section {
-                padding: 64px 0;
-            }
-
-            .section-title br {
-                display: none;
-            }
-
-            .features-grid {
-                grid-template-columns: 1fr;
-            }
-
-            /* Steps */
-            .steps {
-                grid-template-columns: 1fr;
-                gap: 32px;
-            }
-
-            .step-connector {
-                display: none;
-            }
-
-            .step-num {
-                font-size: 36px;
-            }
-
-            /* CTA */
-            .cta-section {
-                padding: 64px 0;
-            }
-
-            .cta-box {
-                padding: 48px 24px;
-            }
-
-            .cta-btns {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .cta-btns .btn-primary {
-                justify-content: center;
-            }
-
-            /* Footer */
-            footer .container {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 20px;
-            }
-
-            .footer-links {
-                flex-wrap: wrap;
-                gap: 16px;
-            }
+            .nav-links a:not(.btn-nav) { display: none; }
+            .lang-toggle { display: flex !important; }
+            .btn-nav { padding: 7px 14px; font-size: 13px; color: #fff !important; }
+            .hero { padding: 120px 0 60px; }
+            .hero h1 { letter-spacing: -1px; }
+            .hero-ctas { flex-direction: column; align-items: stretch; }
+            .hero-ctas .btn-primary, .hero-ctas .btn-ghost { justify-content: center; }
+            .mockup-wrap { display: none; }
+            .section { padding: 64px 0; }
+            .section-title br { display: none; }
+            .features-grid { grid-template-columns: 1fr; }
+            .whats-new-grid { grid-template-columns: 1fr; }
+            .steps { grid-template-columns: 1fr; gap: 32px; }
+            .step-connector { display: none; }
+            .step-num { font-size: 36px; }
+            .cta-section { padding: 64px 0; }
+            .cta-box { padding: 48px 24px; }
+            .cta-btns { flex-direction: column; align-items: stretch; }
+            .cta-btns .btn-primary { justify-content: center; }
+            footer .container { flex-direction: column; align-items: flex-start; gap: 20px; }
+            .footer-links { flex-wrap: wrap; gap: 16px; }
         }
 
         @media (max-width: 480px) {
-            .container {
-                padding: 0 16px;
-            }
-
-            .hero {
-                padding: 100px 0 48px;
-            }
-
-            .hero-badge {
-                font-size: 11px;
-            }
-
-            .hero-sub {
-                font-size: 16px;
-            }
-
-            .nav-logo img {
-                max-height: 32px;
-            }
-
-            .feature-card {
-                padding: 24px;
-            }
-
-            .cta-box {
-                padding: 40px 20px;
-                border-radius: 16px;
-            }
-
-            .os-badge {
-                font-size: 11px;
-            }
-
-            .strip-item {
-                font-size: 12px;
-            }
+            .container { padding: 0 16px; }
+            .hero { padding: 100px 0 48px; }
+            .hero-badge { font-size: 11px; }
+            .hero-sub { font-size: 16px; }
+            .nav-logo img { max-height: 32px; }
+            .feature-card { padding: 24px; }
+            .cta-box { padding: 40px 20px; border-radius: 16px; }
+            .os-badge { font-size: 11px; }
+            .strip-item { font-size: 12px; }
+            .new-card { padding: 24px; }
         }
     </style>
 </head>
@@ -1091,8 +577,7 @@
                     <button class="lang-btn active" onclick="setLang('pt')">PT</button>
                     <button class="lang-btn" onclick="setLang('en')">EN</button>
                 </div>
-                <a href="https://github.com/lbonavina/taskletto/releases" class="btn-nav" data-i18n="nav_download">↓
-                    Download grátis</a>
+                <a href="https://github.com/lbonavina/taskletto/releases" class="btn-nav" data-i18n="nav_download">↓ Download grátis</a>
             </div>
         </div>
     </nav>
@@ -1110,8 +595,7 @@
                 <span class="accent-word" data-i18n="hero_line3">Tudo no desktop.</span>
             </h1>
             <p class="hero-sub" data-i18n="hero_sub">
-                Taskletto é um app desktop leve e focado para quem precisa organizar tarefas e escrever notas sem abrir
-                o browser.
+                Taskletto é um app desktop leve e focado para quem precisa organizar tarefas e escrever notas sem abrir o browser.
             </p>
             <div class="hero-ctas">
                 <a href="https://github.com/lbonavina/taskletto/releases" class="btn-primary">
@@ -1122,14 +606,12 @@
                 </a>
                 <a href="https://github.com/lbonavina/taskletto" target="_blank" class="btn-ghost">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <path
-                            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
                     </svg>
                     <span data-i18n="btn_github">Ver no GitHub</span>
                 </a>
             </div>
-            <p class="hero-note"><strong data-i18n="hero_note_strong">100% gratuito.</strong> <span
-                    data-i18n="hero_note">Totalmente open source.</span></p>
+            <p class="hero-note"><strong data-i18n="hero_note_strong">100% gratuito.</strong> <span data-i18n="hero_note">Totalmente open source.</span></p>
 
             <!-- MOCKUP -->
             <div class="mockup-wrap">
@@ -1151,36 +633,27 @@
                             </div>
                             <div class="mock-section" data-i18n="mock_main">Principal</div>
                             <div class="mock-item">
-                                <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-                                    stroke-width="1.5">
-                                    <rect x="1" y="1" width="6" height="6" rx="1.5" />
-                                    <rect x="9" y="1" width="6" height="6" rx="1.5" />
-                                    <rect x="1" y="9" width="6" height="6" rx="1.5" />
-                                    <rect x="9" y="9" width="6" height="6" rx="1.5" />
+                                <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <rect x="1" y="1" width="6" height="6" rx="1.5" /><rect x="9" y="1" width="6" height="6" rx="1.5" /><rect x="1" y="9" width="6" height="6" rx="1.5" /><rect x="9" y="9" width="6" height="6" rx="1.5" />
                                 </svg>
                                 Dashboard
                             </div>
                             <div class="mock-item active">
-                                <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-                                    stroke-width="1.5">
+                                <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
                                     <path d="M2 4h12M2 8h8M2 12h10" />
                                 </svg>
                                 <span data-i18n="mock_tasks">Tarefas</span>
                                 <span class="mock-badge">2</span>
                             </div>
                             <div class="mock-item">
-                                <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-                                    stroke-width="1.5">
-                                    <path
-                                        d="M1.5 4.5h3a1 1 0 011 1v5a1 1 0 01-1 1h-3a1 1 0 01-1-1v-5a1 1 0 011-1zM8 2.5h3a1 1 0 011 1v9a1 1 0 01-1 1H8a1 1 0 01-1-1v-9a1 1 0 011-1z" />
+                                <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M1.5 4.5h3a1 1 0 011 1v5a1 1 0 01-1 1h-3a1 1 0 01-1-1v-5a1 1 0 011-1zM8 2.5h3a1 1 0 011 1v9a1 1 0 01-1 1H8a1 1 0 01-1-1v-9a1 1 0 011-1z" />
                                 </svg>
                                 <span data-i18n="mock_categories">Categorias</span>
                             </div>
                             <div class="mock-item">
-                                <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-                                    stroke-width="1.5">
-                                    <path d="M3 2h7l3 3v9a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" />
-                                    <path d="M10 2v3h3M5 7h6M5 10h4" />
+                                <svg class="mock-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M3 2h7l3 3v9a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" /><path d="M10 2v3h3M5 7h6M5 10h4" />
                                 </svg>
                                 <span data-i18n="mock_notes">Notas</span>
                             </div>
@@ -1189,10 +662,7 @@
                             <div class="mock-topbar">
                                 <div class="mock-topbar-title" data-i18n="mock_tasks">Tarefas</div>
                                 <div class="mock-btn">
-                                    <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-                                        stroke-width="2.5">
-                                        <path d="M8 2v12M2 8h12" />
-                                    </svg>
+                                    <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 2v12M2 8h12" /></svg>
                                     <span data-i18n="mock_new_task">Nova Tarefa</span>
                                 </div>
                             </div>
@@ -1207,42 +677,46 @@
                                 <div class="mock-row">
                                     <div class="mock-status s-prog"></div>
                                     <div class="mock-task-title" data-i18n="task1">Revisar documentação do projeto</div>
+                                    <div class="mock-recur" data-i18n="recur_weekly">↻ semanal</div>
                                     <div class="mock-priority p-urgent" data-i18n="pri_urgent">urgente</div>
                                     <div class="mock-date" style="color:#e05454" data-i18n="overdue">vencida</div>
                                 </div>
                                 <div class="mock-row">
                                     <div class="mock-status s-pend"></div>
-                                    <div class="mock-task-title" data-i18n="task2">Reunião com cliente — preparar pauta
+                                    <div class="mock-task-title" data-i18n="task2">Reunião com cliente — preparar pauta</div>
+                                    <div class="mock-time-bar">
+                                        <div class="mock-time-track"><div class="mock-time-fill" style="width:60%"></div></div>
+                                        <div class="mock-time-label">1h12m</div>
                                     </div>
                                     <div class="mock-priority p-high" data-i18n="pri_high">alta</div>
                                     <div class="mock-date" data-i18n="today_label">hoje</div>
                                 </div>
                                 <div class="mock-row">
                                     <div class="mock-status s-prog"></div>
-                                    <div class="mock-task-title" data-i18n="task3">Atualizar dependências do repositório
-                                    </div>
+                                    <div class="mock-task-title" data-i18n="task3">Atualizar dependências do repositório</div>
+                                    <div class="mock-recur" data-i18n="recur_monthly">↻ mensal</div>
                                     <div class="mock-priority p-medium" data-i18n="pri_medium">média</div>
                                     <div class="mock-date" data-i18n="in3d">em 3 d</div>
                                 </div>
                                 <div class="mock-row">
                                     <div class="mock-status s-pend"></div>
                                     <div class="mock-task-title" data-i18n="task4">Escrever testes unitários</div>
+                                    <div class="mock-time-bar">
+                                        <div class="mock-time-track"><div class="mock-time-fill" style="width:30%"></div></div>
+                                        <div class="mock-time-label">0h45m</div>
+                                    </div>
                                     <div class="mock-priority p-low" data-i18n="pri_low">baixa</div>
                                     <div class="mock-date" data-i18n="in7d">em 7 d</div>
                                 </div>
                                 <div class="mock-row">
                                     <div class="mock-status s-done"></div>
-                                    <div class="mock-task-title" style="opacity:.4;text-decoration:line-through"
-                                        data-i18n="task5">Configurar CI/CD pipeline</div>
-                                    <div class="mock-priority"
-                                        style="background:rgba(122,122,138,.1);color:var(--muted)" data-i18n="pri_low">
-                                        baixa</div>
+                                    <div class="mock-task-title" style="opacity:.4;text-decoration:line-through" data-i18n="task5">Configurar CI/CD pipeline</div>
+                                    <div class="mock-priority" style="background:rgba(122,122,138,.1);color:var(--muted)" data-i18n="pri_low">baixa</div>
                                     <div class="mock-date" data-i18n="completed_label">concluída</div>
                                 </div>
                                 <div class="mock-row">
                                     <div class="mock-status s-pend"></div>
-                                    <div class="mock-task-title" data-i18n="task6">Deploy da versão 1.1 em produção
-                                    </div>
+                                    <div class="mock-task-title" data-i18n="task6">Deploy da versão 1.2 em produção</div>
                                     <div class="mock-priority p-high" data-i18n="pri_high">alta</div>
                                     <div class="mock-date" data-i18n="tomorrow_label">amanhã</div>
                                 </div>
@@ -1260,23 +734,87 @@
             <div class="strip-item"><span>✦</span> <span data-i18n="strip1">Tarefas com prioridade</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip2">Editor de notas rico</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip3">Categorias personalizadas</span></div>
+            <div class="strip-item"><span>✦</span> <span data-i18n="strip_recur">Recorrência de tarefas</span></div>
+            <div class="strip-item"><span>✦</span> <span data-i18n="strip_time">Time tracking</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip4">Filtros avançados</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip5">Modo claro e escuro</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip6">Atalhos de teclado</span></div>
+            <div class="strip-item"><span>✦</span> <span data-i18n="strip_export">Export / Import JSON</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip7">100% offline</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip8">Open source</span></div>
             <div class="strip-item"><span>✦</span> <span>Windows</span></div>
+            <!-- duplicate for infinite scroll -->
             <div class="strip-item"><span>✦</span> <span data-i18n="strip1">Tarefas com prioridade</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip2">Editor de notas rico</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip3">Categorias personalizadas</span></div>
+            <div class="strip-item"><span>✦</span> <span data-i18n="strip_recur">Recorrência de tarefas</span></div>
+            <div class="strip-item"><span>✦</span> <span data-i18n="strip_time">Time tracking</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip4">Filtros avançados</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip5">Modo claro e escuro</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip6">Atalhos de teclado</span></div>
+            <div class="strip-item"><span>✦</span> <span data-i18n="strip_export">Export / Import JSON</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip7">100% offline</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip8">Open source</span></div>
             <div class="strip-item"><span>✦</span> Windows</div>
         </div>
     </div>
+
+    <!-- WHAT'S NEW v1.2 -->
+    <section class="whats-new" id="whats-new">
+        <div class="container">
+            <div class="reveal">
+                <div class="section-label">✦ <span data-i18n="new_label">Novidades</span></div>
+                <h2 class="section-title" data-i18n="new_title">O que há de novo na v1.2</h2>
+                <p class="section-sub" data-i18n="new_sub">Recorrência, time tracking, dashboard redesenhado e muito mais.</p>
+            </div>
+            <div class="whats-new-grid reveal">
+                <div class="new-card">
+                    <div class="new-card-tag tag-new" data-i18n="tag_new">✦ Novo</div>
+                    <span class="new-card-icon">🔁</span>
+                    <div class="new-card-title" data-i18n="n1_title">Recorrência de tarefas</div>
+                    <div class="new-card-desc" data-i18n="n1_desc">Tarefas que se repetem automaticamente. Ao concluir uma tarefa recorrente, a próxima ocorrência é criada na hora.</div>
+                    <div class="new-card-pills">
+                        <span class="new-pill" data-i18n="recur_daily">Diária</span>
+                        <span class="new-pill" data-i18n="recur_weekly_pill">Semanal</span>
+                        <span class="new-pill" data-i18n="recur_monthly_pill">Mensal</span>
+                    </div>
+                </div>
+                <div class="new-card">
+                    <div class="new-card-tag tag-new" data-i18n="tag_new">✦ Novo</div>
+                    <span class="new-card-icon">⏱️</span>
+                    <div class="new-card-title" data-i18n="n2_title">Time tracking</div>
+                    <div class="new-card-desc" data-i18n="n2_desc">Timer start/stop direto na sidebar da tarefa. Defina o tempo estimado em horas e minutos e acompanhe o progresso com uma barra visual.</div>
+                    <div class="new-card-pills">
+                        <span class="new-pill" data-i18n="pill_timer">Start / Stop</span>
+                        <span class="new-pill" data-i18n="pill_estimate">Tempo estimado</span>
+                        <span class="new-pill" data-i18n="pill_progress">Barra de progresso</span>
+                    </div>
+                </div>
+                <div class="new-card">
+                    <div class="new-card-tag tag-new" data-i18n="tag_new">✦ Novo</div>
+                    <span class="new-card-icon">📊</span>
+                    <div class="new-card-title" data-i18n="n3_title">Dashboard redesenhado</div>
+                    <div class="new-card-desc" data-i18n="n3_desc">KPIs com destaque visual, seção "Hoje" com as tarefas do dia, streak de produtividade e gráfico com tooltip interativo.</div>
+                    <div class="new-card-pills">
+                        <span class="new-pill">KPIs</span>
+                        <span class="new-pill" data-i18n="pill_today">Hoje</span>
+                        <span class="new-pill">Streak</span>
+                    </div>
+                </div>
+                <div class="new-card">
+                    <div class="new-card-tag tag-new" data-i18n="tag_new">✦ Novo</div>
+                    <span class="new-card-icon">💾</span>
+                    <div class="new-card-title" data-i18n="n4_title">Export / Import JSON</div>
+                    <div class="new-card-desc" data-i18n="n4_desc">Faça backup de todas as suas tarefas e notas em um arquivo JSON ou migre seus dados entre dispositivos com um clique.</div>
+                    <div class="new-card-pills">
+                        <span class="new-pill" data-i18n="pill_backup">Backup</span>
+                        <span class="new-pill" data-i18n="pill_migrate">Migração</span>
+                        <span class="new-pill">JSON</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- FEATURES -->
     <section class="section" id="features">
@@ -1284,53 +822,55 @@
             <div class="reveal">
                 <div class="section-label">✦ <span data-i18n="feat_label">Funcionalidades</span></div>
                 <h2 class="section-title" data-i18n="feat_title">Tudo que você precisa,<br>nada que não precisa.</h2>
-                <p class="section-sub" data-i18n="feat_sub">Sem bloat, sem assinatura. Só o essencial para manter o foco
-                    no que importa.</p>
+                <p class="section-sub" data-i18n="feat_sub">Sem bloat, sem assinatura. Só o essencial para manter o foco no que importa.</p>
             </div>
             <div class="features-grid reveal">
                 <div class="feature-card">
                     <div class="feature-icon">📋</div>
                     <div class="feature-title" data-i18n="f1_title">Gestão de tarefas completa</div>
-                    <div class="feature-desc" data-i18n="f1_desc">Status, prioridade, vencimento, categorias e
-                        descrição. Tudo em um lugar só com filtros rápidos e busca.</div>
+                    <div class="feature-desc" data-i18n="f1_desc">Status, prioridade, vencimento, categorias e descrição. Tudo em um lugar só com filtros rápidos e busca.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">📝</div>
                     <div class="feature-title" data-i18n="f2_title">Editor de notas rico</div>
-                    <div class="feature-desc" data-i18n="f2_desc">Baseado no Tiptap — suporta negrito, itálico, tabelas,
-                        checklists, blocos de código, links e muito mais.</div>
+                    <div class="feature-desc" data-i18n="f2_desc">Baseado no Tiptap — suporta negrito, itálico, tabelas, checklists, blocos de código, links e muito mais.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔁</div>
+                    <div class="feature-title" data-i18n="f7_title">Recorrência automática</div>
+                    <div class="feature-desc" data-i18n="f7_desc">Configure tarefas para repetirem diária, semanal ou mensalmente. A próxima ocorrência é criada automaticamente ao concluir.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⏱️</div>
+                    <div class="feature-title" data-i18n="f8_title">Time tracking integrado</div>
+                    <div class="feature-desc" data-i18n="f8_desc">Meça quanto tempo você gasta em cada tarefa com timer embutido, tempo estimado e barra de progresso visual.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🏷️</div>
                     <div class="feature-title" data-i18n="f3_title">Categorias com emoji e cor</div>
-                    <div class="feature-desc" data-i18n="f3_desc">Organize tarefas em categorias visuais com ícone emoji
-                        personalizado e cor de identificação.</div>
+                    <div class="feature-desc" data-i18n="f3_desc">Organize tarefas em categorias visuais com ícone emoji personalizado e cor de identificação.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">⚡</div>
                     <div class="feature-title" data-i18n="f4_title">Atalhos de teclado</div>
-                    <div class="feature-desc" data-i18n="f4_desc">Navegue, crie e filtre sem tirar as mãos do teclado.
-                        Cada ação tem um atalho pensado para produtividade.</div>
+                    <div class="feature-desc" data-i18n="f4_desc">Navegue, crie e filtre sem tirar as mãos do teclado. Cada ação tem um atalho pensado para produtividade.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🌙</div>
                     <div class="feature-title" data-i18n="f5_title">Tema claro e escuro</div>
-                    <div class="feature-desc" data-i18n="f5_desc">Alterne entre dark e light mode com um clique. O tema
-                        é salvo automaticamente entre sessões.</div>
+                    <div class="feature-desc" data-i18n="f5_desc">Alterne entre dark e light mode com um clique. O tema é salvo automaticamente entre sessões.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🔒</div>
                     <div class="feature-title" data-i18n="f6_title">100% local e offline</div>
-                    <div class="feature-desc" data-i18n="f6_desc">Seus dados ficam no seu computador. Sem conta, sem
-                        servidor, sem nada sendo enviado para nenhum lugar.</div>
+                    <div class="feature-desc" data-i18n="f6_desc">Seus dados ficam no seu computador. Sem conta, sem servidor, sem nada sendo enviado para nenhum lugar.</div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- HOW IT WORKS -->
-    <section class="section" id="como-funciona"
-        style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <section class="section" id="como-funciona" style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
         <div class="container">
             <div class="reveal">
                 <div class="section-label">✦ <span data-i18n="how_label">Como funciona</span></div>
@@ -1341,22 +881,19 @@
                 <div class="step">
                     <div class="step-num">01</div>
                     <div class="step-title" data-i18n="step1_title">Baixe o instalador</div>
-                    <div class="step-desc" data-i18n="step1_desc">Clique em Download, escolha Windows e execute o
-                        instalador. Leva menos de um minuto.</div>
+                    <div class="step-desc" data-i18n="step1_desc">Clique em Download, escolha Windows e execute o instalador. Leva menos de um minuto.</div>
                     <div class="step-connector">→</div>
                 </div>
                 <div class="step">
                     <div class="step-num">02</div>
                     <div class="step-title" data-i18n="step2_title">Crie suas categorias</div>
-                    <div class="step-desc" data-i18n="step2_desc">Defina categorias com cores e emojis para organizar
-                        tarefas por projeto, área ou contexto.</div>
+                    <div class="step-desc" data-i18n="step2_desc">Defina categorias com cores e emojis para organizar tarefas por projeto, área ou contexto.</div>
                     <div class="step-connector">→</div>
                 </div>
                 <div class="step">
                     <div class="step-num">03</div>
                     <div class="step-title" data-i18n="step3_title">Comece a produzir</div>
-                    <div class="step-desc" data-i18n="step3_desc">Adicione tarefas, escreva notas e use os filtros para
-                        focar no que precisa ser feito agora.</div>
+                    <div class="step-desc" data-i18n="step3_desc">Adicione tarefas, escreva notas e use os filtros para focar no que precisa ser feito agora.</div>
                 </div>
             </div>
         </div>
@@ -1369,8 +906,7 @@
                 <h2 data-i18n="cta_title">Baixe agora. É grátis.</h2>
                 <div class="cta-btns">
                     <a href="https://github.com/lbonavina/taskletto/releases" class="btn-primary">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-                            stroke-width="2">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M8 2v8M4 7l4 4 4-4M2 13h12" />
                         </svg>
                         <span data-i18n="btn_download">Baixar para Windows</span>
@@ -1379,6 +915,7 @@
                 <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:20px">
                     <span class="os-badge">🪟 Windows 10+</span>
                     <span class="os-badge">⭐ Open source</span>
+                    <span class="os-badge" data-i18n="badge_free">🎉 Gratuito</span>
                 </div>
             </div>
         </div>
@@ -1394,8 +931,7 @@
                 <a href="https://github.com/lbonavina/taskletto/issues" target="_blank">Issues</a>
                 <a href="https://ko-fi.com/lbonavina" target="_blank">Me paga um café :) ☕</a>
             </div>
-            <div class="footer-copy"><span data-i18n="footer_made">Feito por</span> <a
-                    href="https://linkedin.com/in/lbonavina" style="color:var(--accent)">Lucas Bonavina</a></div>
+            <div class="footer-copy"><span data-i18n="footer_made">Feito por</span> <a href="https://linkedin.com/in/lbonavina" style="color:var(--accent)">Lucas Bonavina</a></div>
         </div>
     </footer>
 
@@ -1415,13 +951,29 @@
                 mock_due_today: 'Vence hoje', mock_overdue: 'Atrasadas', mock_in_progress: 'Em progresso',
                 task1: 'Revisar documentação do projeto', task2: 'Reunião com cliente — preparar pauta',
                 task3: 'Atualizar dependências do repositório', task4: 'Escrever testes unitários',
-                task5: 'Configurar CI/CD pipeline', task6: 'Deploy da versão 1.1 em produção',
+                task5: 'Configurar CI/CD pipeline', task6: 'Deploy da versão 1.2 em produção',
                 pri_urgent: 'urgente', pri_high: 'alta', pri_medium: 'média', pri_low: 'baixa',
                 overdue: 'vencida', today_label: 'hoje', in3d: 'em 3 d', in7d: 'em 7 d',
                 completed_label: 'concluída', tomorrow_label: 'amanhã',
+                recur_weekly: '↻ semanal', recur_monthly: '↻ mensal',
                 strip1: 'Tarefas com prioridade', strip2: 'Editor de notas rico', strip3: 'Categorias personalizadas',
                 strip4: 'Filtros avançados', strip5: 'Modo claro e escuro', strip6: 'Atalhos de teclado',
                 strip7: '100% offline', strip8: 'Open source',
+                strip_recur: 'Recorrência de tarefas', strip_time: 'Time tracking', strip_export: 'Export / Import JSON',
+                new_label: 'Novidades', new_title: 'O que há de novo na v1.2',
+                new_sub: 'Recorrência, time tracking, dashboard redesenhado e muito mais.',
+                tag_new: '✦ Novo',
+                n1_title: 'Recorrência de tarefas',
+                n1_desc: 'Tarefas que se repetem automaticamente. Ao concluir uma tarefa recorrente, a próxima ocorrência é criada na hora.',
+                n2_title: 'Time tracking',
+                n2_desc: 'Timer start/stop direto na sidebar da tarefa. Defina o tempo estimado em horas e minutos e acompanhe o progresso com uma barra visual.',
+                n3_title: 'Dashboard redesenhado',
+                n3_desc: 'KPIs com destaque visual, seção "Hoje" com as tarefas do dia, streak de produtividade e gráfico com tooltip interativo.',
+                n4_title: 'Export / Import JSON',
+                n4_desc: 'Faça backup de todas as suas tarefas e notas em um arquivo JSON ou migre seus dados entre dispositivos com um clique.',
+                recur_daily: 'Diária', recur_weekly_pill: 'Semanal', recur_monthly_pill: 'Mensal',
+                pill_timer: 'Start / Stop', pill_estimate: 'Tempo estimado', pill_progress: 'Barra de progresso',
+                pill_today: 'Hoje', pill_backup: 'Backup', pill_migrate: 'Migração',
                 feat_label: 'Funcionalidades', feat_title: 'Tudo que você precisa,<br>nada que não precisa.',
                 feat_sub: 'Sem bloat, sem assinatura. Só o essencial para manter o foco no que importa.',
                 f1_title: 'Gestão de tarefas completa', f1_desc: 'Status, prioridade, vencimento, categorias e descrição. Tudo em um lugar só com filtros rápidos e busca.',
@@ -1430,11 +982,14 @@
                 f4_title: 'Atalhos de teclado', f4_desc: 'Navegue, crie e filtre sem tirar as mãos do teclado. Cada ação tem um atalho pensado para produtividade.',
                 f5_title: 'Tema claro e escuro', f5_desc: 'Alterne entre dark e light mode com um clique. O tema é salvo automaticamente entre sessões.',
                 f6_title: '100% local e offline', f6_desc: 'Seus dados ficam no seu computador. Sem conta, sem servidor, sem nada sendo enviado para nenhum lugar.',
+                f7_title: 'Recorrência automática', f7_desc: 'Configure tarefas para repetirem diária, semanal ou mensalmente. A próxima ocorrência é criada automaticamente ao concluir.',
+                f8_title: 'Time tracking integrado', f8_desc: 'Meça quanto tempo você gasta em cada tarefa com timer embutido, tempo estimado e barra de progresso visual.',
                 how_label: 'Como funciona', how_title: 'Pronto em 3 passos.', how_sub: 'Sem cadastro, sem configuração complicada. Baixa e usa.',
                 step1_title: 'Baixe o instalador', step1_desc: 'Clique em Download, escolha Windows e execute o instalador. Leva menos de um minuto.',
                 step2_title: 'Crie suas categorias', step2_desc: 'Defina categorias com cores e emojis para organizar tarefas por projeto, área ou contexto.',
                 step3_title: 'Comece a produzir', step3_desc: 'Adicione tarefas, escreva notas e use os filtros para focar no que precisa ser feito agora.',
                 cta_title: 'Baixe agora. É grátis.',
+                badge_free: '🎉 Gratuito',
                 footer_made: 'Feito por',
             },
             en: {
@@ -1451,14 +1006,30 @@
                 mock_due_today: 'Due today', mock_overdue: 'Overdue', mock_in_progress: 'In progress',
                 task1: 'Review project documentation', task2: 'Client meeting — prepare agenda',
                 task3: 'Update repository dependencies', task4: 'Write unit tests',
-                task5: 'Set up CI/CD pipeline', task6: 'Deploy version 1.1 to production',
+                task5: 'Set up CI/CD pipeline', task6: 'Deploy version 1.2 to production',
                 pri_urgent: 'urgent', pri_high: 'high', pri_medium: 'medium', pri_low: 'low',
                 overdue: 'overdue', today_label: 'today', in3d: 'in 3 d', in7d: 'in 7 d',
                 completed_label: 'done', tomorrow_label: 'tomorrow',
+                recur_weekly: '↻ weekly', recur_monthly: '↻ monthly',
                 strip1: 'Priority tasks', strip2: 'Rich notes editor', strip3: 'Custom categories',
                 strip4: 'Advanced filters', strip5: 'Light & dark mode', strip6: 'Keyboard shortcuts',
                 strip7: '100% offline', strip8: 'Open source',
-                feat_label: 'Features', feat_title: 'Everything you need,<br>nothing you don\'t.',
+                strip_recur: 'Task recurrence', strip_time: 'Time tracking', strip_export: 'Export / Import JSON',
+                new_label: "What's new", new_title: "What's new in v1.2",
+                new_sub: 'Recurrence, time tracking, redesigned dashboard and more.',
+                tag_new: '✦ New',
+                n1_title: 'Task recurrence',
+                n1_desc: 'Tasks that repeat automatically. When you complete a recurring task, the next occurrence is created instantly.',
+                n2_title: 'Time tracking',
+                n2_desc: 'Start/stop timer right in the task sidebar. Set estimated time in hours and minutes and track progress with a visual bar.',
+                n3_title: 'Redesigned dashboard',
+                n3_desc: 'KPI cards with visual highlights, a "Today" section with daily tasks, productivity streak, and an interactive chart with tooltips.',
+                n4_title: 'Export / Import JSON',
+                n4_desc: 'Back up all your tasks and notes to a JSON file or migrate data between devices with a single click.',
+                recur_daily: 'Daily', recur_weekly_pill: 'Weekly', recur_monthly_pill: 'Monthly',
+                pill_timer: 'Start / Stop', pill_estimate: 'Estimated time', pill_progress: 'Progress bar',
+                pill_today: 'Today', pill_backup: 'Backup', pill_migrate: 'Migration',
+                feat_label: 'Features', feat_title: "Everything you need,<br>nothing you don't.",
                 feat_sub: 'No bloat, no subscription. Just the essentials to keep you focused on what matters.',
                 f1_title: 'Full task management', f1_desc: 'Status, priority, due dates, categories and description. All in one place with quick filters and search.',
                 f2_title: 'Rich notes editor', f2_desc: 'Powered by Tiptap — supports bold, italic, tables, checklists, code blocks, links and much more.',
@@ -1466,11 +1037,14 @@
                 f4_title: 'Keyboard shortcuts', f4_desc: 'Navigate, create and filter without taking your hands off the keyboard. Every action has a shortcut.',
                 f5_title: 'Light & dark theme', f5_desc: 'Switch between dark and light mode with one click. The theme is automatically saved between sessions.',
                 f6_title: '100% local & offline', f6_desc: 'Your data stays on your computer. No account, no server, nothing is ever sent anywhere.',
+                f7_title: 'Automatic recurrence', f7_desc: 'Set tasks to repeat daily, weekly or monthly. The next occurrence is automatically created on completion.',
+                f8_title: 'Built-in time tracking', f8_desc: 'Measure how long you spend on each task with a built-in timer, estimated time and visual progress bar.',
                 how_label: 'How it works', how_title: 'Ready in 3 steps.', how_sub: 'No sign-up, no complex setup. Download and use.',
                 step1_title: 'Download the installer', step1_desc: 'Click Download, choose Windows and run the installer. Takes less than a minute.',
                 step2_title: 'Create your categories', step2_desc: 'Set up categories with colors and emojis to organize tasks by project, area or context.',
                 step3_title: 'Start being productive', step3_desc: 'Add tasks, write notes and use filters to focus on what needs to be done right now.',
-                cta_title: 'Download now. It\'s free.',
+                cta_title: "Download now. It's free.",
+                badge_free: '🎉 Free',
                 footer_made: 'Made by',
             }
         };
@@ -1482,34 +1056,28 @@
             localStorage.setItem('lp_lang', lang);
             document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
 
-            // Update button states
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === lang);
             });
 
             const t = i18n[lang];
 
-            // Update all [data-i18n] elements
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.dataset.i18n;
                 if (t[key] !== undefined) el.innerHTML = t[key];
             });
 
-            // Update page title
             document.title = t.meta_title;
             const metaDesc = document.querySelector('meta[name="description"]');
             if (metaDesc) metaDesc.setAttribute('content', t.meta_desc);
         }
 
-        // Init
         setLang(currentLang);
 
-        // Scroll reveal
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
         }, { threshold: 0.1 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
 </body>
-
 </html>
