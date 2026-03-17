@@ -11,11 +11,12 @@ class NativeAppServiceProvider implements ProvidesPhpIni
     public function boot(): void
     {
         Window::open()
-            ->title('Taskletto')
+            ->title('Taskletto - Gerenciador de tarefas e notas')
             ->width(1280)
             ->height(800)
             ->minWidth(960)
             ->minHeight(600)
+            ->removeMenu()
             ->showDevTools(false);
 
         \Native\Laravel\Facades\Notification::new ()
