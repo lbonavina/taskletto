@@ -1,1 +1,0 @@
-"Tasks locais: " . DB::table('tasks')-;
