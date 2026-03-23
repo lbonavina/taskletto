@@ -159,9 +159,11 @@ return [
         'php artisan route:cache',
         'php artisan view:cache',
         // Copia ícone e assets do instalador para nativephp/electron/build/
+        // O electron-builder.mjs (raiz do projeto) referencia esses arquivos por build/<nome>
+        // LICENSE.rtf também precisa ser copiado — necessário para exibir a licença no installer
         PHP_OS_FAMILY === 'Windows'
-            ? 'cmd /c copy /Y public\\icon.ico nativephp\\electron\\build\\icon.ico && copy /Y public\\installer-header.bmp nativephp\\electron\\build\\installerHeader.bmp && copy /Y public\\installer-sidebar.bmp nativephp\\electron\\build\\installerSidebar.bmp && copy /Y installer\\installer.nsh nativephp\\electron\\build\\installer.nsh'
-            : 'cp public/icon.ico nativephp/electron/build/icon.ico && cp public/installer-header.bmp nativephp/electron/build/installerHeader.bmp && cp public/installer-sidebar.bmp nativephp/electron/build/installerSidebar.bmp && cp installer/installer.nsh nativephp/electron/build/installer.nsh',
+            ? 'cmd /c copy /Y public\\icon.ico nativephp\\electron\\build\\icon.ico && copy /Y public\\installer-header.bmp nativephp\\electron\\build\\installerHeader.bmp && copy /Y public\\installer-sidebar.bmp nativephp\\electron\\build\\installerSidebar.bmp && copy /Y installer\\installer.nsh nativephp\\electron\\build\\installer.nsh && copy /Y installer\\LICENSE.rtf nativephp\\electron\\build\\LICENSE.rtf'
+            : 'cp public/icon.ico nativephp/electron/build/icon.ico && cp public/installer-header.bmp nativephp/electron/build/installerHeader.bmp && cp public/installer-sidebar.bmp nativephp/electron/build/installerSidebar.bmp && cp installer/installer.nsh nativephp/electron/build/installer.nsh && cp installer/LICENSE.rtf nativephp/electron/build/LICENSE.rtf',
     ],
 
     'postbuild' => [

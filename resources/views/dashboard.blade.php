@@ -95,16 +95,17 @@
 
 /* ─── Greeting ─────────────────────────────────────────────── */
 .greet-bg { position:absolute; inset:0; z-index:0; background-size:cover; background-position:center; }
-.greet-bg::after { content:''; position:absolute; inset:0; background:linear-gradient(to top, rgba(12,12,14,.92) 25%, rgba(12,12,14,.3) 65%, transparent 100%); }
-/* Light: pastel gradients are used — just a light scrim at the bottom for text legibility */
-html[data-theme=light] .greet-bg::after { background:linear-gradient(to top, rgba(255,255,255,.70) 0%, rgba(255,255,255,.25) 50%, transparent 100%); }
-html[data-theme=light] .greet-date  { color: rgba(30,30,60,.65); }
-html[data-theme=light] .greet-title { color: #1a1a2e; text-shadow: 0 1px 3px rgba(255,255,255,.4); }
-html[data-theme=light] .greet-sub   { color: rgba(30,30,60,.60); }
+/* Overlay mais denso — garante legibilidade em qualquer gradiente */
+.greet-bg::after { content:''; position:absolute; inset:0; background:linear-gradient(to top, rgba(8,8,10,.96) 0%, rgba(8,8,10,.75) 45%, rgba(8,8,10,.35) 100%); }
+/* Light mode: scrim branco mais forte na base */
+html[data-theme=light] .greet-bg::after { background:linear-gradient(to top, rgba(10,10,20,.82) 0%, rgba(10,10,20,.55) 50%, rgba(10,10,20,.15) 100%); }
+html[data-theme=light] .greet-date  { color: rgba(255,255,255,.65); }
+html[data-theme=light] .greet-title { color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.5); }
+html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
 .greet-content { position:relative; z-index:1; padding:14px 16px; width:100%; }
-.greet-date { font-size:8.5px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
-.greet-title { font-size:18px; font-weight:800; letter-spacing:-.4px; color:var(--text); line-height:1.15; margin-bottom:3px; }
-.greet-sub { font-size:11px; color:var(--muted); line-height:1.5; }
+.greet-date { font-size:8.5px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:4px; }
+.greet-title { font-size:18px; font-weight:800; letter-spacing:-.4px; color:#fff; line-height:1.15; margin-bottom:3px; text-shadow: 0 1px 3px rgba(0,0,0,.4); }
+.greet-sub { font-size:11px; color:rgba(255,255,255,.65); line-height:1.5; }
 
 .period-badge { position:absolute; top:10px; right:12px; z-index:2; font-size:8.5px; font-weight:700; letter-spacing:.9px; text-transform:uppercase; padding:3px 9px; border-radius:20px; background:rgba(255,145,77,.15); color:var(--accent); border:1px solid rgba(255,145,77,.2); display:flex; align-items:center; gap:4px; }
 .period-dot { width:5px; height:5px; border-radius:50%; background:var(--accent); animation:pulse-dot 2s ease-in-out infinite; }
@@ -605,16 +606,16 @@ html[data-theme=light] .greet-sub   { color: rgba(30,30,60,.60); }
 
     // Gradient backgrounds matching time of day
     const bgs = {
-        morning:   'linear-gradient(135deg, #1a2a4a 0%, #2d4a7a 30%, #e8a84a 70%, #f0c060 100%)',
-        afternoon: 'linear-gradient(160deg, #1a3a6a 0%, #2a5090 20%, #60a0d0 60%, #87ceeb 100%)',
-        evening:   'linear-gradient(145deg, #1a1030 0%, #4a2060 30%, #d06030 65%, #e07840 100%)',
-        night:     'linear-gradient(160deg, #050510 0%, #0a0520 30%, #1a0a40 60%, #0d1a3a 100%)',
+        morning:   'linear-gradient(135deg, #0d1b2a 0%, #1a2f4a 35%, #7a4a1a 70%, #5a3010 100%)',
+        afternoon: 'linear-gradient(160deg, #0a1628 0%, #122040 25%, #1a3a6a 60%, #1e4878 100%)',
+        evening:   'linear-gradient(145deg, #0d0820 0%, #2a1040 30%, #6a2a10 65%, #4a1a08 100%)',
+        night:     'linear-gradient(160deg, #030308 0%, #06030f 30%, #0d0520 60%, #060e20 100%)',
     };
     const bgsLight = {
-        morning:   'linear-gradient(135deg, #fde68a 0%, #fbbf24 40%, #fed7aa 75%, #fff7ed 100%)',
-        afternoon: 'linear-gradient(160deg, #bae6fd 0%, #7dd3fc 30%, #e0f2fe 70%, #f0f9ff 100%)',
-        evening:   'linear-gradient(145deg, #fcd34d 0%, #f97316 35%, #fb923c 65%, #fed7aa 100%)',
-        night:     'linear-gradient(160deg, #818cf8 0%, #6366f1 30%, #a78bfa 65%, #c4b5fd 100%)',
+        morning:   'linear-gradient(135deg, #1a2a3a 0%, #2a4060 35%, #7a5020 65%, #5a3818 100%)',
+        afternoon: 'linear-gradient(160deg, #0f2035 0%, #1a3055 30%, #1e4878 65%, #163858 100%)',
+        evening:   'linear-gradient(145deg, #1a0e28 0%, #3a1850 30%, #7a3015 65%, #5a2010 100%)',
+        night:     'linear-gradient(160deg, #080818 0%, #100828 30%, #1a1040 65%, #0d1830 100%)',
     };
     const applyGreetBg = () => {
         const light = document.documentElement.dataset.theme === 'light';

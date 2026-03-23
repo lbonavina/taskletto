@@ -24,7 +24,8 @@ class NativeAppServiceProvider implements ProvidesPhpIni
             ->hideMenu()
             ->showDevTools(false);
 
-        // Ícone na bandeja — PNG obrigatório no v2, sem janela popup
+        // Ícone na bandeja — PNG obrigatório no NativePHP v2 (tray.ico não funciona)
+        // Certifique-se de que public/icons/tray.png existe (16x16 ou 32x32 px)
         MenuBar::create()
             ->icon(public_path('icons/tray.png'))
             ->tooltip('Taskletto')
@@ -41,9 +42,8 @@ class NativeAppServiceProvider implements ProvidesPhpIni
             Window::hide('main');
         });
 
-        // Fechar (X) → esconde para bandeja em vez de encerrar
+        // Fechar (X) → esconde para bandeja em vez de encerrar o processo
         Event::listen(WindowClosed::class, function () {
-            Window::show('main');
             Window::hide('main');
         });
     }
