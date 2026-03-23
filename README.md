@@ -16,7 +16,7 @@
 
 <br/>
 
-### [🌐 lbonavina.github.io/taskletto](https://taskletto.lucasbonavina.win)
+### [🌐 lucasbonavina.win/taskletto](https://lucasbonavina.win/taskletto)
 ### [⬇️ Download for Windows (.exe)](https://github.com/lbonavina/taskletto/releases/latest)
 
 </div>
