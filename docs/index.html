@@ -37,7 +37,7 @@
         "applicationCategory": "ProductivityApplication",
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" },
         "author": { "@type": "Person", "name": "Lucas Bonavina", "url": "https://github.com/lbonavina" },
-        "description": "Gerenciador de tarefas e notas para desktop com suporte a categorias, prioridades e editor de notas rico.",
+        "description": "Gerenciador de tarefas e notas para desktop com suporte a categorias, prioridades, subtarefas, sincronização com GitHub e editor de notas rico.",
         "url": "https://lbonavina.github.io/taskletto"
     }
     </script>
@@ -71,6 +71,7 @@
             --muted: #7a7a8a;
             --success: #4ade80;
             --info: #60a5fa;
+            --purple: #a78bfa;
         }
 
         html {
@@ -230,7 +231,7 @@
         .hero-sub {
             font-size: clamp(17px, 2.5vw, 20px);
             color: var(--muted);
-            max-width: 560px;
+            max-width: 580px;
             margin: 0 auto 40px;
             font-weight: 400;
             line-height: 1.6;
@@ -364,7 +365,6 @@
         .mock-priority { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; font-family: 'DM Mono', monospace; }
         .mock-date { font-size: 10px; color: var(--muted); white-space: nowrap; }
 
-        /* new: recurrence + time badges in mockup */
         .mock-recur { font-size: 9px; color: #a78bfa; background: rgba(167,139,250,.1); border-radius: 4px; padding: 2px 5px; font-family: 'DM Mono', monospace; flex-shrink: 0; }
         .mock-time-bar { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
         .mock-time-track { width: 36px; height: 3px; border-radius: 99px; background: var(--border); overflow: hidden; }
@@ -412,6 +412,20 @@
             height: 1px;
             background: linear-gradient(90deg, transparent, rgba(255,145,77,.4), transparent);
         }
+
+        /* GitHub card special glow */
+        .new-card.github-card::before {
+            background: linear-gradient(90deg, transparent, rgba(167,139,250,.5), transparent);
+        }
+        .new-card.github-card:hover { border-color: rgba(167,139,250,.4); }
+        .new-card.github-card .new-card-tag { background: rgba(167,139,250,.1); color: var(--purple); border: 1px solid rgba(167,139,250,.25); }
+
+        /* Performance card special glow */
+        .new-card.perf-card::before {
+            background: linear-gradient(90deg, transparent, rgba(74,222,128,.4), transparent);
+        }
+        .new-card.perf-card:hover { border-color: rgba(74,222,128,.3); }
+        .new-card.perf-card .new-card-tag { background: rgba(74,222,128,.08); color: var(--success); border: 1px solid rgba(74,222,128,.2); }
 
         .new-card-tag {
             display: inline-flex;
@@ -504,6 +518,8 @@
         .feature-card { background: var(--surface); padding: 32px; transition: background .2s; }
         .feature-card:hover { background: var(--surface2); }
         .feature-icon { width: 44px; height: 44px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; background: rgba(255,145,77,.1); border: 1px solid rgba(255,145,77,.15); font-size: 20px; }
+        .feature-icon.icon-purple { background: rgba(167,139,250,.1); border-color: rgba(167,139,250,.2); }
+        .feature-icon.icon-green { background: rgba(74,222,128,.1); border-color: rgba(74,222,128,.2); }
         .feature-title { font-size: 16px; font-weight: 600; letter-spacing: -.3px; margin-bottom: 8px; }
         .feature-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
 
@@ -612,7 +628,7 @@
         <div class="container">
             <div class="hero-badge">
                 <span class="dot"></span>
-                <span data-i18n="badge">v1.3 · Grátis e Open Source</span>
+                <span data-i18n="badge">v2.0 · Grátis e Open Source</span>
             </div>
             <h1>
                 <span data-i18n="hero_line1">Suas tarefas.</span><br>
@@ -620,7 +636,7 @@
                 <span class="accent-word" data-i18n="hero_line3">Tudo no desktop.</span>
             </h1>
             <p class="hero-sub" data-i18n="hero_sub">
-                Taskletto é um app desktop leve e focado para quem precisa organizar tarefas e escrever notas sem abrir o browser.
+                Taskletto é um app desktop leve e focado para quem precisa organizar tarefas e escrever notas — agora com subtarefas, sincronização com GitHub e início instantâneo.
             </p>
             <div class="hero-ctas">
                 <a href="https://github.com/lbonavina/taskletto/releases" class="btn-primary">
@@ -648,6 +664,9 @@
     <!-- STRIP -->
     <div class="strip">
         <div class="strip-inner">
+            <div class="strip-item"><span>✦</span> <span data-i18n="strip_subtask">Subtarefas</span></div>
+            <div class="strip-item"><span>✦</span> <span data-i18n="strip_github">GitHub Sync</span></div>
+            <div class="strip-item"><span>✦</span> <span data-i18n="strip_perf">Início instantâneo</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip1">Tarefas com prioridade</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip2">Editor de notas rico</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip3">Categorias personalizadas</span></div>
@@ -662,6 +681,9 @@
             <div class="strip-item"><span>✦</span> <span data-i18n="strip8">Open source</span></div>
             <div class="strip-item"><span>✦</span> <span>Windows</span></div>
             <!-- duplicate for infinite scroll -->
+            <div class="strip-item"><span>✦</span> <span data-i18n="strip_subtask">Subtarefas</span></div>
+            <div class="strip-item"><span>✦</span> <span data-i18n="strip_github">GitHub Sync</span></div>
+            <div class="strip-item"><span>✦</span> <span data-i18n="strip_perf">Início instantâneo</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip1">Tarefas com prioridade</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip2">Editor de notas rico</span></div>
             <div class="strip-item"><span>✦</span> <span data-i18n="strip3">Categorias personalizadas</span></div>
@@ -683,8 +705,57 @@
         <div class="container">
             <div class="reveal">
                 <div class="section-label">✦ <span data-i18n="new_label">Novidades</span></div>
-                <h2 class="section-title" data-i18n="new_title">O que há de novo na v1.3</h2>
-                <p class="section-sub" data-i18n="new_sub">Callout blocks no editor de notas — destaques estilo Notion com 6 tipos.</p>
+                <h2 class="section-title" data-i18n="new_title">O que há de novo na v2.0</h2>
+                <p class="section-sub" data-i18n="new_sub">Subtarefas, sincronização com GitHub e início instantâneo — a maior atualização do Taskletto até hoje.</p>
+            </div>
+
+            <!-- v2.0 cards -->
+            <div class="whats-new-grid reveal">
+                <!-- Subtasks — full width highlight -->
+                <div class="new-card" style="grid-column: 1 / -1;">
+                    <div class="new-card-tag tag-new" data-i18n="tag_new">✦ Novo</div>
+                    <span class="new-card-icon">✅</span>
+                    <div class="new-card-title" data-i18n="v2_n1_title">Subtarefas</div>
+                    <div class="new-card-desc" data-i18n="v2_n1_desc">Quebre tarefas complexas em etapas menores. Cada tarefa agora pode ter subtarefas independentes, com progresso calculado automaticamente e exibido na lista principal.</div>
+                    <div class="new-card-pills">
+                        <span class="new-pill" data-i18n="v2_pill_subtask_nested">Subtarefas aninhadas</span>
+                        <span class="new-pill" data-i18n="v2_pill_subtask_progress">Progresso automático</span>
+                        <span class="new-pill" data-i18n="v2_pill_subtask_list">Visível na lista</span>
+                    </div>
+                </div>
+
+                <!-- GitHub Sync -->
+                <div class="new-card github-card">
+                    <div class="new-card-tag" data-i18n="tag_new">✦ Novo</div>
+                    <span class="new-card-icon">🔗</span>
+                    <div class="new-card-title" data-i18n="v2_n2_title">GitHub Sync</div>
+                    <div class="new-card-desc" data-i18n="v2_n2_desc">Sincronize suas tarefas e notas com um repositório GitHub privado. Seus dados ficam versionados e acessíveis de qualquer lugar, sem depender de nenhum servidor próprio.</div>
+                    <div class="new-card-pills">
+                        <span class="new-pill" data-i18n="v2_pill_gh_backup">Backup automático</span>
+                        <span class="new-pill" data-i18n="v2_pill_gh_versioned">Versionado</span>
+                        <span class="new-pill">Git</span>
+                    </div>
+                </div>
+
+                <!-- Performance -->
+                <div class="new-card perf-card">
+                    <div class="new-card-tag" data-i18n="tag_improved">⚡ Melhorado</div>
+                    <span class="new-card-icon">⚡</span>
+                    <div class="new-card-title" data-i18n="v2_n3_title">Início instantâneo</div>
+                    <div class="new-card-desc" data-i18n="v2_n3_desc">Cache de configurações, rotas e views no startup. O app abre significativamente mais rápido — sem tela de loading, direto para as suas tarefas.</div>
+                    <div class="new-card-pills">
+                        <span class="new-pill" data-i18n="v2_pill_perf_cache">Config cache</span>
+                        <span class="new-pill" data-i18n="v2_pill_perf_routes">Route cache</span>
+                        <span class="new-pill" data-i18n="v2_pill_perf_views">View cache</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- version divider v1.3 -->
+            <div class="version-divider reveal">
+                <div class="version-divider-line"></div>
+                <div class="version-divider-label" data-i18n="prev_version_13">v1.3 — versão anterior</div>
+                <div class="version-divider-line"></div>
             </div>
 
             <!-- v1.3 cards -->
@@ -705,7 +776,7 @@
                 </div>
             </div>
 
-            <!-- version divider -->
+            <!-- version divider v1.2 -->
             <div class="version-divider reveal">
                 <div class="version-divider-line"></div>
                 <div class="version-divider-label" data-i18n="prev_version">v1.2 — versão anterior</div>
@@ -777,6 +848,16 @@
                     <div class="feature-desc" data-i18n="f1_desc">Status, prioridade, vencimento, categorias e descrição. Tudo em um lugar só com filtros rápidos e busca.</div>
                 </div>
                 <div class="feature-card">
+                    <div class="feature-icon icon-purple">✅</div>
+                    <div class="feature-title" data-i18n="f10_title">Subtarefas</div>
+                    <div class="feature-desc" data-i18n="f10_desc">Quebre qualquer tarefa em etapas menores. O progresso é calculado automaticamente e exibido diretamente na lista de tarefas.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon icon-purple">🔗</div>
+                    <div class="feature-title" data-i18n="f11_title">GitHub Sync</div>
+                    <div class="feature-desc" data-i18n="f11_desc">Sincronize tarefas e notas com um repositório GitHub privado. Backup automático, versionado e sem servidor próprio.</div>
+                </div>
+                <div class="feature-card">
                     <div class="feature-icon">📝</div>
                     <div class="feature-title" data-i18n="f2_title">Editor de notas rico</div>
                     <div class="feature-desc" data-i18n="f2_desc">Baseado no Tiptap — suporta negrito, itálico, tabelas, checklists, blocos de código, links e muito mais.</div>
@@ -795,6 +876,11 @@
                     <div class="feature-icon">⏱️</div>
                     <div class="feature-title" data-i18n="f8_title">Time tracking integrado</div>
                     <div class="feature-desc" data-i18n="f8_desc">Meça quanto tempo você gasta em cada tarefa com timer embutido, tempo estimado e barra de progresso visual.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon icon-green">⚡</div>
+                    <div class="feature-title" data-i18n="f12_title">Início instantâneo</div>
+                    <div class="feature-desc" data-i18n="f12_desc">Cache de configurações, rotas e views no startup. O app abre mais rápido, sem espera — direto para o seu fluxo de trabalho.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🏷️</div>
@@ -890,31 +976,32 @@
         const i18n = {
             pt: {
                 meta_title: 'Taskletto — Gerenciador de Tarefas e Notas para Desktop',
-                meta_desc: 'Taskletto é um app desktop gratuito para gerenciar tarefas e notas com foco em produtividade. Disponível para Windows.',
+                meta_desc: 'Taskletto é um app desktop gratuito para gerenciar tarefas, subtarefas e notas com foco em produtividade. Disponível para Windows.',
                 nav_features: 'Funcionalidades', nav_how: 'Como funciona', nav_download: '↓ Download grátis',
-                badge: 'v1.3 · Grátis e Open Source',
+                badge: 'v2.0 · Grátis e Open Source',
                 hero_line1: 'Suas tarefas.', hero_line2: 'Suas notas.', hero_line3: 'Tudo no desktop.',
-                hero_sub: 'Taskletto é um app desktop leve e focado para quem precisa organizar tarefas e escrever notas sem abrir o browser.',
+                hero_sub: 'Taskletto é um app desktop leve e focado para quem precisa organizar tarefas e escrever notas — agora com subtarefas, sincronização com GitHub e início instantâneo.',
                 btn_download: 'Baixar para Windows', btn_github: 'Ver no GitHub',
                 hero_note_strong: '100% gratuito.', hero_note: 'Totalmente open source.',
-                mock_main: 'Principal', mock_tasks: 'Tarefas', mock_categories: 'Categorias', mock_notes: 'Notas',
-                mock_new_task: 'Nova Tarefa', mock_all: 'Todas', mock_urgent: 'Urgentes',
-                mock_due_today: 'Vence hoje', mock_overdue: 'Atrasadas', mock_in_progress: 'Em progresso',
-                task1: 'Revisar documentação do projeto', task2: 'Reunião com cliente — preparar pauta',
-                task3: 'Atualizar dependências do repositório', task4: 'Escrever testes unitários',
-                task5: 'Configurar CI/CD pipeline', task6: 'Deploy da versão 1.3 em produção',
-                pri_urgent: 'urgente', pri_high: 'alta', pri_medium: 'média', pri_low: 'baixa',
-                overdue: 'vencida', today_label: 'hoje', in3d: 'em 3 d', in7d: 'em 7 d',
-                completed_label: 'concluída', tomorrow_label: 'amanhã',
-                recur_weekly: '↻ semanal', recur_monthly: '↻ mensal',
+                strip_subtask: 'Subtarefas', strip_github: 'GitHub Sync', strip_perf: 'Início instantâneo',
                 strip1: 'Tarefas com prioridade', strip2: 'Editor de notas rico', strip3: 'Categorias personalizadas',
                 strip4: 'Filtros avançados', strip5: 'Modo claro e escuro', strip6: 'Atalhos de teclado',
                 strip7: '100% offline', strip8: 'Open source',
                 strip_recur: 'Recorrência de tarefas', strip_time: 'Time tracking', strip_export: 'Export / Import JSON',
                 strip_callout: 'Callout blocks',
-                new_label: 'Novidades', new_title: 'O que há de novo na v1.3',
-                new_sub: 'Callout blocks no editor de notas — destaques estilo Notion com 6 tipos.',
-                tag_new: '✦ Novo',
+                new_label: 'Novidades', new_title: 'O que há de novo na v2.0',
+                new_sub: 'Subtarefas, sincronização com GitHub e início instantâneo — a maior atualização do Taskletto até hoje.',
+                tag_new: '✦ Novo', tag_improved: '⚡ Melhorado',
+                v2_n1_title: 'Subtarefas',
+                v2_n1_desc: 'Quebre tarefas complexas em etapas menores. Cada tarefa agora pode ter subtarefas independentes, com progresso calculado automaticamente e exibido na lista principal.',
+                v2_pill_subtask_nested: 'Subtarefas aninhadas', v2_pill_subtask_progress: 'Progresso automático', v2_pill_subtask_list: 'Visível na lista',
+                v2_n2_title: 'GitHub Sync',
+                v2_n2_desc: 'Sincronize suas tarefas e notas com um repositório GitHub privado. Seus dados ficam versionados e acessíveis de qualquer lugar, sem depender de nenhum servidor próprio.',
+                v2_pill_gh_backup: 'Backup automático', v2_pill_gh_versioned: 'Versionado',
+                v2_n3_title: 'Início instantâneo',
+                v2_n3_desc: 'Cache de configurações, rotas e views no startup. O app abre significativamente mais rápido — sem tela de loading, direto para as suas tarefas.',
+                v2_pill_perf_cache: 'Config cache', v2_pill_perf_routes: 'Route cache', v2_pill_perf_views: 'View cache',
+                prev_version_13: 'v1.3 — versão anterior',
                 n5_title: 'Callout Blocks',
                 n5_desc: 'Caixas de destaque estilo Notion diretamente no editor de notas. Disponíveis via menu slash (/) ou pelo novo botão na toolbar, com 6 tipos: Info, Sucesso, Aviso, Perigo, Dica e Nota. Cada bloco tem cor e ícone próprios, e o tipo pode ser alterado clicando no ícone do bloco.',
                 callout_success: 'Sucesso', callout_warning: 'Aviso', callout_danger: 'Perigo',
@@ -942,6 +1029,9 @@
                 f7_title: 'Recorrência automática', f7_desc: 'Configure tarefas para repetirem diária, semanal ou mensalmente. A próxima ocorrência é criada automaticamente ao concluir.',
                 f8_title: 'Time tracking integrado', f8_desc: 'Meça quanto tempo você gasta em cada tarefa com timer embutido, tempo estimado e barra de progresso visual.',
                 f9_title: 'Callout blocks', f9_desc: 'Caixas de destaque estilo Notion no editor de notas. 6 tipos com cores e ícones próprios, inseríveis via slash (/) ou toolbar.',
+                f10_title: 'Subtarefas', f10_desc: 'Quebre qualquer tarefa em etapas menores. O progresso é calculado automaticamente e exibido diretamente na lista de tarefas.',
+                f11_title: 'GitHub Sync', f11_desc: 'Sincronize tarefas e notas com um repositório GitHub privado. Backup automático, versionado e sem servidor próprio.',
+                f12_title: 'Início instantâneo', f12_desc: 'Cache de configurações, rotas e views no startup. O app abre mais rápido, sem espera — direto para o seu fluxo de trabalho.',
                 how_label: 'Como funciona', how_title: 'Pronto em 3 passos.', how_sub: 'Sem cadastro, sem configuração complicada. Baixa e usa.',
                 step1_title: 'Baixe o instalador', step1_desc: 'Clique em Download, escolha Windows e execute o instalador. Leva menos de um minuto.',
                 step2_title: 'Crie suas categorias', step2_desc: 'Defina categorias com cores e emojis para organizar tarefas por projeto, área ou contexto.',
@@ -952,31 +1042,32 @@
             },
             en: {
                 meta_title: 'Taskletto — Desktop Task & Notes Manager',
-                meta_desc: 'Taskletto is a free desktop app to manage tasks and notes focused on productivity. Available for Windows.',
+                meta_desc: 'Taskletto is a free desktop app to manage tasks, subtasks and notes focused on productivity. Available for Windows.',
                 nav_features: 'Features', nav_how: 'How it works', nav_download: '↓ Free Download',
-                badge: 'v1.3 · Free & Open Source',
+                badge: 'v2.0 · Free & Open Source',
                 hero_line1: 'Your tasks.', hero_line2: 'Your notes.', hero_line3: 'All on the desktop.',
-                hero_sub: 'Taskletto is a lightweight, focused desktop app for people who need to organize tasks and write notes without opening a browser.',
+                hero_sub: 'Taskletto is a lightweight, focused desktop app for people who need to organize tasks and write notes — now with subtasks, GitHub sync and instant startup.',
                 btn_download: 'Download for Windows', btn_github: 'View on GitHub',
                 hero_note_strong: '100% free.', hero_note: 'No account, no subscription, no telemetry.',
-                mock_main: 'Main', mock_tasks: 'Tasks', mock_categories: 'Categories', mock_notes: 'Notes',
-                mock_new_task: 'New Task', mock_all: 'All', mock_urgent: 'Urgent',
-                mock_due_today: 'Due today', mock_overdue: 'Overdue', mock_in_progress: 'In progress',
-                task1: 'Review project documentation', task2: 'Client meeting — prepare agenda',
-                task3: 'Update repository dependencies', task4: 'Write unit tests',
-                task5: 'Set up CI/CD pipeline', task6: 'Deploy version 1.3 to production',
-                pri_urgent: 'urgent', pri_high: 'high', pri_medium: 'medium', pri_low: 'low',
-                overdue: 'overdue', today_label: 'today', in3d: 'in 3 d', in7d: 'in 7 d',
-                completed_label: 'done', tomorrow_label: 'tomorrow',
-                recur_weekly: '↻ weekly', recur_monthly: '↻ monthly',
+                strip_subtask: 'Subtasks', strip_github: 'GitHub Sync', strip_perf: 'Instant startup',
                 strip1: 'Priority tasks', strip2: 'Rich notes editor', strip3: 'Custom categories',
                 strip4: 'Advanced filters', strip5: 'Light & dark mode', strip6: 'Keyboard shortcuts',
                 strip7: '100% offline', strip8: 'Open source',
                 strip_recur: 'Task recurrence', strip_time: 'Time tracking', strip_export: 'Export / Import JSON',
                 strip_callout: 'Callout blocks',
-                new_label: "What's new", new_title: "What's new in v1.3",
-                new_sub: 'Callout blocks in the notes editor — Notion-style highlights with 6 types.',
-                tag_new: '✦ New',
+                new_label: "What's new", new_title: "What's new in v2.0",
+                new_sub: 'Subtasks, GitHub sync and instant startup — the biggest Taskletto update yet.',
+                tag_new: '✦ New', tag_improved: '⚡ Improved',
+                v2_n1_title: 'Subtasks',
+                v2_n1_desc: 'Break complex tasks into smaller steps. Each task can now have independent subtasks, with progress calculated automatically and displayed in the main list.',
+                v2_pill_subtask_nested: 'Nested subtasks', v2_pill_subtask_progress: 'Auto progress', v2_pill_subtask_list: 'Shown in list',
+                v2_n2_title: 'GitHub Sync',
+                v2_n2_desc: 'Sync your tasks and notes with a private GitHub repository. Your data is versioned and accessible from anywhere, without relying on any proprietary server.',
+                v2_pill_gh_backup: 'Auto backup', v2_pill_gh_versioned: 'Versioned',
+                v2_n3_title: 'Instant startup',
+                v2_n3_desc: 'Config, route and view cache on startup. The app opens significantly faster — no loading screen, straight to your tasks.',
+                v2_pill_perf_cache: 'Config cache', v2_pill_perf_routes: 'Route cache', v2_pill_perf_views: 'View cache',
+                prev_version_13: 'v1.3 — previous version',
                 n5_title: 'Callout Blocks',
                 n5_desc: 'Notion-style highlight boxes directly in the notes editor. Available via the slash (/) menu or the new toolbar button, with 6 types: Info, Success, Warning, Danger, Tip, and Note. Each block has its own color and icon, and the type can be changed by clicking the block\'s icon.',
                 callout_success: 'Success', callout_warning: 'Warning', callout_danger: 'Danger',
@@ -1004,6 +1095,9 @@
                 f7_title: 'Automatic recurrence', f7_desc: 'Set tasks to repeat daily, weekly or monthly. The next occurrence is automatically created on completion.',
                 f8_title: 'Built-in time tracking', f8_desc: 'Measure how long you spend on each task with a built-in timer, estimated time and visual progress bar.',
                 f9_title: 'Callout blocks', f9_desc: 'Notion-style highlight boxes in the notes editor. 6 types with their own colors and icons, insertable via slash (/) or toolbar.',
+                f10_title: 'Subtasks', f10_desc: 'Break any task into smaller steps. Progress is calculated automatically and shown directly in the task list.',
+                f11_title: 'GitHub Sync', f11_desc: 'Sync tasks and notes with a private GitHub repo. Auto backup, versioned, no proprietary server needed.',
+                f12_title: 'Instant startup', f12_desc: 'Config, route and view cache on startup. The app opens faster with no waiting — straight into your workflow.',
                 how_label: 'How it works', how_title: 'Ready in 3 steps.', how_sub: 'No sign-up, no complex setup. Download and use.',
                 step1_title: 'Download the installer', step1_desc: 'Click Download, choose Windows and run the installer. Takes less than a minute.',
                 step2_title: 'Create your categories', step2_desc: 'Set up categories with colors and emojis to organize tasks by project, area or context.',
