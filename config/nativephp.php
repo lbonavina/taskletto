@@ -6,7 +6,7 @@ return [
      * It is used to determine if the app needs to be updated.
      * Increment this value every time you release a new version of your app.
      */
-    'version' => env('NATIVEPHP_APP_VERSION', '1.3.0'),
+    'version' => env('NATIVEPHP_APP_VERSION', '2.0.0'),
 
     /**
      * The ID of your application. This should be a unique identifier
@@ -155,6 +155,13 @@ return [
      */
     'prebuild' => [
         'npm run build',
+        'php artisan config:cache',
+        'php artisan route:cache',
+        'php artisan view:cache',
+        // Copia ícone e assets do instalador para nativephp/electron/build/
+        PHP_OS_FAMILY === 'Windows'
+            ? 'cmd /c copy /Y public\\icon.ico nativephp\\electron\\build\\icon.ico && copy /Y public\\installer-header.bmp nativephp\\electron\\build\\installerHeader.bmp && copy /Y public\\installer-sidebar.bmp nativephp\\electron\\build\\installerSidebar.bmp && copy /Y installer\\installer.nsh nativephp\\electron\\build\\installer.nsh'
+            : 'cp public/icon.ico nativephp/electron/build/icon.ico && cp public/installer-header.bmp nativephp/electron/build/installerHeader.bmp && cp public/installer-sidebar.bmp nativephp/electron/build/installerSidebar.bmp && cp installer/installer.nsh nativephp/electron/build/installer.nsh',
     ],
 
     'postbuild' => [

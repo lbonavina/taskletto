@@ -718,6 +718,21 @@ document.addEventListener('DOMContentLoaded', () => {
         updateToolbar(editor);
     });
 
+    // ── Shared dropdown positioning ──────────────────────────────────────────
+    function positionMenu(trigger, menu) {
+        const r = trigger.getBoundingClientRect();
+        menu.style.top   = (r.bottom + 4) + 'px';
+        menu.style.left  = r.left + 'px';
+        menu.style.right = 'auto';
+        requestAnimationFrame(() => {
+            const mw = menu.offsetWidth;
+            if (r.left + mw > window.innerWidth - 8) {
+                menu.style.left  = 'auto';
+                menu.style.right = (window.innerWidth - r.right) + 'px';
+            }
+        });
+    }
+
     // ── Font picker ───────────────────────────────────────────────────────────
     (function initFontPicker() {
         const trigger = document.getElementById('ttb-font-trigger');
@@ -746,9 +761,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         trigger.addEventListener('mousedown', e => {
             e.preventDefault();
-            const open = menu.classList.contains('open');
-            menu.classList.toggle('open', !open);
-            trigger.classList.toggle('open', !open);
+            e.stopPropagation();
+            const wasOpen = menu.classList.contains('open');
+            document.querySelectorAll('.ttb-dropdown-menu.open, .ttb-more-menu.open')
+                .forEach(m => { if (m !== menu) m.classList.remove('open'); });
+            document.querySelectorAll('.ttb-dropdown-trigger.open, .ttb-more-btn.open')
+                .forEach(b => { if (b !== trigger) b.classList.remove('open'); });
+            if (!wasOpen) {
+                menu.classList.add('open');
+                trigger.classList.add('open');
+                positionMenu(trigger, menu);
+            } else {
+                menu.classList.remove('open');
+                trigger.classList.remove('open');
+            }
         });
         document.addEventListener('mousedown', e => {
             if (!trigger.contains(e.target) && !menu.contains(e.target)) {
@@ -761,18 +787,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── Heading dropdown ──────────────────────────────────────────────────────
     const hdTrigger = document.getElementById('ttb-heading-trigger');
     const hdMenu    = document.getElementById('ttb-heading-menu');
+
     hdTrigger?.addEventListener('mousedown', e => {
         e.preventDefault();
-        const open = hdMenu.classList.contains('open');
-        hdMenu.classList.toggle('open', !open);
-        hdTrigger.classList.toggle('open', !open);
-    });
-    document.addEventListener('mousedown', e => {
-        if (!hdTrigger?.contains(e.target) && !hdMenu?.contains(e.target)) {
-            hdMenu?.classList.remove('open');
-            hdTrigger?.classList.remove('open');
+        e.stopPropagation();
+        const wasOpen = hdMenu.classList.contains('open');
+        document.querySelectorAll('.ttb-dropdown-menu.open, .ttb-more-menu.open')
+            .forEach(m => { if (m !== hdMenu) m.classList.remove('open'); });
+        document.querySelectorAll('.ttb-dropdown-trigger.open, .ttb-more-btn.open')
+            .forEach(b => { if (b !== hdTrigger) b.classList.remove('open'); });
+        if (!wasOpen) {
+            hdMenu.classList.add('open');
+            hdTrigger.classList.add('open');
+            positionMenu(hdTrigger, hdMenu);
+        } else {
+            hdMenu.classList.remove('open');
+            hdTrigger.classList.remove('open');
         }
     });
+    hdTrigger?.addEventListener('click', e => e.stopPropagation());
+    hdMenu?.addEventListener('mousedown', e => e.stopPropagation());
+    hdMenu?.addEventListener('click',     e => e.stopPropagation());
     hdMenu?.querySelectorAll('.ttb-dropdown-item').forEach(item => {
         item.addEventListener('mousedown', e => {
             e.preventDefault();
@@ -793,9 +828,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         trigger.addEventListener('mousedown', e => {
             e.preventDefault();
-            const open = menu.classList.contains('open');
-            menu.classList.toggle('open', !open);
-            trigger.classList.toggle('open', !open);
+            e.stopPropagation();
+            const wasOpen = menu.classList.contains('open');
+            document.querySelectorAll('.ttb-dropdown-menu.open, .ttb-more-menu.open')
+                .forEach(m => { if (m !== menu) m.classList.remove('open'); });
+            document.querySelectorAll('.ttb-dropdown-trigger.open, .ttb-more-btn.open')
+                .forEach(b => { if (b !== trigger) b.classList.remove('open'); });
+            if (!wasOpen) {
+                menu.classList.add('open');
+                trigger.classList.add('open');
+                positionMenu(trigger, menu);
+            } else {
+                menu.classList.remove('open');
+                trigger.classList.remove('open');
+            }
         });
         document.addEventListener('mousedown', e => {
             if (!trigger.contains(e.target) && !menu.contains(e.target)) {

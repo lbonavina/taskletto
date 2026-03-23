@@ -76,7 +76,7 @@
             min-height: 160px;
             padding: 12px 14px;
             font-size: 14px;
-            font-family: 'DM Sans', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             line-height: 1.7;
             color: var(--text);
             outline: none;
@@ -96,7 +96,7 @@
         #task-tiptap-editor .tiptap h1,
         #task-tiptap-editor .tiptap h2,
         #task-tiptap-editor .tiptap h3 {
-            font-family: 'Codec Pro', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             font-weight: 700;
             color: var(--text);
             line-height: 1.25;
@@ -118,7 +118,7 @@
         #task-tiptap-editor .tiptap code {
             background: rgba(0,0,0,.3);
             border-radius: 4px;
-            font-family: 'DM Sans', monospace;
+            font-family: 'Montserrat', sans-serif;
             font-size: 12.5px;
             color: var(--accent);
             padding: 1px 5px;
@@ -127,7 +127,7 @@
             background: rgba(0,0,0,.3);
             border-radius: 8px;
             padding: 10px 14px;
-            font-family: 'DM Sans', monospace;
+            font-family: 'Montserrat', sans-serif;
             font-size: 12.5px;
             color: var(--accent);
             margin: 6px 0;
@@ -145,13 +145,13 @@
         .md-body { font-size: 13px; line-height: 1.65; color: var(--text); word-break: break-word; }
         .md-body p { margin: 0 0 6px; }
         .md-body p:last-child { margin-bottom: 0; }
-        .md-body h1, .md-body h2, .md-body h3 { font-family: 'Codec Pro', sans-serif; font-weight: 700; margin: 10px 0 4px; letter-spacing: -.2px; }
+        .md-body h1, .md-body h2, .md-body h3 { font-family: 'Montserrat', sans-serif; font-weight: 700; margin: 10px 0 4px; letter-spacing: -.2px; }
         .md-body h1 { font-size: 18px; }
         .md-body h2 { font-size: 15px; }
         .md-body h3 { font-size: 13.5px; }
         .md-body ul, .md-body ol { padding-left: 20px; margin: 4px 0; }
         .md-body li { margin: 2px 0; }
-        .md-body code { background: rgba(0,0,0,.25); border-radius: 4px; font-family: 'DM Sans', monospace; font-size: 12px; color: var(--accent); padding: 1px 5px; }
+        .md-body code { background: rgba(0,0,0,.25); border-radius: 4px; font-family: 'Montserrat', sans-serif; font-size: 12px; color: var(--accent); padding: 1px 5px; }
         .md-body pre { background: rgba(0,0,0,.25); border-radius: 8px; padding: 10px 14px; margin: 6px 0; overflow-x: auto; }
         .md-body pre code { background: none; padding: 0; }
         .md-body blockquote { border-left: 3px solid var(--accent); padding-left: 10px; color: var(--muted); margin: 6px 0; }
@@ -186,6 +186,151 @@
             box-sizing: border-box;
         }
         .prop-date-input:focus { border-color: var(--accent); }
+
+        /* ── Inline title ─────────────────────────────────────────────── */
+        #inline-title:hover { background: var(--surface2); }
+        #inline-title:focus { background: var(--surface2); box-shadow: 0 0 0 2px rgba(255,145,77,.15); }
+        #inline-title:empty::before { content: attr(placeholder); color: var(--muted); opacity: .5; }
+
+        /* ── Meta chips (created/updated below title) ─────────────────── */
+        .task-meta-chip {
+            display: inline-flex; align-items: center; gap: 4px;
+            font-size: 10.5px; color: var(--muted);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* ── Estimate fields ──────────────────────────────────────────── */
+        .est-field-wrap {
+            background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 8px; padding: 8px 10px;
+            display: flex; flex-direction: column; gap: 3px;
+            cursor: text;
+        }
+        .est-field-label {
+            font-size: 9px; color: var(--muted); font-weight: 700;
+            text-transform: uppercase; letter-spacing: .6px;
+        }
+        .est-field-input {
+            background: transparent; border: none; outline: none;
+            font-size: 20px; font-family: 'Montserrat', sans-serif;
+            font-weight: 700; color: var(--text);
+            width: 100%; padding: 0; line-height: 1;
+            -moz-appearance: textfield;
+        }
+        .est-field-input::-webkit-outer-spin-button,
+        .est-field-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+        /* ── Subtasks ─────────────────────────────────────────────────── */
+        .subtasks-header {
+            display: flex; align-items: center; justify-content: space-between; gap: 12px;
+        }
+        .subtasks-progress-wrap {
+            display: flex; align-items: center; gap: 8px; flex: 1; max-width: 200px;
+        }
+        .subtasks-progress-bar {
+            flex: 1; height: 4px; background: var(--surface2);
+            border-radius: 99px; overflow: hidden;
+        }
+        .subtasks-progress-fill {
+            height: 100%; border-radius: 99px;
+            background: var(--success);
+            transition: width .4s cubic-bezier(.34,1.2,.64,1);
+            width: 0%;
+        }
+        .subtasks-progress-label {
+            font-size: 10px; font-family: 'Montserrat', sans-serif;
+            color: var(--muted); white-space: nowrap; flex-shrink: 0;
+        }
+
+        .subtask-item {
+            display: flex; align-items: center; gap: 10px;
+            padding: 7px 10px; border-radius: 8px;
+            transition: background .12s;
+            group: true;
+        }
+        .subtask-item:hover { background: var(--surface2); }
+        .subtask-item:hover .subtask-delete { opacity: 1; }
+
+        .subtask-check {
+            appearance: none; -webkit-appearance: none;
+            width: 16px; height: 16px; flex-shrink: 0;
+            border: 1.5px solid var(--border); border-radius: 4px;
+            background: var(--surface2); cursor: pointer; position: relative;
+            transition: border-color .15s, background .15s;
+        }
+        .subtask-check:hover { border-color: var(--success); }
+        .subtask-check:checked {
+            background: var(--success); border-color: var(--success);
+        }
+        .subtask-check:checked::after {
+            content: ''; position: absolute;
+            left: 4px; top: 1px; width: 5px; height: 9px;
+            border: 2px solid var(--bg); border-top: none; border-left: none;
+            transform: rotate(45deg);
+        }
+
+        .subtask-title {
+            flex: 1; font-size: 13px; color: var(--text);
+            cursor: text; border-radius: 4px; padding: 1px 4px;
+            transition: background .12s; outline: none;
+            line-height: 1.5;
+        }
+        .subtask-title:focus { background: var(--surface2); }
+        .subtask-title.done {
+            color: var(--muted); text-decoration: line-through; opacity: .6;
+        }
+
+        .subtask-delete {
+            width: 22px; height: 22px; border-radius: 5px;
+            background: none; border: none; cursor: pointer;
+            color: var(--muted); opacity: 0;
+            display: flex; align-items: center; justify-content: center;
+            transition: color .12s, background .12s, opacity .15s;
+            flex-shrink: 0;
+        }
+        .subtask-delete:hover { color: var(--danger); background: rgba(224,84,84,.1); }
+
+        .subtask-add-wrap { margin-top: 8px; }
+        .subtask-add-trigger {
+            display: flex; align-items: center; gap: 7px;
+            background: none; border: none; cursor: pointer;
+            color: var(--muted); font-size: 12px; font-weight: 500;
+            font-family: inherit; padding: 5px 6px; border-radius: 7px;
+            transition: color .15s, background .15s;
+        }
+        .subtask-add-trigger:hover { color: var(--accent); background: rgba(255,145,77,.06); }
+        .subtask-add-trigger svg { opacity: .5; transition: opacity .15s, transform .2s; }
+        .subtask-add-trigger:hover svg { opacity: 1; transform: rotate(90deg); }
+
+        .subtask-add-form {
+            display: flex; align-items: center; gap: 8px;
+            padding: 4px 2px; animation: pageEnter .15s ease both;
+        }
+        .subtask-add-input {
+            flex: 1; background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 8px; color: var(--text); font-size: 12.5px;
+            font-family: inherit; padding: 7px 12px; outline: none;
+            transition: border-color .15s, box-shadow .15s;
+        }
+        .subtask-add-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(255,145,77,.1);
+        }
+        .subtask-add-input::placeholder { color: var(--muted); opacity: .5; }
+        .subtask-add-btn {
+            width: 32px; height: 32px; flex-shrink: 0;
+            border-radius: 8px; border: none; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--accent); color: #0c0c0e;
+            transition: transform .15s, box-shadow .15s, opacity .15s;
+            opacity: .4; pointer-events: none;
+        }
+        .subtask-add-btn.active { opacity: 1; pointer-events: all; }
+        .subtask-add-btn:hover { transform: scale(1.08); box-shadow: 0 2px 8px rgba(255,145,77,.35); }
+        .subtask-add-esc {
+            font-size: 10px; color: var(--muted); opacity: .45;
+            white-space: nowrap; user-select: none;
+        }
     </style>
 @endpush
 
@@ -197,12 +342,20 @@
         {{-- Left column --}}
         <div>
 
-            {{-- Header card --}}
+            {{-- Unified header + edit card --}}
             <div class="card" style="margin-bottom:16px">
-                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+
+                {{-- Title row: inline editable + actions --}}
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px">
                     <div style="flex:1;min-width:0">
-                        <h2 style="font-family:'Codec Pro',sans-serif;font-size:22px;font-weight:700;letter-spacing:-.4px;line-height:1.2;margin-bottom:8px">{{ $task->title }}</h2>
-                        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+                        <h2
+                            id="inline-title"
+                            contenteditable="true"
+                            spellcheck="false"
+                            style="font-family:'Montserrat',sans-serif;font-size:21px;font-weight:700;letter-spacing:-0.2px;line-height:1.3;margin-bottom:10px;outline:none;border-radius:6px;padding:2px 6px;margin-left:-6px;transition:background .15s;cursor:text;"
+                            title="Clique para editar o título"
+                        >{{ $task->title }}</h2>
+                        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding-left:2px">
                             <span class="badge status-{{ $task->status->value }}">
                                 <span class="badge-dot" style="background:var(--status-{{ $task->status->value }})"></span>
                                 {{ $task->status->label() }}
@@ -210,6 +363,24 @@
                             <span class="badge priority-{{ $task->priority->value }}">{{ $task->priority->label() }}</span>
                             @if($task->isOverdue())
                                 <span class="badge" style="background:rgba(224,84,84,.12);color:var(--danger)">⚠ Atrasada</span>
+                            @endif
+                        </div>
+
+                        {{-- Meta info inline — compact, below badges --}}
+                        <div style="display:flex;align-items:center;gap:14px;margin-top:10px;flex-wrap:wrap">
+                            <span class="task-meta-chip">
+                                <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 2"/></svg>
+                                Criada {{ $task->created_at->diffForHumans() }}
+                            </span>
+                            <span class="task-meta-chip">
+                                <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11.5 2.5a1.5 1.5 0 012.12 2.12L5 13.24 2 14l.76-3L11.5 2.5z"/></svg>
+                                Atualizada {{ $task->updated_at->diffForHumans() }}
+                            </span>
+                            @if($task->completed_at)
+                            <span class="task-meta-chip" style="color:var(--success)">
+                                <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8l4 4 8-8"/></svg>
+                                Concluída {{ $task->completed_at->diffForHumans() }}
+                            </span>
                             @endif
                         </div>
                     </div>
@@ -222,21 +393,14 @@
                         <button class="btn btn-danger btn-sm" id="btn-delete">{{ __('app.task_delete_btn') }}</button>
                     </div>
                 </div>
-            </div>{{-- /header card --}}
 
-            {{-- Edit card --}}
-            <div class="card" style="margin-bottom:16px">
-                <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:18px">
-                    {{ __('app.task_section_edit') }}
-                </div>
                 <div id="edit-alert" style="display:none" class="alert"></div>
 
-                <div class="form-group">
-                    <label>{{ __('app.task_label_title') }}</label>
-                    <input type="text" id="edit-title" value="{{ $task->title }}">
-                </div>
+                {{-- Divider --}}
+                <div style="height:1px;background:var(--border);margin:0 -20px 18px"></div>
 
-                <div class="form-group">
+                {{-- Description --}}
+                <div class="form-group" style="margin-bottom:0">
                     <label>{{ __('app.task_label_description') }}</label>
                     <div id="task-editor-wrap">
                         <div id="task-editor-toolbar">
@@ -262,10 +426,43 @@
                     </div>
                 </div>
 
-                <div style="text-align:right;margin-top:4px">
+                <div style="text-align:right;margin-top:16px">
                     <button class="btn btn-primary" id="btn-save-edit">{{ __('app.task_save_changes') }}</button>
                 </div>
-            </div>{{-- /edit card --}}
+
+            </div>{{-- /unified card --}}
+
+            {{-- Subtasks card --}}
+            <div class="card" id="subtasks-card" style="margin-bottom:16px">
+                <div class="subtasks-header">
+                    <div class="section-title" style="margin-bottom:0">
+                        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 4h12M2 8h8M2 12h6"/></svg>
+                        Subtarefas
+                    </div>
+                    <div class="subtasks-progress-wrap" id="subtasks-progress-wrap" style="display:none">
+                        <div class="subtasks-progress-bar">
+                            <div class="subtasks-progress-fill" id="subtasks-progress-fill"></div>
+                        </div>
+                        <span class="subtasks-progress-label" id="subtasks-progress-label"></span>
+                    </div>
+                </div>
+
+                <div id="subtasks-list" style="margin-top:12px;display:flex;flex-direction:column;gap:2px"></div>
+
+                <div class="subtask-add-wrap" id="subtask-add-wrap">
+                    <button class="subtask-add-trigger" id="subtask-add-trigger">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v12M2 8h12"/></svg>
+                        Adicionar subtarefa
+                    </button>
+                    <div class="subtask-add-form" id="subtask-add-form" style="display:none">
+                        <input type="text" class="subtask-add-input" id="subtask-add-input" placeholder="Nome da subtarefa…" maxlength="255" autocomplete="off">
+                        <button class="subtask-add-btn" id="subtask-add-submit" title="Adicionar (Enter)">
+                            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 2v12M2 8h12"/></svg>
+                        </button>
+                        <span class="subtask-add-esc">Esc para cancelar</span>
+                    </div>
+                </div>
+            </div>{{-- /subtasks card --}}
 
             {{-- Comments card --}}
             <div class="card" id="comments-card">
@@ -288,7 +485,7 @@
                     <textarea id="comment-body" rows="3" placeholder="Escreva um comentário… Suporta **negrito**, _itálico_, `código`, listas, etc." style="width:100%;resize:vertical;min-height:72px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13.5px;font-family:inherit;color:var(--text);line-height:1.55;transition:border-color .15s,box-shadow .15s;outline:none;box-sizing:border-box" onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 3px rgba(255,145,77,.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"></textarea>
                     <div id="comment-preview" style="display:none;min-height:72px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13.5px;color:var(--text);line-height:1.55" class="md-body"></div>
                     <div style="display:flex;align-items:center;justify-content:space-between">
-                        <span id="comment-char-count" style="font-size:11px;color:var(--muted);font-family:'DM Sans',monospace">0 / 2000</span>
+                        <span id="comment-char-count" style="font-size:11px;color:var(--muted);font-family:'Montserrat',sans-serif">0 / 2000</span>
                         <button id="btn-add-comment" class="btn btn-primary btn-sm">Comentar</button>
                     </div>
                 </div>
@@ -379,61 +576,12 @@
                 </div>
             </div>{{-- /properties card --}}
 
-            {{-- Info card --}}
-            <div class="card" style="font-size:13px">
-                <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:16px">
-                    {{ __('app.task_section_info') }}
-                </div>
-                <div style="display:flex;flex-direction:column;gap:12px">
-                    <div>
-                        <div style="font-size:11px;color:var(--muted);margin-bottom:2px">ID</div>
-                        <div style="font-family:'DM Sans',monospace">#{{ $task->id }}</div>
-                    </div>
-                    <div>
-                        <div style="font-size:11px;color:var(--muted);margin-bottom:2px">{{ __('app.task_info_created') }}</div>
-                        <div style="font-family:'DM Sans',monospace;font-size:12px">{{ $task->created_at->format('d/m/Y H:i') }}</div>
-                    </div>
-                    <div>
-                        <div style="font-size:11px;color:var(--muted);margin-bottom:2px">{{ __('app.task_info_updated') }}</div>
-                        <div style="font-family:'DM Sans',monospace;font-size:12px">{{ $task->updated_at->format('d/m/Y H:i') }}</div>
-                    </div>
-                    @if($task->completed_at)
-                    <div>
-                        <div style="font-size:11px;color:var(--muted);margin-bottom:2px">Concluída em</div>
-                        <div style="font-family:'DM Sans',monospace;font-size:12px;color:var(--success)">{{ $task->completed_at->format('d/m/Y H:i') }}</div>
-                    </div>
-                    @endif
-                    @if($task->due_date)
-                    <div>
-                        <div style="font-size:11px;color:var(--muted);margin-bottom:2px">{{ __('app.task_info_due') }}</div>
-                        <div style="font-family:'DM Sans',monospace;font-size:12px;color:{{ $task->isOverdue() ? 'var(--danger)' : 'var(--text)' }}">
-                            {{ $task->due_date->format('d/m/Y') }}
-                            @if($task->isOverdue()) <span style="font-size:10px">(atrasada)</span> @endif
-                        </div>
-                    </div>
-                    @endif
-                    @if($task->isRecurring())
-                    <div>
-                        <div style="font-size:11px;color:var(--muted);margin-bottom:2px">Recorrência</div>
-                        <div style="font-size:12px;display:flex;align-items:center;gap:5px">
-                            <span style="font-size:14px">🔁</span>
-                            <span>{{ $task->recurrence->label() }}</span>
-                            @if($task->recurrence_ends_at)
-                                <span style="font-size:11px;color:var(--muted)">até {{ $task->recurrence_ends_at->format('d/m/Y') }}</span>
-                            @endif
-                        </div>
-                    </div>
-                    @endif
-                </div>
-            </div>{{-- /info card --}}
-
             {{-- Time tracking card --}}
-            <div class="card" id="time-card">
-                <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:14px">Tempo</div>
-
-                <div style="margin-bottom:12px">
-                    <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Registrado</div>
-                    <div id="tracked-display" style="font-size:24px;font-family:'DM Sans',monospace;font-weight:700;color:var(--text);letter-spacing:-.5px;line-height:1">{{ $task->formattedTrackedTime() }}</div>
+            {{-- Estimativa card --}}
+            <div class="card" id="estimate-card">
+                <div class="section-title" style="margin-bottom:12px">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 2"/></svg>
+                    Estimativa
                 </div>
 
                 @php
@@ -442,44 +590,66 @@
                     $estH     = $task->estimated_minutes ? intdiv($task->estimated_minutes, 60) : 0;
                     $estM     = $task->estimated_minutes ? $task->estimated_minutes % 60 : 0;
                 @endphp
-                <div style="background:var(--surface2);border-radius:99px;height:4px;overflow:hidden;margin-bottom:14px">
+
+                {{-- Tempo registrado + barra --}}
+                <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px">
+                    <div>
+                        <div class="action-row-desc" style="margin-bottom:2px">Registrado</div>
+                        <div id="tracked-display" style="font-size:22px;font-family:'Montserrat',sans-serif;font-weight:700;color:var(--text);letter-spacing:-.5px;line-height:1">{{ $task->formattedTrackedTime() }}</div>
+                    </div>
+                    @if($task->estimated_minutes)
+                    <div id="est-summary" style="font-size:11px;color:var(--muted);text-align:right">
+                        {{ $estH > 0 ? $estH.'h ' : '' }}{{ $estM > 0 ? $estM.'min' : '' }} est.
+                        @if($pct > 0) <br><span style="color:{{ $pct >= 100 ? 'var(--danger)' : 'var(--accent)' }}">{{ $pct }}%</span> @endif
+                    </div>
+                    @else
+                    <div id="est-summary"></div>
+                    @endif
+                </div>
+
+                <div style="background:var(--surface2);border-radius:99px;height:3px;overflow:hidden;margin-bottom:16px">
                     <div id="time-progress-bar" style="height:100%;width:{{ $pct }}%;background:{{ $barColor }};border-radius:99px;transition:width .4s"></div>
                 </div>
 
-                <div style="margin-bottom:12px">
-                    <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Estimativa</div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-                        <div id="est-h-wrap" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:3px;transition:border-color .15s;cursor:text" onclick="document.getElementById('est-h').focus()">
-                            <div style="font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.6px">Horas</div>
-                            <input id="est-h" type="number" min="0" max="99" step="1" value="{{ $estH ?: '' }}" placeholder="0"
-                                style="background:transparent;border:none;outline:none;font-size:20px;font-family:'DM Sans',monospace;font-weight:700;color:var(--text);width:100%;padding:0;line-height:1;-moz-appearance:textfield">
-                        </div>
-                        <div id="est-m-wrap" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:3px;transition:border-color .15s;cursor:text" onclick="document.getElementById('est-m').focus()">
-                            <div style="font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.6px">Minutos</div>
-                            <input id="est-m" type="number" min="0" max="59" step="5" value="{{ $estM ?: '' }}" placeholder="0"
-                                style="background:transparent;border:none;outline:none;font-size:20px;font-family:'DM Sans',monospace;font-weight:700;color:var(--text);width:100%;padding:0;line-height:1;-moz-appearance:textfield">
-                        </div>
+                {{-- Horas / Minutos --}}
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
+                    <div class="est-field-wrap" onclick="document.getElementById('est-h').focus()">
+                        <div class="est-field-label">Horas</div>
+                        <input id="est-h" type="number" min="0" max="99" step="1"
+                            value="{{ $estH ?: '' }}" placeholder="0"
+                            class="est-field-input">
                     </div>
-                    <button id="btn-save-estimate" class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;margin-top:6px;gap:6px">
-                        <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8l4 4 8-8"/></svg>
-                        Salvar estimativa
-                    </button>
-                    <div id="est-summary" style="font-size:11px;color:var(--muted);margin-top:6px;text-align:center;min-height:14px">
-                        @if($task->estimated_minutes)
-                            {{ $estH > 0 ? $estH.'h ' : '' }}{{ $estM > 0 ? $estM.'min' : '' }} estimados
-                            @if($pct > 0) · <span style="color:{{ $pct >= 100 ? 'var(--danger)' : 'var(--accent)' }}">{{ $pct }}% concluído</span> @endif
-                        @endif
+                    <div class="est-field-wrap" onclick="document.getElementById('est-m').focus()">
+                        <div class="est-field-label">Minutos</div>
+                        <input id="est-m" type="number" min="0" max="59" step="5"
+                            value="{{ $estM ?: '' }}" placeholder="0"
+                            class="est-field-input">
                     </div>
                 </div>
 
-                @if(!$task->isCompleted())
-                    <button id="btn-timer" class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;gap:8px;padding:8px">
-                        <span id="timer-icon" style="font-size:12px">▶</span>
-                        <span id="timer-label">Iniciar timer</span>
-                    </button>
-                    <div id="timer-elapsed" style="display:none;font-size:11px;color:var(--accent);text-align:center;font-family:'DM Sans',monospace;margin-top:6px;font-weight:500"></div>
-                @endif
+                <button id="btn-save-estimate" class="btn btn-ghost" style="width:100%;justify-content:center;gap:6px;font-size:12px">
+                    <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8l4 4 8-8"/></svg>
+                    Salvar estimativa
+                </button>
+            </div>{{-- /estimate-card --}}
+
+            {{-- Timer card --}}
+            @if(!$task->isCompleted())
+            <div class="card" id="time-card">
+                <div class="section-title" style="margin-bottom:12px">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 1v3M5 2.2l1.5 2.6M11 2.2L9.5 4.8M14 8a6 6 0 11-12 0 6 6 0 0112 0z"/></svg>
+                    Timer
+                </div>
+
+                <button id="btn-timer" class="btn btn-ghost" style="width:100%;justify-content:center;gap:8px">
+                    <span id="timer-icon">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M6 3l8 5-8 5V3z"/></svg>
+                    </span>
+                    <span id="timer-label">Iniciar timer</span>
+                </button>
+                <div id="timer-elapsed" style="display:none;font-size:11px;color:var(--accent);text-align:center;font-family:'Montserrat',sans-serif;margin-top:8px;font-weight:500"></div>
             </div>{{-- /time-card --}}
+            @endif
 
         </div>{{-- /right sidebar --}}
 
@@ -515,7 +685,7 @@
                     </div>
                     <div style="flex:1;min-width:0;padding-bottom:{{ $loop->last ? '0' : '8px' }}">
                         <div style="font-size:13px;color:var(--text);line-height:1.4">{{ $h->label }}</div>
-                        <div style="font-size:11px;color:var(--muted);font-family:'DM Sans',monospace;margin-top:2px">{{ $h->created_at?->format('d/m/Y \à\s H:i') }}</div>
+                        <div style="font-size:11px;color:var(--muted);font-family:'Montserrat',sans-serif;margin-top:2px">{{ $h->created_at?->format('d/m/Y \à\s H:i') }}</div>
                     </div>
                 </div>
                 @endforeach
@@ -652,7 +822,7 @@
                 btn.disabled = true;
                 const html = editor.getHTML();
                 const payload = {
-                    title: document.getElementById('edit-title').value,
+                    title: document.getElementById('inline-title').textContent.trim(),
                     description: editor.getText().trim() ? html : null,
                 };
                 try {
@@ -689,13 +859,13 @@
                 if (!btn) return;
                 if (running) {
                     btn.style.borderColor='var(--accent)'; btn.style.color='var(--accent)';
-                    icon.textContent='⏹'; lbl.textContent='Parar timer';
+                    icon.innerHTML='<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="3" width="10" height="10" rx="1"/></svg>'; lbl.textContent='Parar timer';
                     elapsed.style.display='block';
                     clearInterval(timerInterval);
                     timerInterval=setInterval(()=>{ elapsed.textContent='Sessão atual: '+fmtSeconds(Math.floor((Date.now()-timerStartedAt)/1000)); },1000);
                 } else {
                     btn.style.borderColor=''; btn.style.color='';
-                    icon.textContent='▶'; lbl.textContent='Iniciar timer';
+                    icon.innerHTML='<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M6 3l8 5-8 5V3z"/></svg>'; lbl.textContent='Iniciar timer';
                     elapsed.style.display='none'; clearInterval(timerInterval);
                 }
                 if (trackedSeconds!==undefined) { const td=document.getElementById('tracked-display'); if(td) td.textContent=fmtTracked(trackedSeconds); }
@@ -773,7 +943,7 @@
                 const div=document.createElement('div'); div.className='comment-item'; div.dataset.id=comment.id; div.dataset.body=comment.body;
                 div.style.cssText='display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)';
                 const editedLabel=comment.edited?`<span style="color:var(--muted);font-size:10px;margin-left:6px">(editado)</span>`:'';
-                div.innerHTML=`<div style="width:28px;height:28px;border-radius:50%;background:rgba(255,145,77,.15);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:1px">💬</div><div style="flex:1;min-width:0"><div class="comment-body-display md-body">${renderMd(comment.body)}</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px;flex-wrap:wrap;gap:4px"><span style="color:var(--muted);font-size:11px;font-family:'DM Sans',monospace">${comment.created_at}${editedLabel}</span><div style="display:flex;gap:4px"><button class="btn-edit-comment" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:2px 6px;border-radius:4px;transition:color .15s,background .15s">Editar</button><button class="btn-delete-comment" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:2px 6px;border-radius:4px;transition:color .15s,background .15s">Excluir</button></div></div></div>`;
+                div.innerHTML=`<div style="width:28px;height:28px;border-radius:50%;background:rgba(255,145,77,.15);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:1px">💬</div><div style="flex:1;min-width:0"><div class="comment-body-display md-body">${renderMd(comment.body)}</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px;flex-wrap:wrap;gap:4px"><span style="color:var(--muted);font-size:11px;font-family:'Montserrat',sans-serif">${comment.created_at}${editedLabel}</span><div style="display:flex;gap:4px"><button class="btn-edit-comment" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:2px 6px;border-radius:4px;transition:color .15s,background .15s">Editar</button><button class="btn-delete-comment" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:2px 6px;border-radius:4px;transition:color .15s,background .15s">Excluir</button></div></div></div>`;
                 div.querySelectorAll('button').forEach(btn=>{ btn.addEventListener('mouseenter',()=>{ const d=btn.classList.contains('btn-delete-comment'); btn.style.color=d?'var(--danger)':'var(--accent)'; btn.style.background=d?'rgba(224,84,84,.1)':'rgba(255,145,77,.1)'; }); btn.addEventListener('mouseleave',()=>{ btn.style.color='var(--muted)'; btn.style.background='none'; }); });
                 div.querySelector('.btn-edit-comment').addEventListener('click',()=>startEdit(div));
                 div.querySelector('.btn-delete-comment').addEventListener('click',()=>handleDelete(div));
@@ -838,6 +1008,150 @@
             });
 
             loadComments(1);
+
+            // ── Subtasks ──────────────────────────────────────────────────────────────────
+            (function () {
+                const TASK_ID   = {{ $task->id }};
+                const CSRF      = document.querySelector('meta[name=csrf-token]').content;
+                const list      = document.getElementById('subtasks-list');
+                const progWrap  = document.getElementById('subtasks-progress-wrap');
+                const progFill  = document.getElementById('subtasks-progress-fill');
+                const progLabel = document.getElementById('subtasks-progress-label');
+                const trigger   = document.getElementById('subtask-add-trigger');
+                const form      = document.getElementById('subtask-add-form');
+                const input     = document.getElementById('subtask-add-input');
+                const submitBtn = document.getElementById('subtask-add-submit');
+
+                async function api(method, url, body) {
+                    const r = await fetch(url, {
+                        method,
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
+                        body: body ? JSON.stringify(body) : undefined,
+                    });
+                    return r.json();
+                }
+
+                // ── Progress bar ──────────────────────────────────────────────────────
+                function updateProgress() {
+                    const items = list.querySelectorAll('.subtask-item');
+                    const total = items.length;
+                    if (total === 0) { progWrap.style.display = 'none'; return; }
+                    const done  = list.querySelectorAll('.subtask-check:checked').length;
+                    const pct   = Math.round(done / total * 100);
+                    progWrap.style.display  = 'flex';
+                    progFill.style.width    = pct + '%';
+                    progLabel.textContent   = `${done}/${total}`;
+                }
+
+                // ── Build row ─────────────────────────────────────────────────────────
+                function buildRow(sub) {
+                    const row = document.createElement('div');
+                    row.className   = 'subtask-item';
+                    row.dataset.id  = sub.id;
+
+                    const check = document.createElement('input');
+                    check.type      = 'checkbox';
+                    check.className = 'subtask-check';
+                    check.checked   = sub.completed;
+
+                    const title = document.createElement('span');
+                    title.className     = 'subtask-title' + (sub.completed ? ' done' : '');
+                    title.textContent   = sub.title;
+                    title.contentEditable = 'true';
+                    title.spellcheck    = false;
+
+                    const del = document.createElement('button');
+                    del.className = 'subtask-delete';
+                    del.title     = 'Remover';
+                    del.innerHTML = '<svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3l10 10M13 3L3 13"/></svg>';
+
+                    // Toggle complete
+                    check.addEventListener('change', async () => {
+                        title.classList.toggle('done', check.checked);
+                        await api('PUT', `/tasks/${TASK_ID}/subtasks/${sub.id}`, { completed: check.checked });
+                        updateProgress();
+                    });
+
+                    // Inline rename on blur
+                    let origTitle = sub.title;
+                    title.addEventListener('focus', () => { origTitle = title.textContent.trim(); });
+                    title.addEventListener('blur', async () => {
+                        const newTitle = title.textContent.trim();
+                        if (!newTitle) { title.textContent = origTitle; return; }
+                        if (newTitle !== origTitle) {
+                            await api('PUT', `/tasks/${TASK_ID}/subtasks/${sub.id}`, { title: newTitle });
+                        }
+                    });
+                    title.addEventListener('keydown', e => {
+                        if (e.key === 'Enter')  { e.preventDefault(); title.blur(); }
+                        if (e.key === 'Escape') { title.textContent = origTitle; title.blur(); }
+                    });
+
+                    // Delete
+                    del.addEventListener('click', async () => {
+                        row.style.transition = 'opacity .2s, transform .2s';
+                        row.style.opacity    = '0';
+                        row.style.transform  = 'translateX(8px)';
+                        await api('DELETE', `/tasks/${TASK_ID}/subtasks/${sub.id}`);
+                        setTimeout(() => { row.remove(); updateProgress(); }, 200);
+                    });
+
+                    row.appendChild(check);
+                    row.appendChild(title);
+                    row.appendChild(del);
+                    return row;
+                }
+
+                // ── Load ──────────────────────────────────────────────────────────────
+                async function loadSubtasks() {
+                    const items = await api('GET', `/tasks/${TASK_ID}/subtasks`);
+                    list.innerHTML = '';
+                    (items || []).forEach(s => list.appendChild(buildRow(s)));
+                    updateProgress();
+                }
+
+                // ── Add form ──────────────────────────────────────────────────────────
+                function openForm() {
+                    trigger.style.display = 'none';
+                    form.style.display    = 'flex';
+                    input.value           = '';
+                    submitBtn.classList.remove('active');
+                    input.focus();
+                }
+
+                function closeForm() {
+                    form.style.display    = 'none';
+                    trigger.style.display = 'flex';
+                    input.value           = '';
+                    submitBtn.classList.remove('active');
+                }
+
+                async function addSubtask() {
+                    const title = input.value.trim();
+                    if (!title) { input.focus(); return; }
+                    input.value = '';
+                    submitBtn.classList.remove('active');
+                    const sub = await api('POST', `/tasks/${TASK_ID}/subtasks`, { title });
+                    if (sub && sub.id) {
+                        list.appendChild(buildRow(sub));
+                        updateProgress();
+                    }
+                    input.focus();
+                }
+
+                trigger.addEventListener('click', openForm);
+                submitBtn.addEventListener('click', addSubtask);
+
+                input.addEventListener('input', () => {
+                    submitBtn.classList.toggle('active', input.value.trim().length > 0);
+                });
+                input.addEventListener('keydown', e => {
+                    if (e.key === 'Enter')  { e.preventDefault(); addSubtask(); }
+                    if (e.key === 'Escape') { closeForm(); }
+                });
+
+                loadSubtasks();
+            })();
         </script>
     @endpush
 

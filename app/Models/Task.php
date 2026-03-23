@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+// TaskSubtask is resolved via HasMany, no explicit use needed
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
@@ -177,6 +178,11 @@ class Task extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(TaskComment::class)->latest();
+    }
+
+    public function subtasks(): HasMany
+    {
+        return $this->hasMany(TaskSubtask::class)->orderBy('sort_order')->orderBy('id');
     }
 
     public function category(): BelongsTo

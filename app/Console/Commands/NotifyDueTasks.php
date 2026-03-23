@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Task;
 use Illuminate\Console\Command;
-use Native\Laravel\Facades\Notification;
+use Native\Desktop\Facades\Notification;
 
 class NotifyDueTasks extends Command
 {

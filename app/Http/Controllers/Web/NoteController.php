@@ -135,7 +135,7 @@ class NoteController extends Controller
         ]);
     }
 
-    public function exportPdf(Note $note): Response
+    public function exportPdf(Note $note)
     {
         return view('notes.pdf', compact('note'));
     }

@@ -351,6 +351,44 @@ class TaskController extends Controller
     }
 
     /**
+     * @OA\Patch(
+     *     path="/tasks/{id}/estimate",
+     *     tags={"Tasks"},
+     *     summary="Atualizar estimativa de tempo da tarefa",
+     *     @OA\Parameter(name="id", in="path", required=true, @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"estimated_minutes"},
+     *             @OA\Property(property="estimated_minutes", type="integer", minimum=0, maximum=99999, example=90)
+     *         )
+     *     ),
+     *     @OA\Response(response=200, description="Estimativa atualizada com sucesso",
+     *         @OA\JsonContent(@OA\Property(property="data", ref="#/components/schemas/Task"))
+     *     ),
+     *     @OA\Response(response=404, description="Tarefa não encontrada",
+     *         @OA\JsonContent(ref="#/components/schemas/NotFoundError")
+     *     ),
+     *     @OA\Response(response=422, description="Erro de validação",
+     *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
+     *     )
+     * )
+     */
+    public function updateEstimate(Request $request, Task $task): JsonResponse
+    {
+        $request->validate([
+            'estimated_minutes' => ['required', 'integer', 'min:0', 'max:99999'],
+        ]);
+
+        $task->update(['estimated_minutes' => $request->estimated_minutes]);
+
+        return response()->json([
+            'message' => 'Estimativa atualizada.',
+            'data' => new TaskResource($task->fresh()),
+        ]);
+    }
+
+    /**
      * @OA\Get(
      *     path="/tasks/stats",
      *     tags={"Tasks"},
@@ -370,20 +408,6 @@ class TaskController extends Controller
      *     )
      * )
      */
-    public function updateEstimate(Request $request, Task $task): JsonResponse
-    {
-        $request->validate([
-            'estimated_minutes' => ['required', 'integer', 'min:0', 'max:99999'],
-        ]);
-
-        $task->update(['estimated_minutes' => $request->estimated_minutes]);
-
-        return response()->json([
-            'message' => 'Estimativa atualizada.',
-            'data' => new TaskResource($task->fresh()),
-        ]);
-    }
-
     public function stats(): JsonResponse
     {
         $total = Task::count();

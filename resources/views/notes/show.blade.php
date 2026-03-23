@@ -3,16 +3,34 @@
 
 @section('topbar-actions')
     <div style="display:flex;align-items:center;gap:8px">
-        <span id="save-status" style="font-size:12px;color:var(--muted);font-family:'DM Sans',monospace;transition:opacity .3s"></span>
+        <span id="save-status" style="font-size:12px;color:var(--muted);font-family:'Montserrat',sans-serif;transition:opacity .3s"></span>
         <button id="btn-pin" class="btn btn-ghost btn-sm" title="{{ $note->pinned ? __('app.note_unpin_title') : __('app.note_pin_title') }}">
             {{ $note->pinned ? __('app.note_pinned') : __('app.note_pin') }}
         </button>
-        <a href="{{ route('notes.export', $note) }}" class="btn btn-ghost btn-sm" title="{{ __('app.note_export_title') }}" download>
-            {{ __('app.note_export_md') }}
-        </a>
-        <a href="{{ route('notes.export.pdf', $note) }}" class="btn btn-ghost btn-sm" target="_blank" title="{{ __('app.note_export_pdf_title') }}">
-            🖨 PDF
-        </a>
+        <div class="export-dropdown" id="export-wrap" style="position:relative">
+            <button class="btn btn-ghost btn-sm" id="btn-export-trigger" style="display:flex;align-items:center;gap:6px">
+                Exportar como
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+            <div id="export-menu" style="
+                display:none; position:fixed; z-index:10001;
+                background:var(--surface); border:1px solid var(--border);
+                border-radius:10px; padding:4px; min-width:160px;
+                box-shadow:0 8px 24px rgba(0,0,0,.4);
+                animation: cselDropIn .15s ease;
+            ">
+                <a href="{{ route('notes.export', $note) }}" id="export-md" download
+                   style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:7px;color:var(--text);text-decoration:none;font-size:13px;transition:background .1s"
+                   onmouseover="this.style.background='rgba(255,145,77,.1)'" onmouseout="this.style.background='none'">
+                    <span style="font-size:14px">⬇</span> Markdown (.md)
+                </a>
+                <a href="{{ route('notes.export.pdf', $note) }}" id="export-pdf" target="_blank"
+                   style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:7px;color:var(--text);text-decoration:none;font-size:13px;transition:background .1s"
+                   onmouseover="this.style.background='rgba(255,145,77,.1)'" onmouseout="this.style.background='none'">
+                    <span style="font-size:14px">🖨</span> PDF
+                </a>
+            </div>
+        </div>
         <button id="btn-delete" class="btn btn-danger btn-sm">{{ __('app.note_delete') }}</button>
         <a href="/notes" class="btn btn-ghost btn-sm">{{ __('app.note_back') }}</a>
     </div>
@@ -34,9 +52,10 @@
 /* ── Note layout ─────────────────────────────────────────────────────── */
 .note-shell {
     display: flex; gap: 0;
-    height: calc(100vh - 56px);
+    height: calc(100vh - 48px);
     margin: -32px; overflow: hidden;
     position: relative;
+    /* toggle-btn uses position:absolute within this, dropdowns use position:fixed */
 }
 
 /* ── Sidebar ──────────────────────────────────────────────────────────── */
@@ -45,7 +64,7 @@
     background: var(--surface);
     border-right: 1px solid var(--border);
     display: flex; flex-direction: column; overflow: hidden;
-    transition: width .28s cubic-bezier(.4,0,.2,1);
+    transition: width .3s cubic-bezier(.4,0,.2,1), border-color .3s;
     position: relative;
 }
 .note-sidebar.collapsed {
@@ -58,7 +77,7 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    /* left set by JS */
+    left: 220px;
     width: 16px; height: 48px;
     background: var(--surface2);
     border: 1px solid var(--border);
@@ -66,13 +85,17 @@
     border-radius: 0 6px 6px 0;
     cursor: pointer;
     display: flex; align-items: center; justify-content: center;
-    z-index: 50;
+    z-index: 200;
     box-shadow: 2px 0 8px rgba(0,0,0,.2);
     color: var(--muted);
     font-size: 10px;
     line-height: 1;
-    transition: background .15s, color .15s, width .15s, left .28s cubic-bezier(.4,0,.2,1);
+    transition: background .15s, color .15s, width .15s, left .3s cubic-bezier(.4,0,.2,1);
     padding: 0;
+}
+.note-sidebar.collapsed + .sidebar-toggle-btn,
+.note-shell:has(.note-sidebar.collapsed) .sidebar-toggle-btn {
+    left: 0;
 }
 .sidebar-toggle-btn:hover {
     background: var(--accent);
@@ -81,7 +104,7 @@
     width: 20px;
 }
 html[data-theme=light] .sidebar-toggle-btn {
-    background: #eeeef2;
+    background: #f0f2f7;
     box-shadow: 2px 0 6px rgba(0,0,0,.08);
 }
 html[data-theme=light] .sidebar-toggle-btn:hover {
@@ -124,7 +147,7 @@ html[data-theme=light] .note-color-dot.active { border-color: #555; }
     margin-top: auto; padding: 12px 16px;
     border-top: 1px solid var(--border);
     font-size: 11px; color: var(--muted);
-    font-family: 'DM Sans', monospace;
+    font-family: 'Montserrat', sans-serif;
     display: flex; flex-direction: column; gap: 3px;
 }
 
@@ -139,23 +162,39 @@ html[data-theme=light] .note-color-dot.active { border-color: #555; }
 .note-title-input {
     width: 100%; background: transparent;
     border: none; outline: none;
-    font-family: 'Codec Pro', sans-serif;
-    font-size: 30px; font-weight: 800; letter-spacing: -0.8px; color: var(--text);
-    padding: 28px 48px 14px; line-height: 1.15;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 26px; font-weight: 700; letter-spacing: -0.5px; color: var(--text);
+    padding: 22px 32px 12px; line-height: 1.2;
     border-bottom: 1px solid var(--border);
+    border-radius: 0;
     resize: none; overflow: hidden;
     transition: none;
+    box-shadow: none !important;
+}
+.note-title-input:focus, .note-title-input:hover {
+    border-color: var(--border) !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
 .note-title-input::placeholder { color: var(--muted); opacity: .35; font-style: italic; }
 
 /* Toolbar */
 .tiptap-toolbar {
     display: flex; align-items: center; gap: 2px;
-    padding: 6px 48px;
+    padding: 0 20px 0 32px;
     border-bottom: 1px solid var(--border);
     background: var(--surface);
-    flex-wrap: wrap; flex-shrink: 0;
+    flex-wrap: nowrap; flex-shrink: 0;
+    overflow-x: auto; overflow-y: visible;
+    scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    height: 40px;
+    position: static;
+    transition: height .3s cubic-bezier(.4,0,.2,1), opacity .3s, padding .3s;
+    /* overflow-y visible allows dropdowns to escape downward */
+    clip-path: none;
 }
+.tiptap-toolbar::-webkit-scrollbar { display: none; }
 .ttb-btn {
     width: 28px; height: 28px;
     display: flex; align-items: center; justify-content: center;
@@ -183,10 +222,10 @@ html[data-theme=light] .note-color-dot.active { border-color: #555; }
 .ttb-dropdown-trigger.open svg { transform: rotate(180deg); opacity: 1; }
 .ttb-dropdown-trigger span { flex: 1; text-align: left; }
 .ttb-dropdown-menu {
-    display: none; position: absolute; top: calc(100% + 4px); left: 0;
+    display: none; position: fixed;
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 10px; padding: 4px; min-width: 130px;
-    box-shadow: 0 8px 24px rgba(0,0,0,.4); z-index: 9999;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4); z-index: 10001;
     animation: cselDropIn .15s ease;
 }
 .ttb-dropdown-menu.open { display: block; }
@@ -202,17 +241,19 @@ html[data-theme=light] .note-color-dot.active { border-color: #555; }
 /* Editor wrap */
 .tiptap-wrap {
     flex: 1; overflow-y: auto;
-    padding: 36px 48px 80px;
+    overflow-x: hidden;
+    padding: 28px 32px 80px;
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
+    min-height: 0;
 }
 
 /* ── ProseMirror content ──────────────────────────────────────────────── */
 .ProseMirror {
     min-height: 400px; outline: none;
-    font-size: 15px; line-height: 1.85;
-    color: var(--text); max-width: 780px;
-    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; line-height: 1.8;
+    color: var(--text); max-width: 740px;
+    font-family: 'Montserrat', sans-serif;
 }
 .ProseMirror p { margin: 0 0 8px; }
 .ProseMirror p.is-editor-empty:first-child::before {
@@ -223,19 +264,19 @@ html[data-theme=light] .note-color-dot.active { border-color: #555; }
 }
 /* Headings — rich hierarchy */
 .ProseMirror h1 {
-    font-family: 'Codec Pro', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 28px; font-weight: 800; letter-spacing: -0.6px;
     margin: 28px 0 10px; line-height: 1.15; color: var(--text);
     padding-bottom: 10px;
     border-bottom: 2px solid var(--border);
 }
 .ProseMirror h2 {
-    font-family: 'Codec Pro', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 21px; font-weight: 700; letter-spacing: -0.3px;
     margin: 22px 0 8px; line-height: 1.25; color: var(--text);
 }
 .ProseMirror h3 {
-    font-family: 'Codec Pro', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 16px; font-weight: 700; letter-spacing: -0.1px;
     margin: 16px 0 5px; color: var(--text);
 }
@@ -268,11 +309,11 @@ html[data-theme=light] .note-color-dot.active { border-color: #555; }
 /* ── Word count bar at bottom of editor ─────────────────────────────── */
 .note-wordcount-bar {
     display: flex; align-items: center; gap: 16px;
-    padding: 6px 48px;
+    padding: 5px 32px;
     border-top: 1px solid var(--border);
     background: var(--surface);
     font-size: 11px; color: var(--muted);
-    font-family: 'DM Mono', monospace;
+    font-family: 'Montserrat', sans-serif;
     flex-shrink: 0;
 }
 .note-wordcount-bar span { display: flex; align-items: center; gap: 5px; }
@@ -329,7 +370,7 @@ html[data-theme=light] .note-wordcount-bar { background: #fff; }
     background: rgba(96,165,250,.12);
     border: 1px solid rgba(96,165,250,.2);
     border-radius: 4px;
-    font-family: 'DM Mono', monospace; font-size: 12.5px;
+    font-family: 'Montserrat', sans-serif; font-size: 12.5px;
     color: #60a5fa; padding: 1px 6px;
 }
 .ProseMirror pre {
@@ -342,7 +383,7 @@ html[data-theme=light] .note-wordcount-bar { background: #fff; }
 .ProseMirror pre::before {
     content: '</>';
     position: absolute; top: 10px; right: 14px;
-    font-family: 'DM Mono', monospace; font-size: 10px;
+    font-family: 'Montserrat', sans-serif; font-size: 10px;
     color: var(--muted); opacity: .4;
 }
 .ProseMirror pre code { background: none; border: none; padding: 0; font-size: 13px; color: #e2e8f0; line-height: 1.65; }
@@ -446,40 +487,40 @@ html[data-theme=light] .note-wordcount-bar { background: #fff; }
 }
 
 /* ── Light theme overrides ───────────────────────────────────────────── */
-html[data-theme=light] .note-editor-area    { background: #f6f6f9; }
+html[data-theme=light] .note-editor-area    { background: #eef0f5; }
 html[data-theme=light] .note-sidebar        { background: #ffffff; }
-html[data-theme=light] .note-title-input    { background: #f6f6f9; color: var(--text); }
+html[data-theme=light] .note-title-input    { background: #eef0f5; color: var(--text); }
 html[data-theme=light] .tiptap-toolbar      { background: #ffffff; }
-html[data-theme=light] .tiptap-wrap         { background: #f6f6f9; }
+html[data-theme=light] .tiptap-wrap         { background: #eef0f5; }
 html[data-theme=light] .ProseMirror         { color: var(--text); }
 html[data-theme=light] .ProseMirror code    { background: rgba(59,130,246,.08); border-color: rgba(59,130,246,.2); color: #2563eb; }
 html[data-theme=light] .ProseMirror pre     { background: #1e1e2e; border-color: #2a2a3a; }
 html[data-theme=light] .ProseMirror pre code { color: #e2e8f0; }
 html[data-theme=light] .ProseMirror blockquote { background: rgba(255,145,77,.04); }
-html[data-theme=light] .ProseMirror h1 { border-bottom-color: #dddde6; }
+html[data-theme=light] .ProseMirror h1 { border-bottom-color: #dddde8; }
 
 /* Light theme — toolbar dropdown */
-html[data-theme=light] .ttb-dropdown-trigger  { background: #eeeeF2; border-color: #dddde6; color: #555566; }
-html[data-theme=light] .ttb-dropdown-menu     { background: #ffffff; border-color: #dddde6; box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+html[data-theme=light] .ttb-dropdown-trigger  { background: #f0f2f7; border-color: #dddde8; color: #555570; }
+html[data-theme=light] .ttb-dropdown-menu     { background: #ffffff; border-color: #dddde8; box-shadow: 0 8px 24px rgba(0,0,0,.12); }
 html[data-theme=light] .ttb-dropdown-item     { color: #18181c; }
 html[data-theme=light] .ttb-dropdown-item:hover { background: rgba(255,145,77,.1); }
 
 /* Light theme — bubble menu */
-html[data-theme=light] #bubble-menu   { background: #ffffff; border-color: #dddde6; box-shadow: 0 4px 16px rgba(0,0,0,.12); }
-html[data-theme=light] .bbl-btn       { color: #555566; }
+html[data-theme=light] #bubble-menu   { background: #ffffff; border-color: #dddde8; box-shadow: 0 4px 16px rgba(0,0,0,.12); }
+html[data-theme=light] .bbl-btn       { color: #555570; }
 html[data-theme=light] .bbl-btn:hover { background: rgba(255,145,77,.1); color: #18181c; }
 
 /* Light theme — slash menu */
-html[data-theme=light] #slash-menu                  { background: #ffffff !important; border-color: #dddde6 !important; box-shadow: 0 12px 40px rgba(0,0,0,.15) !important; }
+html[data-theme=light] #slash-menu                  { background: #ffffff !important; border-color: #dddde8 !important; box-shadow: 0 12px 40px rgba(0,0,0,.15) !important; }
 html[data-theme=light] #slash-menu button           { color: #18181c !important; }
 html[data-theme=light] #slash-menu button:hover,
 html[data-theme=light] #slash-menu button.slash-selected { background: rgba(255,145,77,.1) !important; }
-html[data-theme=light] #slash-menu [style*="surface2"] { background: #eeeeF2 !important; }
+html[data-theme=light] #slash-menu [style*="surface2"] { background: #f0f2f7 !important; }
 
 /* Light theme — image popover */
-html[data-theme=light] #image-popover { background: #ffffff; border-color: #dddde6; box-shadow: 0 12px 40px rgba(0,0,0,.15); }
-html[data-theme=light] .img-tab       { border-color: #dddde6; color: #555566; }
-html[data-theme=light] #img-drop-zone { border-color: #dddde6; color: #888899; }
+html[data-theme=light] #image-popover { background: #ffffff; border-color: #dddde8; box-shadow: 0 12px 40px rgba(0,0,0,.15); }
+html[data-theme=light] .img-tab       { border-color: #dddde8; color: #555570; }
+html[data-theme=light] #img-drop-zone { border-color: #dddde8; color: #888899; }
 
 /* ── Image popover ───────────────────────────────────────────────────── */
 #image-popover {
@@ -516,7 +557,7 @@ html[data-theme=light] #image-popover {
 }
 html[data-theme=light] #image-popover input[type=url],
 html[data-theme=light] #image-popover input[type=text] {
-    background: #f4f4f6; border-color: #dddde6; color: #18181c;
+    background: #f0f2f7; border-color: #dddde8; color: #18181c;
 }
 html[data-theme=light] #image-popover input[type=url]:focus,
 html[data-theme=light] #image-popover input[type=text]:focus {
@@ -541,7 +582,7 @@ html[data-theme=light] #image-popover input[type=text]:focus {
     background: rgba(255,145,77,.15); color: var(--accent);
     border-color: rgba(255,145,77,.35); font-weight: 600;
 }
-html[data-theme=light] .img-tab { border-color: #dddde6; color: #8888a0; background: #f4f4f6; }
+html[data-theme=light] .img-tab { border-color: #dddde8; color: var(--muted); background: #f0f2f7; }
 html[data-theme=light] .img-tab:hover { background: rgba(255,145,77,.08); color: #18181c; }
 html[data-theme=light] .img-tab.active { background: rgba(255,145,77,.12); border-color: rgba(255,145,77,.4); }
 
@@ -557,7 +598,7 @@ html[data-theme=light] .img-tab.active { background: rgba(255,145,77,.12); borde
     border-color: var(--accent); background: rgba(255,145,77,.06);
     color: var(--text); transform: scale(1.01);
 }
-html[data-theme=light] #img-drop-zone { border-color: #dddde6; color: #8888a0; }
+html[data-theme=light] #img-drop-zone { border-color: #dddde8; color: var(--muted); }
 html[data-theme=light] #img-drop-zone:hover,
 html[data-theme=light] #img-drop-zone.dragover { background: rgba(255,145,77,.05); color: #18181c; }
 
@@ -579,7 +620,7 @@ html[data-theme=light] #img-drop-zone.dragover { background: rgba(255,145,77,.05
 }
 html[data-theme=light] #link-popover {
     background: #ffffff;
-    border-color: #dddde6;
+    border-color: #dddde8;
     box-shadow: 0 20px 60px rgba(0,0,0,.15), 0 4px 16px rgba(0,0,0,.08);
 }
 .link-popover-title {
@@ -603,7 +644,7 @@ html[data-theme=light] #link-popover {
 }
 html[data-theme=light] #link-popover input[type=url],
 html[data-theme=light] #link-popover input[type=text] {
-    background: #f4f4f6; border-color: #dddde6; color: #18181c;
+    background: #f0f2f7; border-color: #dddde8; color: #18181c;
 }
 html[data-theme=light] #link-popover input[type=url]:focus,
 html[data-theme=light] #link-popover input[type=text]:focus {
@@ -655,78 +696,106 @@ html[data-theme=light] #link-popover input[type=text]:focus {
 #slash-menu [style*="text-transform:uppercase"] { color: var(--muted) !important; }
 #slash-menu [style*="surface2"] { background: var(--surface2) !important; }
 /* ── Tags ────────────────────────────────────────────────────────────── */
-.note-tags-section { padding: 0 12px 12px; }
+.note-tags-section {
+    padding: 0 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
 
-/* Chips row above input */
+/* Chips — flutuam livremente, sem container */
 .note-tags-chips {
     display: flex; flex-wrap: wrap; gap: 5px;
-    margin-bottom: 6px; min-height: 0;
 }
 .note-tags-chips:empty { display: none; }
 
-/* Input row — clean single line */
+/* Input — campo separado, contido na sidebar */
 .note-tags-input-wrap {
     display: flex; align-items: center; gap: 6px;
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 8px; padding: 5px 10px; min-height: 32px;
-    cursor: text; transition: border-color .15s, box-shadow .15s;
+    background: transparent;
+    border: 1px dashed var(--border);
+    border-radius: 7px; padding: 4px 10px; height: 30px;
+    cursor: text;
+    min-width: 0; overflow: hidden;
+    transition: border-color .2s, background .2s, box-shadow .2s;
 }
 .note-tags-input-wrap:focus-within {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(255,145,77,.1);
+    border-style: solid;
+    border-color: rgba(255,145,77,.5);
+    background: rgba(255,145,77,.04);
+    box-shadow: inset 0 0 0 2px rgba(255,145,77,.08);
 }
 .note-tags-input-icon {
-    font-size: 11px; color: var(--muted); opacity: .6; flex-shrink: 0;
+    font-size: 11px; font-weight: 600;
+    color: var(--muted); opacity: .5; flex-shrink: 0;
 }
+html[data-theme=light] .note-tags-input-wrap { border-color: #c8c8d4; }
 
-/* Tag chips */
+
+/* Tag chips — subtle pill style */
 .tag-chip {
-    display: inline-flex; align-items: center; gap: 2px;
-    background: var(--tag-bg, rgba(255,145,77,.1));
-    color: var(--tag-color, var(--accent));
-    border: 1px solid var(--tag-border, rgba(255,145,77,.2));
-    border-radius: 20px; padding: 2px 8px 2px 9px;
-    font-size: 11px; font-weight: 500; letter-spacing: .15px;
+    display: inline-flex; align-items: center; gap: 3px;
+    background: var(--surface);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 6px; padding: 3px 7px 3px 8px;
+    font-size: 11px; font-weight: 500; letter-spacing: .1px;
     animation: tagIn .15s cubic-bezier(.34,1.4,.64,1) both;
     cursor: default;
-    transition: background .12s, box-shadow .12s, transform .1s;
-    line-height: 1.6; white-space: nowrap;
+    transition: background .12s, color .12s, border-color .12s;
+    line-height: 1.5; white-space: nowrap;
+    max-width: 110px; overflow: hidden; text-overflow: ellipsis;
 }
 .tag-chip:hover {
-    background: var(--tag-hover, rgba(255,145,77,.2));
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+    background: rgba(255,145,77,.1);
+    color: var(--accent);
+    border-color: rgba(255,145,77,.3);
 }
-.tag-chip::before { content: '#'; opacity: .5; font-weight: 400; margin-right: 1px; }
+.tag-chip::before {
+    content: '#';
+    opacity: .4;
+    font-weight: 400;
+    font-size: 10px;
+    flex-shrink: 0;
+}
 
-/* Color cycling */
-.tag-chip:nth-child(5n+1) { --tag-bg: rgba(96,165,250,.12);  --tag-color: #60a5fa; --tag-border: rgba(96,165,250,.25);  --tag-hover: rgba(96,165,250,.2);  }
-.tag-chip:nth-child(5n+2) { --tag-bg: rgba(74,222,128,.11);  --tag-color: #4ade80; --tag-border: rgba(74,222,128,.24);  --tag-hover: rgba(74,222,128,.2);  }
-.tag-chip:nth-child(5n+3) { --tag-bg: rgba(192,132,252,.12); --tag-color: #c084fc; --tag-border: rgba(192,132,252,.26); --tag-hover: rgba(192,132,252,.2); }
-.tag-chip:nth-child(5n+4) { --tag-bg: rgba(244,114,182,.11); --tag-color: #f472b6; --tag-border: rgba(244,114,182,.24); --tag-hover: rgba(244,114,182,.2); }
-.tag-chip:nth-child(5n+5) { --tag-bg: rgba(255,145,77,.1);   --tag-color: var(--accent); --tag-border: rgba(255,145,77,.22); --tag-hover: rgba(255,145,77,.2); }
+html[data-theme=light] .tag-chip {
+    background: #f4f4f8;
+    color: #555570;
+    border-color: #dddde8;
+}
+html[data-theme=light] .tag-chip:hover {
+    background: rgba(255,145,77,.08);
+    color: #c2410c;
+    border-color: rgba(255,145,77,.3);
+}
 
-html[data-theme=light] .tag-chip:nth-child(5n+1) { --tag-bg: rgba(59,130,246,.09);  --tag-color: #2563eb; --tag-border: rgba(59,130,246,.22); --tag-hover: rgba(59,130,246,.16); }
-html[data-theme=light] .tag-chip:nth-child(5n+2) { --tag-bg: rgba(34,197,94,.09);   --tag-color: #16a34a; --tag-border: rgba(34,197,94,.22);  --tag-hover: rgba(34,197,94,.16);  }
-html[data-theme=light] .tag-chip:nth-child(5n+3) { --tag-bg: rgba(168,85,247,.09);  --tag-color: #7c3aed; --tag-border: rgba(168,85,247,.22); --tag-hover: rgba(168,85,247,.16); }
-html[data-theme=light] .tag-chip:nth-child(5n+4) { --tag-bg: rgba(236,72,153,.09);  --tag-color: #db2777; --tag-border: rgba(236,72,153,.22); --tag-hover: rgba(236,72,153,.16); }
-html[data-theme=light] .tag-chip:nth-child(5n+5) { --tag-bg: rgba(234,88,12,.09);   --tag-color: #c2410c; --tag-border: rgba(234,88,12,.22);  --tag-hover: rgba(234,88,12,.16);  }
+/* Remove color cycling — one clean consistent style */
 
-@keyframes tagIn { from { opacity:0; transform: scale(.82) translateY(2px); } to { opacity:1; transform: scale(1); } }
+@keyframes tagIn { from { opacity:0; transform: scale(.85) translateY(2px); } to { opacity:1; transform: scale(1) translateY(0); } }
 
 .tag-chip-remove {
     background: none; border: none; color: inherit; cursor: pointer;
-    padding: 0 0 0 3px; font-size: 13px; line-height: 1; opacity: .4;
-    transition: opacity .12s; display: flex; align-items: center; margin-left: 1px;
+    padding: 0; width: 14px; height: 14px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 3px; font-size: 12px; line-height: 1;
+    opacity: .35; transition: opacity .12s, background .12s;
+    flex-shrink: 0; margin-left: 1px;
 }
-.tag-chip-remove:hover { opacity: .9; }
+.tag-chip-remove:hover { opacity: 1; background: rgba(255,100,80,.15); }
 
 .tag-input {
     border: none; outline: none; background: transparent;
-    color: var(--text); font-size: 12px; font-family: inherit;
-    min-width: 80px; flex: 1; padding: 0;
+    color: var(--text); font-size: 11.5px; font-family: inherit;
+    width: 100%; min-width: 0; padding: 0;
+    line-height: 1.5;
 }
-.tag-input::placeholder { color: var(--muted); opacity: .5; font-size: 11.5px; }
+.tag-input::placeholder {
+    color: var(--muted);
+    opacity: .5;
+    font-size: 11px;
+    font-style: italic;
+}
 
 .tag-suggestions {
     position: absolute; z-index: 200;
@@ -773,7 +842,86 @@ html[data-theme=light] .ttb-color-swatch.active { border-color: #555; }
     cursor: pointer; font-family: inherit; transition: background .1s;
 }
 .ttb-color-remove:hover { background: rgba(255,145,77,.1); color: var(--text); }
-html[data-theme=light] .ttb-color-palette { background: #fff; border-color: #dddde6; box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+html[data-theme=light] .ttb-color-palette { background: #fff; border-color: #dddde8; box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+
+.note-shell.focus-mode .tiptap-toolbar {
+    height: 0; opacity: 0; pointer-events: none;
+    padding: 0; overflow: hidden; border-bottom: none;
+}
+.note-shell.focus-mode .note-wordcount-bar {
+    height: 0; opacity: 0; pointer-events: none;
+    padding: 0; overflow: hidden; border-top: none;
+}
+.note-shell.focus-mode .note-sidebar {
+    width: 0;
+}
+.note-shell.focus-mode .tiptap-wrap { padding: 40px 64px 80px; }
+.note-shell.focus-mode .ProseMirror { max-width: 660px; margin: 0 auto; }
+.tiptap-toolbar     { transition: height .3s cubic-bezier(.4,0,.2,1), opacity .25s ease, padding .3s; }
+.note-wordcount-bar { transition: height .3s cubic-bezier(.4,0,.2,1), opacity .25s ease, padding .3s; }
+.note-sidebar       { transition: width .3s cubic-bezier(.4,0,.2,1); }
+
+/* Focus mode toggle btn — FIXED to viewport, always on top */
+#btn-focus-mode {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--muted); cursor: pointer; font-size: 12px;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .15s, color .15s, border-color .15s, box-shadow .15s, opacity .15s;
+    z-index: 9990;
+    box-shadow: 0 2px 10px rgba(0,0,0,.35);
+    opacity: 0.6;
+}
+#btn-focus-mode:hover {
+    background: var(--surface2); color: var(--text);
+    border-color: var(--muted);
+    box-shadow: 0 4px 18px rgba(0,0,0,.45);
+    opacity: 1;
+}
+.note-shell.focus-mode #btn-focus-mode {
+    color: var(--accent);
+    border-color: rgba(255,145,77,.5);
+    background: rgba(255,145,77,.1);
+    box-shadow: 0 4px 18px rgba(255,145,77,.25);
+    opacity: 1;
+}
+
+/* ── Words in toolbar ─────────────────────────────────────────────────── */
+#toolbar-wordcount {
+    margin-left: auto; flex-shrink: 0;
+    font-size: 10px; color: var(--muted);
+    white-space: nowrap; padding: 0 8px 0 4px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+/* ── More menu (···) ──────────────────────────────────────────────────── */
+.ttb-more-wrap { position: relative; flex-shrink: 0; }
+.ttb-more-btn {
+    width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+    border-radius: 6px; border: none; background: none;
+    color: var(--muted); cursor: pointer; font-size: 14px; font-weight: 700;
+    transition: background .1s, color .1s; letter-spacing: 1px; line-height: 1;
+}
+.ttb-more-btn:hover, .ttb-more-btn.open { background: var(--surface2); color: var(--text); }
+.ttb-more-menu {
+    display: none; position: fixed;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 4px; min-width: 170px;
+    box-shadow: 0 8px 28px rgba(0,0,0,.4); z-index: 9999;
+    animation: cselDropIn .15s ease;
+}
+.ttb-more-menu.open { display: block; }
+.ttb-more-section {
+    font-size: 9.5px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;
+    color: var(--muted); padding: 8px 10px 4px;
+}
+.ttb-more-row { display: flex; gap: 2px; padding: 4px 6px; flex-wrap: wrap; }
+.ttb-more-menu .ttb-btn { width: 28px; height: 28px; }
+html[data-theme=light] .ttb-more-menu { background: #fff; border-color: #dddde8; box-shadow: 0 8px 24px rgba(0,0,0,.12); }
 </style>
 @endpush
 
@@ -791,11 +939,11 @@ html[data-theme=light] .ttb-color-palette { background: #fff; border-color: #ddd
 
         <div class="note-meta-row">
             <span class="note-meta-label">{{ __('app.note_created') }}</span>
-            <span class="note-meta-value" style="font-family:'DM Sans',monospace;font-size:11px">{{ $note->created_at->format('d/m/Y') }}</span>
+            <span class="note-meta-value" style="font-family:'Montserrat',sans-serif;font-size:11px">{{ $note->created_at->format('d/m/Y') }}</span>
         </div>
         <div class="note-meta-row">
             <span class="note-meta-label">{{ __('app.note_edited') }}</span>
-            <span class="note-meta-value" id="sidebar-updated" style="font-family:'DM Sans',monospace;font-size:11px">{{ $note->updated_at->format('d/m/Y H:i') }}</span>
+            <span class="note-meta-value" id="sidebar-updated" style="font-family:'Montserrat',sans-serif;font-size:11px">{{ $note->updated_at->format('d/m/Y H:i') }}</span>
         </div>
 
         <div class="note-sidebar-section" style="margin-top:8px">{{ __('app.note_section_color') }}</div>
@@ -817,7 +965,7 @@ html[data-theme=light] .ttb-color-palette { background: #fff; border-color: #ddd
                     @foreach($categories as $cat)
                         <option value="{{ $cat->name }}" data-color="{{ $cat->color }}" data-icon="{{ $cat->icon }}"
                             {{ $note->category === $cat->name ? 'selected' : '' }}>
-                            {{ $cat->icon }} {{ $cat->name }}
+                            {{ $cat->name }}
                         </option>
                     @endforeach
                 </select>
@@ -827,7 +975,7 @@ html[data-theme=light] .ttb-color-palette { background: #fff; border-color: #ddd
         {{-- Tags --}}
         <div class="note-sidebar-section">🏷 Tags</div>
         <div class="note-tags-section" style="position:relative">
-            {{-- Chips row --}}
+            {{-- Chips --}}
             <div class="note-tags-chips" id="tags-chips-wrap">
                 @foreach($note->tags_array as $tag)
                     <span class="tag-chip" data-tag="{{ $tag }}">
@@ -835,7 +983,7 @@ html[data-theme=light] .ttb-color-palette { background: #fff; border-color: #ddd
                     </span>
                 @endforeach
             </div>
-            {{-- Input row --}}
+            {{-- Input separado --}}
             <div class="note-tags-input-wrap" id="tags-input-wrap">
                 <span class="note-tags-input-icon">#</span>
                 <input class="tag-input" id="tag-input" type="text"
@@ -860,7 +1008,7 @@ html[data-theme=light] .ttb-color-palette { background: #fff; border-color: #ddd
         {{-- Toolbar --}}
         <div class="tiptap-toolbar" id="tiptap-toolbar">
             {{-- Heading --}}
-            <div class="ttb-dropdown" id="ttb-heading-wrap">
+            <div class="ttb-dropdown" id="ttb-heading-wrap" style="flex-shrink:0">
                 <button class="ttb-dropdown-trigger" id="ttb-heading-trigger" type="button">
                     <span id="ttb-heading-label">{{ __('app.note_paragraph') }}</span>
                     <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -872,24 +1020,13 @@ html[data-theme=light] .ttb-color-palette { background: #fff; border-color: #ddd
                     <button type="button" data-heading="3" class="ttb-dropdown-item" style="font-size:13px;font-weight:600">Título 3</button>
                 </div>
             </div>
-            {{-- Font picker --}}
-            <div class="ttb-dropdown" id="ttb-font-wrap">
-                <button class="ttb-dropdown-trigger" id="ttb-font-trigger" type="button" title="Fonte do editor">
-                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 13L6 3l4 10M4 9.5h4M11 5v8M10 5h3"/></svg>
-                    <span id="ttb-font-label" style="font-size:11px;min-width:52px;text-align:left">Sans</span>
-                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-                <div class="ttb-dropdown-menu" id="ttb-font-menu" style="min-width:160px">
-                    {{-- populated by editor.js --}}
-                </div>
-            </div>
             <div class="ttb-sep"></div>
-            {{-- Formatting --}}
-            <button class="ttb-btn" data-cmd="bold"        title="Negrito (Ctrl+B)"><i class="fa fa-bold"></i></button>
-            <button class="ttb-btn" data-cmd="italic"      title="Itálico (Ctrl+I)"><i class="fa fa-italic"></i></button>
-            <button class="ttb-btn" data-cmd="underline"   title="Sublinhado (Ctrl+U)"><i class="fa fa-underline"></i></button>
-            <button class="ttb-btn" data-cmd="strike"      title="Tachado"><i class="fa fa-strikethrough"></i></button>
-            <button class="ttb-btn" data-cmd="highlight"   title="Realçar"><i class="fa fa-highlighter"></i></button>
+            {{-- Core formatting — always visible --}}
+            <button class="ttb-btn" data-cmd="bold"      title="Negrito (Ctrl+B)"><i class="fa fa-bold"></i></button>
+            <button class="ttb-btn" data-cmd="italic"    title="Itálico (Ctrl+I)"><i class="fa fa-italic"></i></button>
+            <button class="ttb-btn" data-cmd="underline" title="Sublinhado (Ctrl+U)"><i class="fa fa-underline"></i></button>
+            <button class="ttb-btn" data-cmd="strike"    title="Tachado"><i class="fa fa-strikethrough"></i></button>
+            <button class="ttb-btn" data-cmd="highlight" title="Realçar"><i class="fa fa-highlighter"></i></button>
             {{-- Text color --}}
             <div class="ttb-color-wrap">
                 <button class="ttb-btn" id="ttb-color-trigger" title="Cor do texto" style="position:relative">
@@ -906,65 +1043,86 @@ html[data-theme=light] .ttb-color-palette { background: #fff; border-color: #ddd
                 </div>
             </div>
             <div class="ttb-sep"></div>
-            {{-- Subscript / Superscript --}}
-            <button class="ttb-btn" data-cmd="subscript"   title="Subscrito"><i class="fa fa-subscript"></i></button>
-            <button class="ttb-btn" data-cmd="superscript" title="Sobrescrito"><i class="fa fa-superscript"></i></button>
-            <div class="ttb-sep"></div>
-            {{-- Alignment --}}
-            <button class="ttb-btn" data-cmd="alignLeft"   title="Alinhar à esquerda"><i class="fa fa-align-left"></i></button>
-            <button class="ttb-btn" data-cmd="alignCenter" title="Centralizar"><i class="fa fa-align-center"></i></button>
-            <button class="ttb-btn" data-cmd="alignRight"  title="Alinhar à direita"><i class="fa fa-align-right"></i></button>
-            <button class="ttb-btn" data-cmd="alignJustify" title="Justificar"><i class="fa fa-align-justify"></i></button>
-            <div class="ttb-sep"></div>
-            {{-- Lists --}}
+            {{-- Lists —— always visible --}}
             <button class="ttb-btn" data-cmd="bulletList"  title="Lista com marcadores"><i class="fa fa-list-ul"></i></button>
             <button class="ttb-btn" data-cmd="orderedList" title="Lista numerada"><i class="fa fa-list-ol"></i></button>
             <button class="ttb-btn" data-cmd="taskList"    title="Lista de tarefas"><i class="fa fa-check-square"></i></button>
             <div class="ttb-sep"></div>
-            {{-- Blocks --}}
-            <button class="ttb-btn" data-cmd="blockquote"  title="Citação"><i class="fa fa-quote-left"></i></button>
-            <button class="ttb-btn" data-cmd="codeBlock"   title="Bloco de código"><i class="fa fa-code"></i></button>
-            <button class="ttb-btn" data-cmd="horizontalRule" title="Linha horizontal"><i class="fa fa-minus"></i></button>
-            {{-- Callout dropdown --}}
-            <div class="ttb-dropdown" id="ttb-callout-wrap">
-                <button class="ttb-dropdown-trigger ttb-callout-trigger-btn" id="ttb-callout-trigger" type="button" title="Inserir callout">
-                    <span id="ttb-callout-icon" style="font-size:15px;line-height:1">💬</span>
-                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                </button>
-                <div class="ttb-dropdown-menu" id="ttb-callout-menu" style="min-width:148px">
-                    <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="info">
-                        <span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#3b82f6"/><rect x="8.2" y="8" width="1.6" height="5.5" rx=".8" fill="white"/><circle cx="9" cy="5.5" r="1.1" fill="white"/></svg></span> Info
-                    </button>
-                    <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="success">
-                        <span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#22c55e"/><path d="M5.5 9.5l2.5 2.5 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Sucesso
-                    </button>
-                    <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="warning">
-                        <span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M9 2L16.5 15H1.5L9 2Z" fill="#f59e0b"/><rect x="8.2" y="7" width="1.6" height="4" rx=".8" fill="white"/><circle cx="9" cy="13" r=".9" fill="white"/></svg></span> Aviso
-                    </button>
-                    <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="danger">
-                        <span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#ef4444"/><path d="M6 6l6 6M12 6l-6 6" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg></span> Perigo
-                    </button>
-                    <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="tip">
-                        <span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#a855f7"/><path d="M9 5a3.5 3.5 0 011.2 6.8V13H7.8v-1.2A3.5 3.5 0 019 5z" fill="white"/><rect x="8.2" y="13.5" width="1.6" height="1.5" rx=".6" fill="white"/></svg></span> Dica
-                    </button>
-                    <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="note">
-                        <span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3.5" fill="#64748b"/><path d="M5 6.5h8M5 9h8M5 11.5h5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></span> Nota
-                    </button>
-                </div>
-            </div>
+            {{-- Common blocks --}}
+            <button class="ttb-btn" data-cmd="blockquote" title="Citação"><i class="fa fa-quote-left"></i></button>
+            <button class="ttb-btn" data-cmd="codeBlock"  title="Bloco de código"><i class="fa fa-code"></i></button>
             <div class="ttb-sep"></div>
-            {{-- Table --}}
-            <button class="ttb-btn" data-cmd="insertTable" title="Inserir tabela"><i class="fa fa-table"></i></button>
-            <div class="ttb-sep"></div>
-            {{-- Link, Image & Emoji --}}
-            <button class="ttb-btn" data-cmd="link"        title="Link"><i class="fa fa-link"></i></button>
-            <button class="ttb-btn" data-cmd="image"       title="Imagem"><i class="fa fa-image"></i></button>
-            <button class="ttb-btn" data-cmd="emoji"       title="Emoji" style="font-size:14px">😀</button>
+            {{-- Inline inserts --}}
+            <button class="ttb-btn" data-cmd="link"  title="Link (Ctrl+K)"><i class="fa fa-link"></i></button>
+            <button class="ttb-btn" data-cmd="image" title="Imagem"><i class="fa fa-image"></i></button>
             <div class="ttb-sep"></div>
             {{-- Undo/Redo --}}
-            <button class="ttb-btn" data-cmd="undo"  title="Desfazer (Ctrl+Z)"><i class="fa fa-undo"></i></button>
-            <button class="ttb-btn" data-cmd="redo"  title="Refazer (Ctrl+Y)"><i class="fa fa-redo"></i></button>
+            <button class="ttb-btn" data-cmd="undo" title="Desfazer (Ctrl+Z)"><i class="fa fa-undo"></i></button>
+            <button class="ttb-btn" data-cmd="redo" title="Refazer (Ctrl+Y)"><i class="fa fa-redo"></i></button>
+            <div class="ttb-sep"></div>
+            {{-- ··· More menu — less used tools --}}
+            <div class="ttb-more-wrap">
+                <button class="ttb-more-btn" id="ttb-more-btn" title="Mais opções">···</button>
+                <div class="ttb-more-menu" id="ttb-more-menu">
+                    <div class="ttb-more-section">Fonte</div>
+                    <div style="padding:2px 6px 6px">
+                        <div class="ttb-dropdown" id="ttb-font-wrap" style="display:block">
+                            <button class="ttb-dropdown-trigger" id="ttb-font-trigger" type="button" title="Fonte do editor" style="width:100%">
+                                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 13L6 3l4 10M4 9.5h4M11 5v8M10 5h3"/></svg>
+                                <span id="ttb-font-label" style="font-size:11px;min-width:52px;text-align:left">Sans</span>
+                                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                            </button>
+                            <div class="ttb-dropdown-menu" id="ttb-font-menu" style="min-width:160px">
+                                {{-- populated by editor.js --}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ttb-more-section">Formatação</div>
+                    <div class="ttb-more-row">
+                        <button class="ttb-btn" data-cmd="subscript"    title="Subscrito"><i class="fa fa-subscript"></i></button>
+                        <button class="ttb-btn" data-cmd="superscript"  title="Sobrescrito"><i class="fa fa-superscript"></i></button>
+                        <button class="ttb-btn" data-cmd="horizontalRule" title="Linha horizontal"><i class="fa fa-minus"></i></button>
+                        <button class="ttb-btn" data-cmd="emoji"        title="Emoji" style="font-size:14px">😀</button>
+                    </div>
+                    <div class="ttb-more-section">Alinhamento</div>
+                    <div class="ttb-more-row">
+                        <button class="ttb-btn" data-cmd="alignLeft"    title="Esquerda"><i class="fa fa-align-left"></i></button>
+                        <button class="ttb-btn" data-cmd="alignCenter"  title="Centro"><i class="fa fa-align-center"></i></button>
+                        <button class="ttb-btn" data-cmd="alignRight"   title="Direita"><i class="fa fa-align-right"></i></button>
+                        <button class="ttb-btn" data-cmd="alignJustify" title="Justificar"><i class="fa fa-align-justify"></i></button>
+                    </div>
+                    <div class="ttb-more-section">Inserir</div>
+                    <div class="ttb-more-row">
+                        <button class="ttb-btn" data-cmd="insertTable"  title="Tabela"><i class="fa fa-table"></i></button>
+                    </div>
+                    <div class="ttb-more-section">Callout</div>
+                    <div style="padding:2px 6px 6px">
+                        <div class="ttb-dropdown" id="ttb-callout-wrap">
+                            <button class="ttb-dropdown-trigger ttb-callout-trigger-btn" id="ttb-callout-trigger" type="button" title="Inserir callout" style="width:100%">
+                                <span id="ttb-callout-icon" style="font-size:14px;line-height:1">💬</span>
+                                <span style="font-size:11px;flex:1;text-align:left">Callout</span>
+                                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                            </button>
+                            <div class="ttb-dropdown-menu" id="ttb-callout-menu" style="min-width:148px">
+                                <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="info"><span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#3b82f6"/><rect x="8.2" y="8" width="1.6" height="5.5" rx=".8" fill="white"/><circle cx="9" cy="5.5" r="1.1" fill="white"/></svg></span> Info</button>
+                                <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="success"><span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#22c55e"/><path d="M5.5 9.5l2.5 2.5 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Sucesso</button>
+                                <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="warning"><span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M9 2L16.5 15H1.5L9 2Z" fill="#f59e0b"/><rect x="8.2" y="7" width="1.6" height="4" rx=".8" fill="white"/><circle cx="9" cy="13" r=".9" fill="white"/></svg></span> Aviso</button>
+                                <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="danger"><span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#ef4444"/><path d="M6 6l6 6M12 6l-6 6" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg></span> Perigo</button>
+                                <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="tip"><span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#a855f7"/><path d="M9 5a3.5 3.5 0 011.2 6.8V13H7.8v-1.2A3.5 3.5 0 019 5z" fill="white"/><rect x="8.2" y="13.5" width="1.6" height="1.5" rx=".6" fill="white"/></svg></span> Dica</button>
+                                <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="note"><span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3.5" fill="#64748b"/><path d="M5 6.5h8M5 9h8M5 11.5h5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></span> Nota</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{-- Words counter in toolbar --}}
+            <span id="toolbar-wordcount">0 palavras</span>
         </div>
+
+        {{-- Focus mode button — fixed position, always accessible --}}
+        <button id="btn-focus-mode" title="Modo foco (Ctrl+Shift+F)">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 4V2a1 1 0 011-1h2M12 1h2a1 1 0 011 1v2M15 12v2a1 1 0 01-1 1h-2M4 15H2a1 1 0 01-1-1v-2"/></svg>
+        </button>
 
         {{-- Editor --}}
         <div class="tiptap-wrap">
@@ -1054,44 +1212,186 @@ html[data-theme=light] .ttb-color-palette { background: #fff; border-color: #ddd
 
 @push('scripts')
 <script>
-// ── Sidebar toggle ────────────────────────────────────────────────────────────
+// ── Sidebar toggle ─────────────────────────────────────────────────────────────
 (function() {
     const sidebar   = document.getElementById('note-sidebar');
     const toggleBtn = document.getElementById('sidebar-toggle');
     const arrow     = document.getElementById('sidebar-toggle-arrow');
     if (!sidebar || !toggleBtn) return;
 
-    const SIDEBAR_W = 220; // must match CSS width
+    const SIDEBAR_W = 220;
     let collapsed = localStorage.getItem('note-sidebar-collapsed') === '1';
 
-    function applyState(animated) {
-        if (!animated) {
-            toggleBtn.style.transition = 'background .15s, color .15s, width .15s';
+    function applyState(instant) {
+        if (instant) {
+            // Suppress CSS transitions for initial paint
+            sidebar.style.transition   = 'none';
+            toggleBtn.style.transition = 'none';
         }
-        if (collapsed) {
-            sidebar.classList.add('collapsed');
-            toggleBtn.style.left = '0px';
-            if (arrow) arrow.setAttribute('d', 'M3.5 1.5L6 4.5l-2.5 3');
-            toggleBtn.title = 'Mostrar painel lateral';
-        } else {
-            sidebar.classList.remove('collapsed');
-            toggleBtn.style.left = SIDEBAR_W + 'px';
-            if (arrow) arrow.setAttribute('d', 'M5.5 1.5L3 4.5l2.5 3');
-            toggleBtn.title = 'Esconder painel lateral';
-        }
-        if (!animated) {
-            requestAnimationFrame(() => {
-                toggleBtn.style.transition = 'background .15s, color .15s, width .15s, left .28s cubic-bezier(.4,0,.2,1)';
-            });
+
+        sidebar.classList.toggle('collapsed', collapsed);
+        // Update toggle btn position via inline style to match sidebar width
+        toggleBtn.style.left = collapsed ? '0px' : SIDEBAR_W + 'px';
+
+        if (arrow) arrow.setAttribute('d',
+            collapsed ? 'M3.5 1.5L6 4.5l-2.5 3'   // → expand arrow
+                      : 'M5.5 1.5L3 4.5l2.5 3'     // ← collapse arrow
+        );
+        toggleBtn.title = collapsed ? 'Mostrar painel lateral' : 'Esconder painel lateral';
+
+        if (instant) {
+            // Re-enable transitions after paint
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                sidebar.style.transition   = '';
+                toggleBtn.style.transition = '';
+            }));
         }
     }
 
-    applyState(false);
+    applyState(true); // instant on load
 
     toggleBtn.addEventListener('click', () => {
         collapsed = !collapsed;
         localStorage.setItem('note-sidebar-collapsed', collapsed ? '1' : '0');
-        applyState(true);
+        applyState(false); // animated on interaction
+    });
+})();
+
+// ── Focus mode (Ctrl+Shift+F / fixed btn bottom-right) ────────────────────────
+(function() {
+    const shell = document.querySelector('.note-shell');
+    const btn   = document.getElementById('btn-focus-mode');
+    if (!shell || !btn) return;
+
+    let focused = false; // always open on load
+
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+
+    function applyFocus() {
+        shell.classList.toggle('focus-mode', focused);
+        btn.setAttribute('title', focused
+            ? 'Sair do modo foco  (Esc ou Ctrl+Shift+F)'
+            : 'Modo foco  (Ctrl+Shift+F)');
+        // In focus mode, push toggle btn to edge (sidebar is 0px wide)
+        if (sidebarToggle) {
+            sidebarToggle.style.left = focused ? '0px' : '';
+            // The sidebar JS will recalculate on next click if needed
+        }
+    }
+
+    applyFocus();
+
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        focused = !focused;
+        applyFocus();
+    });
+
+    document.addEventListener('keydown', e => {
+        if (e.ctrlKey && e.shiftKey && e.key === 'F') {
+            e.preventDefault();
+            focused = !focused;
+            applyFocus();
+        }
+        if (e.key === 'Escape' && focused) {
+            focused = false;
+            applyFocus();
+        }
+    });
+})();
+
+// ── Dropdown positioning (fixed, escapes overflow:auto toolbar) ───────────────
+(function() {
+    function positionDropdown(trigger, menu) {
+        const rect = trigger.getBoundingClientRect();
+        menu.style.top  = (rect.bottom + 4) + 'px';
+        menu.style.left = rect.left + 'px';
+        menu.style.right = 'auto';
+        // Prevent right-overflow
+        const menuW = menu.offsetWidth || 160;
+        if (rect.left + menuW > window.innerWidth - 8) {
+            menu.style.left = 'auto';
+            menu.style.right = (window.innerWidth - rect.right) + 'px';
+        }
+    }
+
+    function openDropdown(trigger, menu) {
+        const wasOpen = menu.classList.contains('open');
+        closeAllDropdowns();
+        if (!wasOpen) {
+            menu.classList.add('open');
+            trigger.classList.add('open');
+            positionDropdown(trigger, menu);
+        }
+    }
+
+    function closeAllDropdowns() {
+        document.querySelectorAll('.ttb-dropdown-menu.open, .ttb-more-menu.open').forEach(m => m.classList.remove('open'));
+        document.querySelectorAll('.ttb-dropdown-trigger.open, .ttb-more-btn.open').forEach(b => b.classList.remove('open'));
+    }
+
+    // Use mousedown so we capture before blur/click events from editor
+    function bindDropdown(triggerId, menuId) {
+        const trigger = document.getElementById(triggerId);
+        const menu    = document.getElementById(menuId);
+        if (!trigger || !menu) return;
+        trigger.addEventListener('mousedown', (e) => {
+            e.preventDefault(); // prevent editor losing focus
+            e.stopPropagation();
+            openDropdown(trigger, menu);
+        });
+        // also stop click from bubbling to document's closeAllDropdowns
+        trigger.addEventListener('click', e => e.stopPropagation());
+    }
+
+    // ttb-heading and ttb-callout are handled by editor.js (needs editor instance)
+    // ttb-font is also handled by editor.js
+    // Only bind dropdowns that are NOT managed by editor.js:
+    // (none currently — more menu has its own handler below)
+
+    // More menu
+    const moreBtn  = document.getElementById('ttb-more-btn');
+    const moreMenu = document.getElementById('ttb-more-menu');
+    if (moreBtn && moreMenu) {
+        moreBtn.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const wasOpen = moreMenu.classList.contains('open');
+            closeAllDropdowns();
+            if (!wasOpen) {
+                moreMenu.classList.add('open');
+                moreBtn.classList.add('open');
+                const rect = moreBtn.getBoundingClientRect();
+                moreMenu.style.top   = (rect.bottom + 4) + 'px';
+                moreMenu.style.right = (window.innerWidth - rect.right) + 'px';
+                moreMenu.style.left  = 'auto';
+            }
+        });
+        moreBtn.addEventListener('click', e => e.stopPropagation());
+        moreMenu.addEventListener('mousedown', e => e.stopPropagation());
+        moreMenu.addEventListener('click',     e => e.stopPropagation());
+    }
+
+    document.addEventListener('mousedown', e => {
+        // Only close if click is outside ALL toolbar dropdown triggers and menus
+        if (!e.target.closest('.ttb-dropdown, .ttb-more-wrap')) {
+            document.querySelectorAll('.ttb-dropdown-menu.open, .ttb-more-menu.open').forEach(m => m.classList.remove('open'));
+            document.querySelectorAll('.ttb-dropdown-trigger.open, .ttb-more-btn.open').forEach(b => b.classList.remove('open'));
+        }
+    });
+})();
+
+// ── Toolbar wordcount sync ────────────────────────────────────────────────────
+(function() {
+    const twc = document.getElementById('toolbar-wordcount');
+    if (!twc) return;
+    const obs = new MutationObserver(() => {
+        const w = document.getElementById('stat-words');
+        if (w && twc) twc.textContent = w.textContent;
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+        const stats = document.getElementById('note-stats');
+        if (stats) obs.observe(stats, { childList: true, subtree: true, characterData: true });
     });
 })();
 </script>
@@ -1124,4 +1424,32 @@ window.__NOTE__ = {
 };
 </script>
 @vite('resources/js/editor.js')
+<script>
+// ── Export dropdown ───────────────────────────────────────────────────────────
+(function () {
+    const trigger = document.getElementById('btn-export-trigger');
+    const menu    = document.getElementById('export-menu');
+    if (!trigger || !menu) return;
+
+    trigger.addEventListener('click', function (e) {
+        e.stopPropagation();
+        const isOpen = menu.style.display === 'block';
+        menu.style.display = isOpen ? 'none' : 'block';
+        if (!isOpen) {
+            const r = trigger.getBoundingClientRect();
+            menu.style.top  = (r.bottom + 4) + 'px';
+            menu.style.left = r.left + 'px';
+        }
+    });
+
+    document.addEventListener('click', function () {
+        menu.style.display = 'none';
+    });
+
+    menu.addEventListener('click', function (e) {
+        e.stopPropagation();
+        setTimeout(() => { menu.style.display = 'none'; }, 80);
+    });
+})();
+</script>
 @endpush

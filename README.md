@@ -4,19 +4,19 @@
     <img src="https://raw.githubusercontent.com/lbonavina/taskletto/main/public/logo-taskletto.png" alt="Taskletto" width="300">
   </picture>
 
-  <p><strong>Modern task and notes manager</strong></p>
+  <p><strong>Modern task and notes manager for developers</strong></p>
 </div>
 
 [![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com)
-[![PHP](https://img.shields.io/badge/PHP-8.4+-777BB4?style=flat-square&logo=php&logoColor=white)](https://php.net)
-[![NativePHP](https://img.shields.io/badge/NativePHP-Desktop-ff914d?style=flat-square)](https://nativephp.com)
+[![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat-square&logo=php&logoColor=white)](https://php.net)
+[![NativePHP](https://img.shields.io/badge/NativePHP-v2-FF750F?style=flat-square)](https://nativephp.com)
 [![License](https://img.shields.io/badge/License-MIT-4ade80?style=flat-square)](LICENSE)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker&logoColor=white)](docker-compose.yml)
-[![Website](https://img.shields.io/badge/Website-lbonavina.github.io/taskletto-ff914d?style=flat-square&logo=github&logoColor=white)](https://lbonavina.github.io/taskletto)
+[![Website](https://img.shields.io/badge/Website-lbonavina.github.io/taskletto-FF750F?style=flat-square&logo=github&logoColor=white)](https://lbonavina.github.io/taskletto)
 
 <br/>
 
-### [🌐 lbonavina.github.io/taskletto](https://lbonavina.github.io/taskletto)
+### [🌐 lbonavina.github.io/taskletto](https://taskletto.lucasbonavina.win)
 ### [⬇️ Download for Windows (.exe)](https://github.com/lbonavina/taskletto/releases/latest)
 
 </div>
@@ -30,12 +30,13 @@
 <td width="50%">
 
 **📝 Notes**
-- Rich editor with Tiptap — headings, lists, checklists, code
-- Slash `/` commands, auto-save, pin notes
+- Rich editor powered by Tiptap — headings, lists, checklists, code blocks
+- Slash `/` commands, auto-save and pin notes
+- Callout blocks: Info, Success, Warning, Danger, Tip, Note
 - Customizable colors and categories
-- Callout blocks (Info, Success, Warning, Danger, Tip, Note)
 
 **✅ Tasks**
+- Subtasks with nested progress tracking
 - Priorities, statuses and categories
 - Recurrence: daily, weekly, monthly — auto-spawns on completion
 - Time tracking: start/stop timer, estimated vs. tracked time, progress bar
@@ -46,20 +47,25 @@
 <td width="50%">
 
 **📊 Dashboard**
-- KPI cards with daily overview
+- Redesigned KPI cards with activity overview
 - Today's tasks section and streak tracker
-- Interactive chart with tooltips
+- Interactive activity chart with tooltips
+- Weather widget with local forecast
+
+**🔗 GitHub Sync**
+- Connect your GitHub account
+- Sync tasks and notes across devices
+- Keep your workflow tied to your repositories
 
 **🎨 Interface**
-- Dark and light theme
+- Polished dark and light themes
 - Keyboard shortcuts with search panel
-- Native desktop app for Windows
+- Native desktop app for Windows via NativePHP v2
 
 **⚙️ Technical**
 - REST API with Swagger documentation
-- Export/import JSON for backup and device migration
-- Docker ready
-- SQLite by default, MySQL support
+- Export/import JSON for backup and migration
+- Docker ready · SQLite by default
 
 </td>
 </tr>
@@ -67,43 +73,29 @@
 
 ---
 
-## 🆕 What's new in v1.3.0
+## 🆕 What's new in v2.0.0
 
-### 📣 Callout Blocks
-Notion-style highlight boxes directly in the notes editor. Available via the slash `/` menu or the new toolbar button, with **6 types**: Info, Success, Warning, Danger, Tip, and Note. Each block has its own color and icon, and the type can be changed by clicking the block's icon.
+### 🔗 GitHub Sync
+Tasks and notes can now be synced via GitHub, keeping your data across devices and tying your workflow to your repositories. Connect your account from the settings panel and choose what to sync.
 
----
-
-## 🆕 What's new in v1.2.0
-
-### ✅ Task Recurrence
-Tasks can now repeat automatically — choose **daily**, **weekly**, or **monthly**. When you complete a recurring task, the next occurrence is spawned automatically.
-
-### ⏱️ Time Tracking
-- Start/stop timer directly from the task sidebar
-- Set `estimated_minutes` displayed as hours + minutes
-- Visual progress bar comparing tracked vs. estimated time
+### 🌿 Subtasks
+Break down complex tasks into smaller, trackable steps. Each task now supports a nested subtask list with its own completion state, and the parent task shows an aggregated progress indicator.
 
 ### 📊 Redesigned Dashboard
-- KPI cards with background highlights
-- **Today** section showing what's due now
-- Streak counter to keep you motivated
-- Tooltip support on the activity chart
+The dashboard was rebuilt from scratch with a cleaner layout, improved KPI cards, a reworked activity chart with reliable tooltips, and a weather widget that caches data locally to avoid repeated requests.
 
-### 💾 JSON Export / Import
-Back up all your tasks and notes to a JSON file, or migrate data between devices with a single import.
+### ✏️ Improved Notes Editor
+The Tiptap editor received several quality-of-life improvements: better slash command discovery, improved table handling, smoother callout block interactions, and a more consistent toolbar across light and dark themes.
 
-### 💬 Improved Comments
-- Pagination for long comment threads
-- Inline editing with Markdown preview
-- Comment count displayed per task
-- Task sidebar reorganized into stacked cards: Info, Time, and Comments
+### 🖥️ NativePHP v2
+Upgraded from `nativephp/electron` v1 to `nativephp/desktop` v2, bringing Electron 38, improved security defaults, faster startup via build-time caching (`config:cache`, `route:cache`, `view:cache`), and a polished NSIS installer with welcome screen, license acceptance, and directory selection.
 
 ---
 
 ## 🖥️ Desktop app (NativePHP)
 
 > **Requirements:** PHP 8.2+, Composer, Node.js 18+, npm
+
 ```bash
 # 1. Clone the repository
 git clone https://github.com/lbonavina/taskletto.git
@@ -135,6 +127,7 @@ The app will open as a native desktop window. ✅
 ---
 
 ## 🚀 Run locally (web)
+
 ```bash
 git clone https://github.com/lbonavina/taskletto.git
 cd taskletto
@@ -150,6 +143,7 @@ Visit **http://localhost:8000**
 ---
 
 ## 🐳 Docker
+
 ```bash
 docker compose up -d
 docker compose exec app php artisan migrate
@@ -161,17 +155,18 @@ Visit **http://localhost:8000**
 
 ## 🔮 Roadmap
 
-- [ ] Cloud sync (Google Drive / GitHub)
-- [x] Export / import JSON for backup and migration
-- [x] Export notes as PDF and Markdown
+- [x] GitHub sync
+- [x] Subtasks with progress tracking
+- [x] Redesigned dashboard
+- [x] Improved notes editor
+- [x] NativePHP v2 with polished installer
+- [x] Export / import JSON
 - [x] Task recurrence (daily, weekly, monthly)
 - [x] Time tracking with progress bar
-- [x] Desktop notifications for overdue tasks
 - [x] Callout blocks in the notes editor
 - [ ] macOS app
 - [ ] Customizable themes
-
-> **ℹ️** Data is currently stored locally. Cloud sync is planned for future releases.
+- [ ] Mobile companion app
 
 ---
 
@@ -185,6 +180,6 @@ MIT — see [`LICENSE`](LICENSE).
 
 Made with ❤️ using **Laravel**, **Tiptap** and **NativePHP**
 
-[🌐 Website](https://lbonavina.github.io/taskletto) · [⬇️ Download](https://github.com/lbonavina/taskletto/releases/latest) · [☕ Ko-fi](https://ko-fi.com/lbonavina)
+[🌐 Website](https://taskletto.lucasbonavina.win) · [⬇️ Download](https://github.com/lbonavina/taskletto/releases/latest) · [☕ Ko-fi](https://ko-fi.com/lbonavina)
 
 </div>

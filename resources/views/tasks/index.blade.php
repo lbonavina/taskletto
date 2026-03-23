@@ -2,7 +2,7 @@
 @section('page-title', __('app.nav_tasks'))
 
 @section('topbar-actions')
-    <button class="btn btn-ghost btn-sm" id="kb-help-btn" title="Atalhos de teclado (?)">
+    <button class="btn btn-ghost" id="kb-help-btn" title="Atalhos de teclado (?)">
         <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="14" height="10" rx="2"/><path d="M4 7h1M7 7h1M10 7h1M4 10h8"/></svg>
     </button>
     <button class="btn btn-primary" id="btn-new-task-top" title="{{ __('app.new_task') }} (N)">
@@ -36,14 +36,14 @@
     <a href="/tasks?status=in_progress" class="qf {{ request('status') === 'in_progress' ? 'active' : '' }}">
         {{ __('app.tasks_in_progress_filter') }}
     </a>
-    <a href="/tasks?quick=recurring" class="qf {{ request('quick') === 'recurring' ? 'active' : '' }}" style="color:#a78bfa;border-color:rgba(167,139,250,.2);background:rgba(167,139,250,.06)">
+    <a href="/tasks?quick=recurring" class="qf {{ request('quick') === 'recurring' ? 'active' : '' }}" style="color:var(--purple);border-color:var(--purple-border);background:var(--purple-bg)">
         ↻ Recorrentes
     </a>
     <div style="flex:1"></div>
 </div>
 
 {{-- Advanced filters (collapsible) --}}
-<div id="advanced-filters" style="display:none;margin-bottom:16px">
+<div id="advanced-filters" style="margin-bottom:16px">
     <form method="GET" action="/tasks" class="filter-bar">
         <input type="text" name="search" placeholder="{{ __('app.tasks_search_ph') }}" value="{{ request('search') }}" id="search-input">
         <div class="select-wrap">
@@ -72,7 +72,6 @@
         @if(request()->anyFilled(['search','status','priority','overdue','quick']))
             <a href="/tasks" class="btn btn-ghost btn-sm">{{ __('app.tasks_clear') }}</a>
         @endif
-        <button type="submit" class="btn btn-ghost btn-sm">{{ __('app.tasks_filter') }}</button>
     </form>
 </div>
 
@@ -169,7 +168,7 @@
                                 <span class="task-title-text">{{ $task->title }}</span>
                                 @if($isOverdue)<span class="overdue-chip"> ⚠</span>@endif
                                 @if($task->isRecurring())
-                                    <span title="{{ $task->recurrence->label() }}" style="display:inline-flex;align-items:center;margin-left:5px;font-size:10px;color:#a78bfa;background:rgba(167,139,250,.12);border-radius:4px;padding:1px 5px;font-family:'DM Sans',monospace;vertical-align:middle;line-height:1.4">↻ {{ $task->recurrence->label() }}</span>
+                                    <span title="{{ $task->recurrence->label() }}" class="badge-recurrence">↻ {{ $task->recurrence->label() }}</span>
                                 @endif
                             </td>
                             <td onclick="event.stopPropagation()">
@@ -197,7 +196,7 @@
                             </td>
                             <td onclick="window.location='/tasks/{{ $task->id }}'">
                                 @if($dueLabel)
-                                    <span style="font-family:'DM Sans',monospace;font-size:12px;color:{{ $dueLabel['color'] }}">
+                                    <span style="font-family:'Montserrat',sans-serif;font-size:12px;color:{{ $dueLabel['color'] }}">
                                         {{ $dueLabel['text'] }}
                                     </span>
                                 @else
@@ -206,12 +205,38 @@
                             </td>
                             <td style="text-align:right;white-space:nowrap" onclick="event.stopPropagation()">
                                 @if(!$task->isCompleted())
-                                    <button class="btn btn-ghost btn-sm quick-complete" data-id="{{ $task->id }}" title="{{ __('app.tasks_quick_complete') }}">✓</button>
+                                    <button class="btn btn-ghost btn-sm quick-complete" data-id="{{ $task->id }}" title="{{ __('app.tasks_quick_complete') }}"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 8l5 5L14 4"/></svg></button>
                                 @endif
                                 <a href="/tasks/{{ $task->id }}" class="btn btn-ghost btn-sm">{{ __('app.tasks_view') }}</a>
                             </td>
                         </tr>
                     @endforeach
+
+                    {{-- Quick add row --}}
+                    <tr id="quick-add-row">
+                        <td colspan="8" style="padding:0">
+                            <div class="quick-add-row" id="quick-add-wrap">
+                                <button class="quick-add-trigger" id="quick-add-trigger" title="Adicionar tarefa rápida (Q)">
+                                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v12M2 8h12"/></svg>
+                                    <span>Adicionar tarefa</span>
+                                </button>
+                                <div class="quick-add-form" id="quick-add-form" style="display:none">
+                                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="2" style="flex-shrink:0"><path d="M8 2v12M2 8h12"/></svg>
+                                    <input
+                                        type="text"
+                                        id="quick-add-input"
+                                        class="quick-add-input"
+                                        placeholder="Nome da tarefa… (Enter para salvar, Esc para cancelar)"
+                                        autocomplete="off"
+                                        maxlength="255"
+                                    >
+                                    <button class="quick-add-submit" id="quick-add-submit" title="Criar (Enter)">
+                                        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 8l4 4 8-8"/></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -228,57 +253,86 @@
     <div id="inline-popup-inner"></div>
 </div>
 
-{{-- Keyboard shortcuts modal --}}
-<div id="kb-modal" style="display:none;position:fixed;inset:0;z-index:9200;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);align-items:center;justify-content:center">
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;width:420px;animation:modalIn .2s cubic-bezier(.34,1.56,.64,1) both">
-        <div style="font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:20px">{{ __("app.tasks_kbd_title") }}</div>
-        <div style="display:flex;flex-direction:column;gap:10px;font-size:13px">
-            @foreach([
-                ['N', __('app.tasks_kbd_new')],
-                ['/', __('app.tasks_kbd_search')],
-                ['R', __('app.tasks_kbd_reorder')],
-                ['Esc', __('app.tasks_kbd_close')],
-                ['A', __('app.tasks_kbd_select_all')],
-                ['Delete', __('app.tasks_kbd_delete')],
-                ['?', __('app.tasks_kbd_shortcuts')],
-            ] as [$key, $desc])
-            <div style="display:flex;align-items:center;gap:12px">
-                <kbd>{{ $key }}</kbd>
-                <span style="color:var(--muted)">{{ $desc }}</span>
-            </div>
-            @endforeach
-        </div>
-        <div style="text-align:right;margin-top:20px">
-            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('kb-modal').style.display='none'">{{ __('app.close') }}</button>
-        </div>
-    </div>
-</div>
-
 @push('modals')
     @include('tasks._modal_form')
+
+    {{-- Keyboard shortcuts modal --}}
+    <div id="kb-modal" class="modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+        <div class="modal" style="max-width:400px">
+            <button class="modal-close" onclick="document.getElementById('kb-modal').classList.remove('open')">×</button>
+            <div class="modal-title">{{ __("app.tasks_kbd_title") }}</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+                @foreach([
+                    ['N', __('app.tasks_kbd_new')],
+                    ['/', __('app.tasks_kbd_search')],
+                    ['R', __('app.tasks_kbd_reorder')],
+                    ['Esc', __('app.tasks_kbd_close')],
+                    ['A', __('app.tasks_kbd_select_all')],
+                    ['Delete', __('app.tasks_kbd_delete')],
+                    ['?', __('app.tasks_kbd_shortcuts')],
+                ] as [$key, $desc])
+                <div style="display:flex;align-items:center;gap:12px">
+                    <kbd>{{ $key }}</kbd>
+                    <span class="action-row-desc">{{ $desc }}</span>
+                </div>
+                @endforeach
+            </div>
+            <div style="text-align:right;margin-top:20px">
+                <button class="btn btn-ghost" onclick="document.getElementById('kb-modal').classList.remove('open')">{{ __('app.close') }}</button>
+            </div>
+        </div>
+    </div>
 @endpush
 
 @push('scripts')
 <style>
 @keyframes rowIn { from { opacity:0; transform:translateX(-8px); } to { opacity:1; transform:translateX(0); } }
 
+/* ── Quick add row ────────────────────────────────────────────────────── */
+.quick-add-row {
+    display: flex;
+    align-items: center;
+    border-top: 1px solid var(--border);
+}
+.quick-add-trigger {
+    display: flex; align-items: center; gap: 8px;
+    width: 100%; padding: 11px 16px;
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); font-size: 12.5px; font-weight: 500;
+    font-family: inherit; text-align: left;
+    transition: color .15s, background .15s;
+}
+.quick-add-trigger:hover { color: var(--accent); background: rgba(255,145,77,.04); }
+.quick-add-trigger svg { opacity: .5; transition: opacity .15s, transform .2s; flex-shrink: 0; }
+.quick-add-trigger:hover svg { opacity: 1; transform: rotate(90deg); }
+
+.quick-add-form {
+    display: flex; align-items: center; gap: 10px;
+    width: 100%; padding: 8px 12px;
+    animation: pageEnter .15s ease both;
+}
+.quick-add-input {
+    flex: 1; background: none; border: none; outline: none;
+    color: var(--text); font-size: 13px; font-family: inherit;
+    padding: 4px 0;
+}
+.quick-add-input::placeholder { color: var(--muted); opacity: .5; }
+.quick-add-submit {
+    width: 26px; height: 26px; border-radius: 7px; flex-shrink: 0;
+    background: var(--accent); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: #0c0c0e;
+    transition: transform .15s, box-shadow .15s, opacity .15s;
+    opacity: 0; pointer-events: none;
+}
+.quick-add-submit.visible { opacity: 1; pointer-events: all; }
+.quick-add-submit:hover { transform: scale(1.08); box-shadow: 0 2px 8px rgba(255,145,77,.35); }
+
 /* Quick filters */
 .quick-filters {
     display: flex; align-items: center; gap: 6px;
     margin-bottom: 14px; flex-wrap: wrap;
 }
-.qf {
-    display: inline-flex; align-items: center; gap: 5px;
-    padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 500;
-    color: var(--muted); background: var(--surface); border: 1px solid var(--border);
-    text-decoration: none; cursor: pointer; transition: all .15s;
-    white-space: nowrap;
-}
-.qf:hover { color: var(--text); border-color: #3a3a46; }
-.qf.active { background: var(--accent); color: #0f0f11; border-color: var(--accent); font-weight: 600; }
-.qf-count { background: rgba(0,0,0,.2); border-radius: 10px; padding: 0 5px; font-family: 'DM Sans',monospace; font-size: 10px; }
-.qf.active .qf-count { background: rgba(0,0,0,.15); }
-.qf-danger { background: rgba(224,84,84,.3) !important; color: var(--danger) !important; }
 
 /* Bulk bar */
 .bulk-bar {
@@ -324,7 +378,7 @@
     position: absolute;
     left: 4px; top: 1.5px;
     width: 5px; height: 9px;
-    border: 2px solid #0f0f11;
+    border: 2px solid var(--bg);
     border-top: none; border-left: none;
     transform: rotate(45deg);
 }
@@ -336,7 +390,7 @@
     position: absolute;
     left: 3px; top: 6px;
     width: 8px; height: 2px;
-    background: #0f0f11;
+    background: var(--bg);
     border-radius: 1px;
 }
 tr.selected td { background: rgba(255,145,77,.06) !important; }
@@ -373,13 +427,29 @@ kbd {
     display: inline-flex; align-items: center; justify-content: center;
     min-width: 28px; height: 22px; padding: 0 6px;
     background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 5px; font-family: 'DM Sans',monospace; font-size: 11px;
+    border-radius: 5px; font-family: 'Montserrat',sans-serif; font-size: 11px;
     color: var(--text); font-weight: 600; flex-shrink: 0;
 }
 
 /* Inline edit badge hover */
 .inline-edit-trigger { cursor: pointer; transition: opacity .15s; }
 .inline-edit-trigger:hover { opacity: .7; }
+
+/* Quick complete button */
+.quick-complete {
+    width: 28px; height: 28px; padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 7px;
+    color: var(--muted);
+    border-color: var(--border);
+    transition: color .15s, background .15s, border-color .15s, transform .15s;
+}
+.quick-complete:hover {
+    color: var(--success) !important;
+    background: rgba(74,222,128,.10) !important;
+    border-color: rgba(74,222,128,.3) !important;
+    transform: scale(1.08);
+}
 </style>
 
 <script>
@@ -406,7 +476,7 @@ document.querySelectorAll('.quick-complete').forEach(btn => {
             row.style.opacity = '0'; row.style.transform = 'translateX(12px)';
             toast('{{ __('app.tasks_completed_toast') }}', 'success');
             setTimeout(() => row.remove(), 300);
-        } else { toast('{{ __('app.tasks_error_complete') }}', 'error'); this.innerHTML = '✓'; this.disabled = false; }
+        } else { toast('{{ __('app.tasks_error_complete') }}', 'error'); this.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 8l5 5L14 4"/></svg>'; this.disabled = false; }
     });
 });
 
@@ -664,7 +734,6 @@ document.addEventListener('keydown', e => {
             break;
         case '/':
             e.preventDefault();
-            document.getElementById('advanced-filters').style.display = 'block';
             setTimeout(() => document.querySelector('[name=search]')?.focus(), 50);
             break;
         case 'a': case 'A':
@@ -675,17 +744,17 @@ document.addEventListener('keydown', e => {
             if (selected.size > 0 && e.key === 'Delete') document.getElementById('bulk-delete')?.click();
             break;
         case '?':
-            document.getElementById('kb-modal').style.display = 'flex';
+            document.getElementById('kb-modal').classList.add('open');
             break;
         case 'Escape':
-            document.getElementById('kb-modal').style.display = 'none';
+            document.getElementById('kb-modal').classList.remove('open');
             if (selected.size) document.getElementById('bulk-cancel')?.click();
             break;
     }
 });
 
 document.getElementById('kb-help-btn')?.addEventListener('click', () => {
-    document.getElementById('kb-modal').style.display = 'flex';
+    document.getElementById('kb-modal').classList.add('open');
 });
 document.getElementById('btn-new-task-top')?.addEventListener('click', () => {
     document.getElementById('modal-new-task').classList.add('open');
@@ -694,19 +763,165 @@ document.getElementById('btn-empty-new')?.addEventListener('click', () => {
     document.getElementById('modal-new-task').classList.add('open');
 });
 
+// ── Quick add ─────────────────────────────────────────────────────────────────
+(function () {
+    const trigger  = document.getElementById('quick-add-trigger');
+    const form     = document.getElementById('quick-add-form');
+    const input    = document.getElementById('quick-add-input');
+    const submit   = document.getElementById('quick-add-submit');
+    if (!trigger || !form || !input) return;
+
+    function openQuickAdd() {
+        trigger.style.display = 'none';
+        form.style.display    = 'flex';
+        input.value           = '';
+        submit.classList.remove('visible');
+        input.focus();
+    }
+
+    function closeQuickAdd() {
+        form.style.display    = 'none';
+        trigger.style.display = 'flex';
+        input.value           = '';
+        submit.classList.remove('visible');
+    }
+
+    async function createQuick() {
+        const title = input.value.trim();
+        if (!title) { input.focus(); return; }
+
+        // Optimistic UI — show spinner on submit btn
+        submit.innerHTML = '<span class="spinner" style="width:10px;height:10px;border-width:1.5px"></span>';
+        submit.disabled  = true;
+
+        try {
+            const res  = await fetch('/api/v1/tasks', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': CSRF },
+                body:    JSON.stringify({ title }),
+            });
+            const json = await res.json();
+            // Laravel ResourceResponse wraps in { data: {...} }
+            const task = json.data ?? json;
+
+            if (res.ok) {
+                // Insert new row into the table optimistically
+                const tbody = document.getElementById('sortable-body');
+                if (tbody) {
+                    const isDragMode = document.querySelectorAll('.drag-handle-cell').length > 0 &&
+                                       document.querySelectorAll('.drag-handle-cell')[0].style.display !== 'none';
+                    const tr = document.createElement('tr');
+                    tr.className    = 'task-row';
+                    tr.dataset.id   = task.id;
+                    tr.dataset.status   = 'pending';
+                    tr.dataset.priority = 'medium';
+                    tr.style.animation  = 'rowIn .2s ease both';
+                    tr.setAttribute('draggable', true);
+                    tr.innerHTML = `
+                        <td style="padding-left:14px"><input type="checkbox" class="row-checkbox task-checkbox" data-id="${task.id}"></td>
+                        <td class="drag-handle-cell" style="${isDragMode ? '' : 'display:none;'}cursor:grab;color:var(--border);padding:0 4px;text-align:center;font-size:16px">⠿</td>
+                        <td class="td-title" onclick="window.location='/tasks/${task.id}'">
+                            <span class="task-title-text">${task.title}</span>
+                        </td>
+                        <td onclick="event.stopPropagation()">
+                            <span class="badge status-pending inline-edit-trigger" data-field="status" data-id="${task.id}" title="Clique para editar">
+                                <span class="badge-dot" style="background:var(--status-pending)"></span>
+                                ${task.status?.label ?? 'Pendente'}
+                            </span>
+                        </td>
+                        <td onclick="event.stopPropagation()">
+                            <span class="badge priority-medium inline-edit-trigger" data-field="priority" data-id="${task.id}" title="Clique para editar">
+                                ${task.priority?.label ?? 'Média'}
+                            </span>
+                        </td>
+                        <td style="color:var(--muted);font-size:13px">—</td>
+                        <td><span style="color:var(--muted)">—</span></td>
+                        <td style="text-align:right;white-space:nowrap" onclick="event.stopPropagation()">
+                            <button class="btn btn-ghost btn-sm quick-complete" data-id="${task.id}" title="{{ __('app.tasks_quick_complete') }}"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 8l5 5L14 4"/></svg></button>
+                            <a href="/tasks/${task.id}" class="btn btn-ghost btn-sm">{{ __('app.tasks_view') }}</a>
+                        </td>
+                    `;
+                    // Insert before the quick-add-row
+                    const qaRow = document.getElementById('quick-add-row');
+                    tbody.insertBefore(tr, qaRow);
+
+                    // Wire up the new checkbox and quick-complete button
+                    tr.querySelector('.task-checkbox')?.addEventListener('change', function() {
+                        this.checked ? selected.add(this.dataset.id) : selected.delete(this.dataset.id);
+                        tr.classList.toggle('selected', this.checked);
+                        updateBulkBar();
+                    });
+                    tr.querySelector('.quick-complete')?.addEventListener('click', async function(e) {
+                        e.stopPropagation();
+                        const res2 = await api('PATCH', `/api/v1/tasks/${this.dataset.id}/complete`);
+                        if (res2.ok) {
+                            tr.style.transition = 'opacity .3s, transform .3s';
+                            tr.style.opacity    = '0';
+                            tr.style.transform  = 'translateX(12px)';
+                            toast('{{ __('app.tasks_completed_toast') }}', 'success');
+                            setTimeout(() => tr.remove(), 300);
+                        }
+                    });
+                    tr.querySelectorAll('.inline-edit-trigger').forEach(el => {
+                        el.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            if (popupOpen) { closePopup(); return; }
+                            openInlinePopup(this, this.dataset.field, this.dataset.id, tr.dataset[this.dataset.field]);
+                        });
+                    });
+                }
+
+                toast('Tarefa criada!', 'success');
+                // Reset and keep open for rapid entry
+                input.value = '';
+                submit.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 8l4 4 8-8"/></svg>';
+                submit.disabled  = false;
+                submit.classList.remove('visible');
+                input.focus();
+            } else {
+                toast('Erro ao criar tarefa.', 'error');
+                submit.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 8l4 4 8-8"/></svg>';
+                submit.disabled  = false;
+            }
+        } catch {
+            toast('Erro de conexão.', 'error');
+            submit.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 8l4 4 8-8"/></svg>';
+            submit.disabled  = false;
+        }
+    }
+
+    trigger.addEventListener('click', openQuickAdd);
+    submit.addEventListener('click', createQuick);
+
+    input.addEventListener('input', () => {
+        submit.classList.toggle('visible', input.value.trim().length > 0);
+    });
+    input.addEventListener('keydown', e => {
+        if (e.key === 'Enter')  { e.preventDefault(); createQuick(); }
+        if (e.key === 'Escape') { e.preventDefault(); closeQuickAdd(); }
+    });
+
+    // Q shortcut to open quick add
+    document.addEventListener('keydown', e => {
+        const tag = document.activeElement.tagName;
+        if (['INPUT','TEXTAREA','SELECT'].includes(tag)) return;
+        if (e.key === 'q' || e.key === 'Q') {
+            e.preventDefault();
+            openQuickAdd();
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+    });
+})();
+
 // Advanced filters toggle on search shortcut
 document.addEventListener('keydown', e => {
     if (e.key === 'f' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        document.getElementById('advanced-filters').style.display = 'block';
         document.querySelector('[name=search]')?.focus();
     }
 });
 
-// Show advanced filters if any active
-@if(request()->anyFilled(['search','status','priority','overdue']))
-document.getElementById('advanced-filters').style.display = 'block';
-@endif
+// Show advanced filters if any active — always visible now
 
 </script>
 @endpush

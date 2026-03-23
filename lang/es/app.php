@@ -378,7 +378,7 @@ return [
     'cat_none' => 'No hay categorías creadas.',
     'cat_tasks_count' => 'tarea(s)',
     'cat_edit_btn' => 'Editar',
-    'cat_view_tasks' => 'Ver tareas →',
+    'cat_view_tasks' => 'Ver tareas',
     'cat_edit_title' => 'Editar Categoría',
     'cat_label_name' => 'Nombre *',
     'cat_name_ph' => 'Ej: Trabajo',

@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $note->title ?: 'Nota' }} — Taskletto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            font-size: 13pt;
-            line-height: 1.7;
+            font-family: 'Montserrat', 'Arial', sans-serif;
+            font-size: 11pt;
+            line-height: 1.75;
             color: #1a1a2e;
             background: #fff;
             padding: 0;
@@ -23,20 +25,22 @@
             margin-bottom: 32px;
         }
         .print-header-app {
-            font-size: 10pt;
+            font-size: 9pt;
             color: #888;
-            letter-spacing: .5px;
+            letter-spacing: 1px;
             text-transform: uppercase;
             margin-bottom: 10px;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
         }
         .print-title {
-            font-size: 26pt;
-            font-weight: 700;
+            font-size: 24pt;
+            font-weight: 800;
             line-height: 1.2;
             color: #0f0f1a;
             margin-bottom: 12px;
             letter-spacing: -0.5px;
+            font-family: 'Montserrat', sans-serif;
         }
         .print-meta {
             display: flex;
@@ -44,18 +48,19 @@
             flex-wrap: wrap;
             font-size: 9pt;
             color: #666;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Montserrat', sans-serif;
         }
         .print-meta-item { display: flex; align-items: center; gap: 4px; }
         .print-tag {
             display: inline-block;
-            background: #f0f0f6;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 1px 6px;
+            background: rgba(255,145,77,.1);
+            border: 1px solid rgba(255,145,77,.25);
+            border-radius: 20px;
+            padding: 2px 9px;
             font-size: 8pt;
-            font-family: 'Arial', sans-serif;
-            color: #444;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            color: #c2410c;
         }
         .print-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
 
@@ -67,45 +72,49 @@
         }
 
         /* Tiptap HTML reset for print */
-        .print-body h1 { font-size: 20pt; margin: 24px 0 10px; color: #0f0f1a; }
-        .print-body h2 { font-size: 16pt; margin: 20px 0 8px; color: #1a1a2e; }
-        .print-body h3 { font-size: 13pt; margin: 16px 0 6px; color: #1a1a2e; }
-        .print-body p  { margin: 0 0 10px; }
+        .print-body h1 { font-family: 'Montserrat', sans-serif; font-size: 19pt; font-weight: 800; margin: 24px 0 10px; color: #0f0f1a; letter-spacing: -0.4px; padding-bottom: 8px; border-bottom: 2px solid #e8e8ee; }
+        .print-body h2 { font-family: 'Montserrat', sans-serif; font-size: 15pt; font-weight: 700; margin: 20px 0 8px; color: #1a1a2e; letter-spacing: -0.2px; }
+        .print-body h3 { font-family: 'Montserrat', sans-serif; font-size: 12pt; font-weight: 700; margin: 16px 0 6px; color: #1a1a2e; }
+        .print-body p  { margin: 0 0 9px; }
         .print-body ul, .print-body ol { padding-left: 22px; margin: 0 0 10px; }
         .print-body li { margin-bottom: 4px; }
         .print-body blockquote {
             border-left: 4px solid {{ $note->color ?? '#ff914d' }};
-            padding: 6px 16px;
-            margin: 12px 0;
+            padding: 8px 16px;
+            margin: 14px 0;
             color: #555;
             font-style: italic;
+            background: rgba(255,145,77,.04);
+            border-radius: 0 8px 8px 0;
         }
         .print-body code {
-            background: #f4f4f8;
+            background: rgba(59,130,246,.08);
+            border: 1px solid rgba(59,130,246,.15);
             border-radius: 4px;
-            padding: 1px 5px;
+            padding: 1px 6px;
             font-family: 'Courier New', monospace;
-            font-size: 11pt;
+            font-size: 10pt;
+            color: #2563eb;
         }
         .print-body pre {
-            background: #f4f4f8;
-            border-radius: 8px;
+            background: #1e1e2e;
+            border-radius: 10px;
             padding: 14px 18px;
             overflow: auto;
             margin: 12px 0;
             font-family: 'Courier New', monospace;
-            font-size: 10pt;
-            line-height: 1.5;
+            font-size: 9.5pt;
+            line-height: 1.6;
         }
-        .print-body pre code { background: none; padding: 0; }
-        .print-body hr { border: none; border-top: 1px solid #ddd; margin: 20px 0; }
-        .print-body a { color: #0066cc; }
-        .print-body img { max-width: 100%; height: auto; border-radius: 6px; margin: 8px 0; }
-        .print-body mark { background: #fff3b0; padding: 0 2px; border-radius: 2px; }
+        .print-body pre code { background: none; border: none; padding: 0; color: #e2e8f0; }
+        .print-body hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+        .print-body a { color: #ff914d; text-decoration: underline; text-underline-offset: 2px; }
+        .print-body img { max-width: 100%; height: auto; border-radius: 8px; margin: 8px 0; }
+        .print-body mark { background: rgba(250,204,21,.3); padding: 1px 4px; border-radius: 3px; }
         .print-body strong { font-weight: 700; }
         .print-body em { font-style: italic; }
-        .print-body u  { text-decoration: underline; }
-        .print-body s  { text-decoration: line-through; }
+        .print-body u  { text-decoration: underline; text-underline-offset: 3px; }
+        .print-body s  { text-decoration: line-through; color: #888; }
 
         /* Task list (checklist) */
         .print-body ul[data-type="taskList"] { list-style: none; padding-left: 0; }
@@ -113,19 +122,19 @@
         .print-body ul[data-type="taskList"] li input[type="checkbox"] { margin-top: 3px; flex-shrink: 0; }
 
         /* Tables */
-        .print-body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 11pt; }
-        .print-body th, .print-body td { border: 1px solid #ccc; padding: 7px 10px; text-align: left; }
-        .print-body th { background: #f0f0f6; font-weight: 600; }
+        .print-body table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 10pt; }
+        .print-body th, .print-body td { border: 1px solid #ddd; padding: 7px 10px; text-align: left; }
+        .print-body th { background: #f4f4f8; font-weight: 700; font-family: 'Montserrat', sans-serif; }
         .print-body tr:nth-child(even) td { background: #fafafa; }
 
         /* ── Footer ───────────────────────────────────────────────────── */
         .print-footer {
-            border-top: 1px solid #ddd;
+            border-top: 1px solid #e8e8ee;
             padding: 14px 40px;
             margin-top: 40px;
             font-size: 9pt;
             color: #aaa;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Montserrat', sans-serif;
             display: flex;
             justify-content: space-between;
         }
@@ -143,13 +152,14 @@
             padding: 11px 22px;
             border-radius: 10px;
             border: none;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: .2px;
         }
-        .btn-print { background: {{ $note->color ?? '#ff914d' }}; color: #fff; }
-        .btn-close  { background: #eee; color: #333; }
+        .btn-print { background: {{ $note->color ?? '#ff914d' }}; color: #fff; box-shadow: 0 4px 14px rgba(255,145,77,.35); }
+        .btn-close  { background: #f0f0f6; color: #444; }
 
         @media print {
             .no-print { display: none !important; }

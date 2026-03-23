@@ -11,133 +11,386 @@
     </button>
 @endsection
 
+@push('styles')
+<style>
+/* ── Category grid ───────────────────────────────────────────────────── */
+.cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+}
+
+/* ── Card ────────────────────────────────────────────────────────────── */
+.cat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    cursor: default;
+    transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+    animation: catIn .22s cubic-bezier(.25,.46,.45,.94) both;
+}
+
+.cat-card:hover {
+    border-color: var(--cat-color, var(--accent));
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--cat-color, var(--accent)) 30%, transparent),
+                0 8px 28px rgba(0,0,0,.18);
+    transform: translateY(-2px);
+}
+
+@keyframes catIn {
+    from { opacity: 0; transform: translateY(6px) scale(.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* stagger cards */
+.cat-card:nth-child(1) { animation-delay: 0ms; }
+.cat-card:nth-child(2) { animation-delay: 40ms; }
+.cat-card:nth-child(3) { animation-delay: 80ms; }
+.cat-card:nth-child(4) { animation-delay: 120ms; }
+.cat-card:nth-child(5) { animation-delay: 160ms; }
+.cat-card:nth-child(6) { animation-delay: 200ms; }
+.cat-card:nth-child(n+7) { animation-delay: 240ms; }
+
+/* ── Colored top band with emoji ─────────────────────────────────────── */
+.cat-card-header {
+    padding: 22px 20px 16px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    position: relative;
+}
+
+/* Subtle gradient wash from cat color */
+.cat-card-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg,
+        color-mix(in srgb, var(--cat-color, var(--accent)) 14%, transparent) 0%,
+        transparent 70%);
+    pointer-events: none;
+}
+
+.cat-icon-wrap {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--cat-color, var(--accent)) 18%, transparent);
+    border: 1px solid color-mix(in srgb, var(--cat-color, var(--accent)) 30%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    transition: transform .2s ease, background .2s ease;
+}
+
+.cat-card:hover .cat-icon-wrap {
+    transform: scale(1.06);
+    background: color-mix(in srgb, var(--cat-color, var(--accent)) 26%, transparent);
+}
+
+/* ── Hover actions (edit / delete) ───────────────────────────────────── */
+.cat-actions {
+    display: flex;
+    gap: 5px;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity .18s ease, transform .18s ease;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.cat-card:hover .cat-actions {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.cat-action-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .12s, color .12s, border-color .12s;
+}
+
+.cat-action-btn:hover {
+    background: var(--surface2);
+    color: var(--text);
+    border-color: color-mix(in srgb, currentColor 30%, transparent);
+}
+
+.cat-action-btn.danger:hover {
+    background: rgba(224,84,84,.12);
+    color: var(--danger);
+    border-color: rgba(224,84,84,.3);
+}
+
+/* ── Body ────────────────────────────────────────────────────────────── */
+.cat-card-body {
+    padding: 4px 20px 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--border);
+}
+
+.cat-card-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -.2px;
+    margin-bottom: 4px;
+    margin-top: 4px;
+    line-height: 1.25;
+}
+
+.cat-card-desc {
+    font-size: 11.5px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 14px;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ── Task count + mini bar ───────────────────────────────────────────── */
+.cat-card-count-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.cat-card-count {
+    font-size: 10px;
+    color: var(--muted);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.cat-card-count strong {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.cat-mini-bar {
+    height: 3px;
+    background: color-mix(in srgb, var(--cat-color, var(--accent)) 15%, var(--border));
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.cat-mini-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    background: var(--cat-color, var(--accent));
+    width: 0;
+    transition: width 1s cubic-bezier(.34,1.2,.64,1);
+}
+
+/* ── Footer link ─────────────────────────────────────────────────────── */
+.cat-card-footer {
+    padding: 10px 20px 14px;
+    border-top: 1px solid var(--border);
+}
+
+.cat-card-link {
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    letter-spacing: .1px;
+    transition: color .15s, gap .15s;
+}
+
+.cat-card-link:hover {
+    color: var(--cat-color, var(--accent));
+    gap: 8px;
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────── */
+.cat-empty {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 72px 20px;
+    text-align: center;
+    color: var(--muted);
+    border: 1px dashed var(--border);
+    border-radius: 14px;
+    gap: 12px;
+}
+
+.cat-empty-icon {
+    font-size: 40px;
+    opacity: .35;
+    margin-bottom: 4px;
+}
+
+.cat-empty p {
+    font-size: 13px;
+    max-width: 280px;
+    line-height: 1.6;
+}
+
+/* ── New category card (ghost slot) ─────────────────────────────────── */
+.cat-card-new {
+    border: 1.5px dashed var(--border);
+    background: none;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 32px 20px;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: inherit;
+    transition: border-color .2s, color .2s, background .2s;
+    min-height: 160px;
+    animation: catIn .22s cubic-bezier(.25,.46,.45,.94) both;
+}
+
+.cat-card-new:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(255,145,77,.04);
+}
+
+.cat-card-new svg {
+    opacity: .4;
+    transition: opacity .2s, transform .2s;
+}
+
+.cat-card-new:hover svg {
+    opacity: 1;
+    transform: scale(1.1) rotate(90deg);
+}
+</style>
+@endpush
+
 @section('content')
 
-    @if($categories->isEmpty())
-        <div class="card">
-            <div class="empty-state">
-                <svg width="48" height="48" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1">
-                    <path
-                        d="M1.5 4.5h3a1 1 0 011 1v5a1 1 0 01-1 1h-3a1 1 0 01-1-1v-5a1 1 0 011-1zM8 2.5h3a1 1 0 011 1v9a1 1 0 01-1 1H8a1 1 0 01-1-1v-9a1 1 0 011-1z" />
-                </svg>
+    <div class="cat-grid">
+
+        @if($categories->isEmpty())
+            <div class="cat-empty">
+                <div class="cat-empty-icon">🗂</div>
                 <p>{{ __('app.cat_none') }}</p>
                 <button class="btn btn-primary" onclick="openModal()">Criar categoria</button>
             </div>
-        </div>
-    @else
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px">
-            @foreach($categories as $cat)
-                <div class="cat-card" style="--cat-color:{{ $cat->color }}">
-                    <div class="cat-card-body">
-                        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
-                            <div style="display:flex;align-items:center;gap:10px">
-                                <span style="font-size:22px;line-height:1">{{ $cat->icon }}</span>
-                                <div>
-                                    <div class="cat-card-title">{{ $cat->name }}</div>
-                                    <div style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:2px">
-                                        {{ $cat->tasks_count }} {{ __('app.cat_tasks_count') }}</div>
-                                </div>
-                            </div>
-                            <div style="display:flex;gap:4px;flex-shrink:0">
-                                <button class="btn btn-ghost btn-sm"
-                                    onclick="openEdit({{ $cat->id }}, '{{ addslashes($cat->name) }}', '{{ $cat->color }}', '{{ addslashes($cat->icon) }}', '{{ addslashes($cat->description ?? '') }}')">
-                                    {{ __('app.cat_edit_btn') }}
+        @else
+            @foreach($categories as $i => $cat)
+                @php
+                    $maxTasks = $categories->max('tasks_count') ?: 1;
+                    $barPct   = round($cat->tasks_count / $maxTasks * 100);
+                @endphp
+                <div class="cat-card" style="--cat-color:{{ $cat->color }};animation-delay:{{ $i * 45 }}ms">
+
+                    {{-- Header: icon + actions --}}
+                    <div class="cat-card-header">
+                        <div class="cat-icon-wrap">{{ $cat->icon ?: '📁' }}</div>
+                        <div class="cat-actions">
+                            <button class="cat-action-btn"
+                                onclick="openEdit({{ $cat->id }}, '{{ addslashes($cat->name) }}', '{{ $cat->color }}', '{{ addslashes($cat->icon) }}', '{{ addslashes($cat->description ?? '') }}')"
+                                title="{{ __('app.cat_edit_btn') }}">
+                                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+                                    <path d="M11.5 2.5a1.5 1.5 0 012.12 2.12L5 13.24 2 14l.76-3L11.5 2.5z"/>
+                                </svg>
+                            </button>
+                            <form method="POST" action="/categories/{{ $cat->id }}" id="del-form-{{ $cat->id }}" onsubmit="return false">
+                                @csrf @method('DELETE')
+                                <button type="button" class="cat-action-btn danger"
+                                    onclick="confirmDelete({{ $cat->id }}, '{{ addslashes($cat->name) }}')"
+                                    title="{{ __('app.cat_delete_btn') ?? 'Excluir' }}">
+                                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+                                        <path d="M2 4h12M5 4V2.5h6V4M6 7v5M10 7v5M3 4l1 9.5h8L13 4"/>
+                                    </svg>
                                 </button>
-                                <form method="POST" action="/categories/{{ $cat->id }}"
-                                    id="del-form-{{ $cat->id }}"
-                                    onsubmit="return false">
-                                    @csrf @method('DELETE')
-                                    <button type="button" class="btn btn-danger btn-sm"
-                                        onclick="confirmDelete({{ $cat->id }}, '{{ addslashes($cat->name) }}')">✕</button>
-                                </form>
+                            </form>
+                        </div>
+                    </div>
+
+                    {{-- Body --}}
+                    <div class="cat-card-body">
+                        <div class="cat-card-name">{{ $cat->name }}</div>
+                        @if($cat->description)
+                            <div class="cat-card-desc">{{ $cat->description }}</div>
+                        @else
+                            <div class="cat-card-desc" style="opacity:.4;font-style:italic">Sem descrição</div>
+                        @endif
+
+                        <div class="cat-card-count-row">
+                            <div class="cat-card-count">
+                                <strong>{{ $cat->tasks_count }}</strong>
+                                {{ __('app.cat_tasks_count') }}
                             </div>
                         </div>
-                        @if($cat->description)
-                            <p style="font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:10px">{{ $cat->description }}</p>
-                        @endif
+                        <div class="cat-mini-bar">
+                            <div class="cat-mini-bar-fill" data-w="{{ $barPct }}"></div>
+                        </div>
                     </div>
+
                     <div class="cat-card-footer">
                         <a href="/tasks?category={{ $cat->id }}" class="cat-card-link">
                             {{ __('app.cat_view_tasks') }}
-                            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 6h8M6 2l4 4-4 4"/></svg>
+                            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                                <path d="M2 6h8M6 2l4 4-4 4"/>
+                            </svg>
                         </a>
                     </div>
                 </div>
             @endforeach
-        </div>
-    @endif
+
+            {{-- Ghost "new" slot --}}
+            <button class="cat-card-new" onclick="openModal()" style="animation-delay:{{ $categories->count() * 45 }}ms">
+                <svg width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+                    <path d="M8 2v12M2 8h12"/>
+                </svg>
+                {{ __('app.cat_new_btn') }}
+            </button>
+        @endif
+
+    </div>
 
 @endsection
 
 @push('scripts')
     <style>
-        /* ── Category card — mirrors note-card style ─────────────────────── */
-        .cat-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 14px; padding: 0;
-            display: flex; flex-direction: column;
-            position: relative; overflow: hidden;
-            transition: transform .18s, box-shadow .18s, border-color .18s;
-            animation: catCardIn .2s ease both;
-        }
-        @keyframes catCardIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-        .cat-card::before {
-            content: ''; position: absolute;
-            top: 0; left: 0; bottom: 0; width: 3px;
-            background: var(--cat-color, var(--accent));
-            border-radius: 14px 0 0 14px;
-        }
-        .cat-card::after {
-            content: ''; position: absolute;
-            top: 0; left: 0; right: 0; height: 60px;
-            background: linear-gradient(180deg, color-mix(in srgb, var(--cat-color, var(--accent)) 10%, transparent) 0%, transparent 100%);
-            pointer-events: none;
-        }
-        .cat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 32px rgba(0,0,0,.3), 0 0 0 1px var(--cat-color, var(--accent));
-            border-color: var(--cat-color, var(--accent));
-        }
-        .cat-card-body { padding: 16px 18px 12px 20px; flex: 1; }
-        .cat-card-title {
-            font-family: 'Codec Pro', sans-serif; font-size: 14.5px;
-            font-weight: 700; letter-spacing: -0.2px;
-            color: var(--text); line-height: 1.3;
-        }
-        .cat-card-footer {
-            display: flex; align-items: center;
-            padding: 8px 18px 12px 20px;
-            border-top: 1px solid var(--border);
-        }
-        .cat-card-link {
-            font-size: 11px; color: var(--accent); text-decoration: none;
-            font-weight: 600; display: inline-flex; align-items: center; gap: 4px;
-            transition: gap .15s;
-        }
-        .cat-card-link:hover { gap: 7px; }
-
-        #modal-cat-portal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 10000;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0);
-            backdrop-filter: blur(0px);
-        }
-
-        #modal-cat-portal.open {
-            display: flex;
-            animation: overlayIn .2s ease forwards;
-        }
 
         #modal-cat-portal .modal {
-            animation: modalIn .22s cubic-bezier(.34, 1.56, .64, 1) both;
             max-width: 500px;
+            overflow: visible;
         }
 
         /* Color picker */
@@ -163,7 +416,7 @@
         }
 
         .color-preview:hover {
-            border-color: #3a3a46;
+            border-color: color-mix(in srgb, var(--border) 60%, var(--muted));
         }
 
         .color-preview:focus-within {
@@ -184,8 +437,8 @@
         }
 
         .color-hex {
-            font-family: 'DM Sans', monospace;
-            font-size: 13px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
             color: var(--text);
             text-transform: uppercase;
             flex: 1;
@@ -249,7 +502,7 @@
         }
 
         .emoji-trigger:hover {
-            border-color: #3a3a46;
+            border-color: color-mix(in srgb, var(--border) 60%, var(--muted));
         }
 
         .emoji-trigger.open,
@@ -260,12 +513,12 @@
         }
 
         .emoji-trigger-preview {
-            font-size: 20px;
+            font-size: 17px;
             line-height: 1;
         }
 
         .emoji-trigger-label {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--muted);
             flex: 1;
         }
@@ -288,7 +541,7 @@
             left: 0;
             right: 0;
             z-index: 99999;
-            background: #1a1a22;
+            background: var(--surface);
             border: 1px solid var(--border);
             border-radius: 12px;
             overflow: hidden;
@@ -311,8 +564,8 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             color: var(--text);
-            padding: 7px 12px;
-            font-size: 13px;
+            padding: 6px 10px;
+            font-size: 12px;
             font-family: inherit;
             outline: none;
             transition: border-color .15s;
@@ -384,9 +637,9 @@
         }
 
         .emoji-btn {
-            font-size: 20px;
+            font-size: 17px;
             line-height: 1;
-            padding: 6px;
+            padding: 5px;
             border-radius: 7px;
             cursor: pointer;
             border: none;
@@ -417,6 +670,12 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             document.body.appendChild(document.getElementById('modal-cat-portal'));
+            // Animate mini bars
+            setTimeout(() => {
+                document.querySelectorAll('.cat-mini-bar-fill[data-w]').forEach(el => {
+                    el.style.width = el.dataset.w + '%';
+                });
+            }, 300);
         });
 
         // ── Emoji data ────────────────────────────────────────────────────────────────
@@ -749,8 +1008,8 @@
     </script>
 
     {{-- Portal --}}
-    <div id="modal-cat-portal">
-        <div class="modal" style="max-width:500px;width:100%;overflow:visible">
+    <div id="modal-cat-portal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+        <div class="modal" style="max-width:500px;overflow:visible">
             <button class="modal-close" onclick="closeModal()">×</button>
             <div class="modal-title" id="modal-cat-title">{{ __('app.cat_new_title') }}</div>
 
@@ -761,12 +1020,11 @@
 
                 <div class="form-group">
                     <label>{{ __('app.cat_label_name') }}</label>
-                    <input type="text" name="name" id="cat-name" placeholder="{{ __('app.cat_name_ph') }}" required
-                        maxlength="100">
+                    <input type="text" name="name" id="cat-name" placeholder="{{ __('app.cat_name_ph') }}" required maxlength="100">
                 </div>
 
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-                    <div class="form-group">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px">
+                    <div class="form-group" style="margin:0">
                         <label>{{ __('app.cat_label_color') }}</label>
                         <div class="color-picker-wrap">
                             <div class="color-preview">
@@ -778,21 +1036,19 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group" style="margin:0">
                         <label>{{ __('app.cat_label_icon') }}</label>
                         <div style="position:relative;overflow:visible">
                             <div id="emoji-trigger" class="emoji-trigger" tabindex="0">
                                 <span id="emoji-preview" class="emoji-trigger-preview">📁</span>
                                 <span class="emoji-trigger-label">{{ __('app.cat_choose_emoji') }}</span>
                                 <svg class="emoji-trigger-arrow" width="10" height="10" viewBox="0 0 10 10" fill="none">
-                                    <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5"
-                                        stroke-linecap="round" stroke-linejoin="round" />
+                                    <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                                 </svg>
                             </div>
                             <div id="emoji-panel" class="emoji-panel">
                                 <div class="emoji-search-wrap">
-                                    <input type="text" id="emoji-search" class="emoji-search"
-                                        placeholder="{{ __('app.cat_search_emoji_ph') }}">
+                                    <input type="text" id="emoji-search" class="emoji-search" placeholder="{{ __('app.cat_search_emoji_ph') }}">
                                 </div>
                                 <div id="emoji-tabs" class="emoji-tabs"></div>
                                 <div id="emoji-grid" class="emoji-grid-wrap">
@@ -817,25 +1073,18 @@
     </div>
 
     {{-- Delete confirmation modal --}}
-    <div id="del-confirm-portal" style="display:none;position:fixed;inset:0;z-index:10100;align-items:center;justify-content:center;background:rgba(0,0,0,.5);backdrop-filter:blur(4px)">
-        <div id="del-confirm-box" style="
-            background:var(--surface);border:1px solid var(--border);
-            border-radius:16px;padding:28px 28px 22px;
-            width:100%;max-width:360px;margin:16px;
-            box-shadow:0 24px 60px rgba(0,0,0,.5);
-            transform:scale(.95);opacity:0;
-            transition:transform .18s cubic-bezier(.34,1.4,.64,1),opacity .15s;
-        ">
-            <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
-                <div style="width:36px;height:36px;border-radius:50%;background:rgba(239,68,68,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM7.25 5.5h1.5v3.5h-1.5V5.5zm0 4.5h1.5v1.5h-1.5V10z" fill="#ef4444"/></svg>
+    <div id="del-confirm-portal" class="modal-overlay" onclick="if(event.target===this)closeDeleteConfirm()">
+        <div id="del-confirm-box" class="modal" style="max-width:360px">
+            <div class="action-row" style="margin-bottom:16px;align-items:flex-start">
+                <div style="width:36px;height:36px;border-radius:50%;background:rgba(224,84,84,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM7.25 5.5h1.5v3.5h-1.5V5.5zm0 4.5h1.5v1.5h-1.5V10z" fill="var(--danger)"/></svg>
                 </div>
-                <div>
-                    <div style="font-weight:700;font-size:14px;color:var(--text)">{{ __('app.cat_delete_confirm') }}</div>
-                    <div id="del-confirm-name" style="font-size:12px;color:var(--muted);margin-top:2px"></div>
+                <div class="action-row-text">
+                    <div class="modal-title" style="margin-bottom:2px">{{ __('app.cat_delete_confirm') }}</div>
+                    <div id="del-confirm-name" class="action-row-desc"></div>
                 </div>
             </div>
-            <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px">
+            <div style="display:flex;gap:8px;justify-content:flex-end">
                 <button class="btn btn-ghost" onclick="closeDeleteConfirm()">{{ __('app.cancel') }}</button>
                 <button class="btn btn-danger" id="del-confirm-btn">{{ __('app.cat_delete_btn') ?? 'Excluir' }}</button>
             </div>
@@ -847,30 +1096,17 @@
 
         function confirmDelete(id, name) {
             _delFormId = id;
-            const portal = document.getElementById('del-confirm-portal');
-            const box    = document.getElementById('del-confirm-box');
             document.getElementById('del-confirm-name').textContent = name;
-            portal.style.display = 'flex';
-            requestAnimationFrame(() => {
-                box.style.transform = 'scale(1)';
-                box.style.opacity   = '1';
-            });
+            document.getElementById('del-confirm-portal').classList.add('open');
         }
 
         function closeDeleteConfirm() {
-            const portal = document.getElementById('del-confirm-portal');
-            const box    = document.getElementById('del-confirm-box');
-            box.style.transform = 'scale(.95)';
-            box.style.opacity   = '0';
-            setTimeout(() => { portal.style.display = 'none'; _delFormId = null; }, 160);
+            document.getElementById('del-confirm-portal').classList.remove('open');
+            setTimeout(() => { _delFormId = null; }, 200);
         }
 
         document.getElementById('del-confirm-btn').addEventListener('click', () => {
             if (_delFormId) document.getElementById('del-form-' + _delFormId).submit();
-        });
-
-        document.getElementById('del-confirm-portal').addEventListener('mousedown', e => {
-            if (e.target === e.currentTarget) closeDeleteConfirm();
         });
 
         document.addEventListener('keydown', e => {

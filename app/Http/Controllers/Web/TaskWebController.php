@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Enums\TaskPriority;
+use App\Enums\TaskStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Task;
@@ -16,30 +18,34 @@ class TaskWebController extends Controller
 
         // Quick filters
         if ($request->filled('quick')) {
+            $excludeFinished = [TaskStatus::Completed->value, TaskStatus::Cancelled->value];
+
             match ($request->quick) {
-                'urgent' => $query->where('priority', 'urgent')->whereNotIn('status', ['completed', 'cancelled']),
-                'today' => $query->whereDate('due_date', today())->whereNotIn('status', ['completed', 'cancelled']),
-                'overdue' => $query->overdue(),
-                'recurring' => $query->where('recurrence', '!=', 'none')->whereNotIn('status', ['completed', 'cancelled']),
+                'urgent'        => $query->where('priority', TaskPriority::Urgent->value)->whereNotIn('status', $excludeFinished),
+                'today'         => $query->whereDate('due_date', today())->whereNotIn('status', $excludeFinished),
+                'overdue'       => $query->overdue(),
+                'recurring'     => $query->where('recurrence', '!=', 'none')->whereNotIn('status', $excludeFinished),
                 'created_today' => $query->whereDate('created_at', today()),
-                'created_week' => $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]),
+                'created_week'  => $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]),
                 'created_month' => $query->whereMonth('created_at', now()->month)->whereYear('created_at', now()->year),
-                default => null,
+                default         => null,
             };
         }
 
         // Filter by status
         if ($request->filled('status')) {
-            $status = \App\Enums\TaskStatus::tryFrom($request->status);
-            if ($status)
+            $status = TaskStatus::tryFrom($request->status);
+            if ($status) {
                 $query->where('status', $status);
+            }
         }
 
         // Filter by priority
         if ($request->filled('priority')) {
-            $priority = \App\Enums\TaskPriority::tryFrom($request->priority);
-            if ($priority)
+            $priority = TaskPriority::tryFrom($request->priority);
+            if ($priority) {
                 $query->where('priority', $priority);
+            }
         }
 
         // Filter by category
@@ -54,7 +60,7 @@ class TaskWebController extends Controller
 
         // Filter: hide/show completed
         if ($request->boolean('hide_completed')) {
-            $query->whereNotIn('status', ['completed', 'cancelled']);
+            $query->whereNotIn('status', [TaskStatus::Completed->value, TaskStatus::Cancelled->value]);
         }
 
         // Filter: date range (due_date)
@@ -79,31 +85,50 @@ class TaskWebController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(20);
 
-        $byStatus = Task::selectRaw('status, COUNT(*) as count')->groupBy('status')->pluck('count', 'status');
+        // ── Stats (5 queries instead of 8) ───────────────────────────────────
+
+        // by_status covers: total, by_status, overdue proxy
+        $byStatus = Task::selectRaw('status, COUNT(*) as count')
+            ->groupBy('status')
+            ->pluck('count', 'status');
+
+        // by_priority filtered to active tasks only
         $byPriority = Task::selectRaw('priority, COUNT(*) as count')
-            ->whereNotIn('status', ['completed', 'cancelled'])
-            ->groupBy('priority')->pluck('count', 'priority');
+            ->whereNotIn('status', [TaskStatus::Completed->value, TaskStatus::Cancelled->value])
+            ->groupBy('priority')
+            ->pluck('count', 'priority');
+
+        // date-based counters in a single query
+        $now        = now();
+        $startWeek  = $now->copy()->startOfWeek()->toDateTimeString();
+        $endWeek    = $now->copy()->endOfWeek()->toDateTimeString();
+
+        $dateCounts = Task::selectRaw("
+            SUM(CASE WHEN DATE(due_date) = DATE('now') AND status NOT IN (?, ?) THEN 1 ELSE 0 END) as due_today,
+            SUM(CASE WHEN DATE(created_at) = DATE('now') THEN 1 ELSE 0 END)                        as created_today,
+            SUM(CASE WHEN created_at BETWEEN ? AND ? THEN 1 ELSE 0 END)                            as created_week,
+            SUM(CASE WHEN strftime('%Y-%m', created_at) = strftime('%Y-%m', 'now') THEN 1 ELSE 0 END) as created_month
+        ", [TaskStatus::Completed->value, TaskStatus::Cancelled->value, $startWeek, $endWeek])->first();
 
         $categories = Category::withCount([
             'tasks',
             'tasks as active_tasks_count' => function ($q) {
-                $q->whereNotIn('status', ['completed', 'cancelled']);
-            }
+                $q->whereNotIn('status', [TaskStatus::Completed->value, TaskStatus::Cancelled->value]);
+            },
         ])->orderBy('name')->get();
 
         return view('tasks.index', [
-            'tasks' => $tasks,
+            'tasks'      => $tasks,
             'categories' => $categories,
-            'stats' => [
-                'total' => Task::count(),
-                'by_status' => $byStatus->toArray(),
-                'by_priority' => $byPriority->toArray(),
-                'overdue' => Task::overdue()->count(),
-                'due_today' => Task::whereDate('due_date', today())
-                    ->whereNotIn('status', ['completed', 'cancelled'])->count(),
-                'created_today' => Task::whereDate('created_at', today())->count(),
-                'created_week' => Task::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count(),
-                'created_month' => Task::whereMonth('created_at', now()->month)->whereYear('created_at', now()->year)->count(),
+            'stats'      => [
+                'total'         => $byStatus->sum(),
+                'by_status'     => $byStatus->toArray(),
+                'by_priority'   => $byPriority->toArray(),
+                'overdue'       => Task::overdue()->count(),
+                'due_today'     => (int) $dateCounts->due_today,
+                'created_today' => (int) $dateCounts->created_today,
+                'created_week'  => (int) $dateCounts->created_week,
+                'created_month' => (int) $dateCounts->created_month,
             ],
         ]);
     }
