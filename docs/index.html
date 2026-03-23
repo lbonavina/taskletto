@@ -1,605 +1,167 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="shortcut icon" href="favicon.png">
-
     <title data-i18n="meta_title">Taskletto — Gerenciador de Tarefas e Notas para Desktop</title>
-    <meta name="description" data-i18n-attr="content" data-i18n="meta_desc"
-        content="Taskletto é um app desktop gratuito para gerenciar tarefas e notas com foco em produtividade. Disponível para Windows.">
-    <meta name="keywords"
-        content="gerenciador de tarefas, task manager, notas, produtividade, desktop, windows, grátis, task manager desktop, notes app">
+    <meta name="description" data-i18n-attr="content" data-i18n="meta_desc" content="Taskletto é um app desktop gratuito para gerenciar tarefas e notas com foco em produtividade. Disponível para Windows.">
+    <meta name="keywords" content="gerenciador de tarefas, task manager, notas, produtividade, desktop, windows, grátis">
     <meta name="author" content="Lucas Bonavina">
     <meta name="google-site-verification" content="Jqw8yHwUcxW6hBUEaVzfNlDgRdCadKTIhoc55zmUVHc" />
     <link rel="canonical" href="https://lbonavina.github.io/taskletto">
-
     <meta property="og:title" content="Taskletto — Gerenciador de Tarefas e Notas">
-    <meta property="og:description"
-        content="App desktop gratuito para gerenciar tarefas e notas com foco em produtividade.">
+    <meta property="og:description" content="App desktop gratuito para gerenciar tarefas e notas com foco em produtividade.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://lbonavina.github.io/taskletto">
     <meta property="og:image" content="https://lbonavina.github.io/taskletto/og.png">
-
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Taskletto — Task & Notes Manager">
-    <meta name="twitter:description" content="Free desktop app to manage tasks and notes. No account needed.">
     <meta property="og:site_name" content="Taskletto">
-
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "SoftwareApplication",
-        "name": "Taskletto",
-        "operatingSystem": "Windows",
-        "applicationCategory": "ProductivityApplication",
-        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" },
-        "author": { "@type": "Person", "name": "Lucas Bonavina", "url": "https://github.com/lbonavina" },
-        "description": "Gerenciador de tarefas e notas para desktop com suporte a categorias, prioridades, subtarefas, sincronização com GitHub e editor de notas rico.",
-        "url": "https://lbonavina.github.io/taskletto"
-    }
-    </script>
-
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Taskletto","operatingSystem":"Windows","applicationCategory":"ProductivityApplication","offers":{"@type":"Offer","price":"0","priceCurrency":"BRL"},"author":{"@type":"Person","name":"Lucas Bonavina","url":"https://github.com/lbonavina"},"description":"Gerenciador de tarefas e notas para desktop com subtarefas, atalhos, sync com GitHub, editor rico e dashboard redesenhado.","url":"https://lbonavina.github.io/taskletto"}</script>
     <base href="/taskletto/">
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="shortcut icon" href="favicon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
     <style>
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{--bg:#0f0f11;--surface:#16161a;--surface2:#1e1e24;--border:#2a2a32;--accent:#ff914d;--accent2:#ff6b1a;--text:#e8e8ec;--muted:#7a7a8a;--success:#4ade80;--info:#60a5fa;--purple:#a78bfa}
+        html{scroll-behavior:smooth}
+        body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
+        ::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+        a{color:inherit;text-decoration:none}
+        body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");opacity:.4}
+        .blob{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;opacity:.12}
+        .blob-1{width:600px;height:600px;background:var(--accent);top:-200px;left:-100px}
+        .blob-2{width:400px;height:400px;background:#6b5bff;bottom:-100px;right:-100px}
+        .container{max-width:1100px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+
+        /* NAV */
+        nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 0;backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.04);background:rgba(15,15,17,.7)}
+        nav .container{display:flex;align-items:center;justify-content:space-between}
+        .nav-logo{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;letter-spacing:-.3px}
+        .nav-links{display:flex;align-items:center;gap:8px}
+        .nav-links a{padding:7px 14px;border-radius:8px;font-size:14px;font-weight:500;color:var(--text);transition:color .15s,background .15s}
+        .nav-links a:not(.btn-nav){color:var(--muted)}.nav-links a:not(.btn-nav):hover{color:var(--text);background:var(--surface2)}
+        .lang-toggle{display:flex;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-right:4px}
+        .lang-btn{padding:6px 11px;font-size:12px;font-weight:600;font-family:'DM Mono',monospace;color:var(--muted);cursor:pointer;border:none;background:none;transition:color .15s,background .15s;letter-spacing:.3px}
+        .lang-btn.active{background:var(--surface);color:var(--accent)}.lang-btn:hover:not(.active){color:var(--text)}
+        .btn-nav{padding:8px 18px;border-radius:10px;font-size:14px;font-weight:600;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;transition:box-shadow .2s,transform .15s;box-shadow:0 4px 16px rgba(255,145,77,.3)}
+        .btn-nav:hover{color:#fff;box-shadow:0 6px 24px rgba(255,145,77,.5);transform:translateY(-1px)}
+
+        /* HERO */
+        .hero{padding:160px 0 100px;text-align:center}
+        .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:99px;margin-bottom:32px;background:rgba(255,145,77,.08);border:1px solid rgba(255,145,77,.2);font-size:13px;font-weight:500;color:var(--accent);font-family:'DM Mono',monospace;animation:fadeUp .6s .1s both}
+        .hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+        .hero h1{font-size:clamp(42px,7vw,80px);font-weight:700;letter-spacing:-2px;line-height:1.05;margin-bottom:24px;animation:fadeUp .6s .2s both}
+        .hero h1 .accent-word{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .hero-sub{font-size:clamp(17px,2.5vw,20px);color:var(--muted);max-width:580px;margin:0 auto 40px;font-weight:400;line-height:1.6;animation:fadeUp .6s .3s both}
+        .hero-ctas{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;animation:fadeUp .6s .4s both}
+        .btn-primary{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:12px;font-size:15px;font-weight:600;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;transition:box-shadow .2s,transform .15s;box-shadow:0 4px 24px rgba(255,145,77,.3)}
+        .btn-primary:hover{box-shadow:0 6px 32px rgba(255,145,77,.5);transform:translateY(-2px)}
+        .btn-ghost{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:12px;font-size:15px;font-weight:600;border:1px solid var(--border);color:var(--text);transition:border-color .15s,background .15s,transform .15s}
+        .btn-ghost:hover{border-color:var(--muted);background:var(--surface2);transform:translateY(-2px)}
+        .hero-note{margin-top:16px;font-size:13px;color:var(--muted);animation:fadeUp .6s .5s both}
+        .hero-note strong{color:var(--success)}
+        .mockup-wrap{margin-top:72px;position:relative;animation:fadeUp .8s .5s both}
+        .mockup-window{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04)}
+
+        /* STRIP */
+        .strip{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:24px 0;overflow:hidden}
+        .strip-inner{display:flex;gap:40px;white-space:nowrap;animation:marquee 22s linear infinite}
+        .strip-item{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500;color:var(--muted);flex-shrink:0}
+        .strip-item span{color:var(--accent);font-size:16px}
+        @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+        /* WHAT'S NEW */
+        .whats-new{padding:100px 0;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+        .whats-new-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:56px}
+        .new-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px 32px;position:relative;overflow:hidden;transition:border-color .2s,transform .2s}
+        .new-card:hover{border-color:rgba(255,145,77,.3);transform:translateY(-2px)}
+        .new-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,145,77,.4),transparent)}
+        .new-card.github-card::before{background:linear-gradient(90deg,transparent,rgba(167,139,250,.5),transparent)}
+        .new-card.github-card:hover{border-color:rgba(167,139,250,.4)}
+        .new-card.github-card .new-card-tag{background:rgba(167,139,250,.1);color:var(--purple);border:1px solid rgba(167,139,250,.25)}
+        .new-card.perf-card::before{background:linear-gradient(90deg,transparent,rgba(74,222,128,.4),transparent)}
+        .new-card.perf-card:hover{border-color:rgba(74,222,128,.3)}
+        .new-card.perf-card .new-card-tag{background:rgba(74,222,128,.08);color:var(--success);border:1px solid rgba(74,222,128,.2)}
+        .new-card.ux-card::before{background:linear-gradient(90deg,transparent,rgba(96,165,250,.4),transparent)}
+        .new-card.ux-card:hover{border-color:rgba(96,165,250,.3)}
+        .new-card.ux-card .new-card-tag{background:rgba(96,165,250,.08);color:var(--info);border:1px solid rgba(96,165,250,.2)}
+        .new-card-tag{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:99px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;font-family:'DM Mono',monospace;margin-bottom:16px}
+        .tag-new{background:rgba(255,145,77,.1);color:var(--accent);border:1px solid rgba(255,145,77,.2)}
+        .tag-improved{background:rgba(96,165,250,.1);color:var(--info);border:1px solid rgba(96,165,250,.2)}
+        .new-card-icon{font-size:28px;margin-bottom:12px;display:block}
+        .new-card-title{font-size:17px;font-weight:700;letter-spacing:-.3px;margin-bottom:8px}
+        .new-card-desc{font-size:14px;color:var(--muted);line-height:1.6}
+        .new-card-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+        .new-pill{padding:3px 9px;border-radius:6px;font-size:11px;font-weight:500;background:var(--surface2);color:var(--muted);font-family:'DM Mono',monospace;border:1px solid var(--border)}
+        .version-divider{display:flex;align-items:center;gap:16px;margin:48px 0 32px}
+        .version-divider-line{flex:1;height:1px;background:var(--border)}
+        .version-divider-label{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);font-family:'DM Mono',monospace;white-space:nowrap}
+
+        /* FEATURES */
+        .section{padding:100px 0}
+        .section-label{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);margin-bottom:16px;font-family:'DM Mono',monospace}
+        .section-title{font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-1.5px;margin-bottom:16px}
+        .section-sub{font-size:17px;color:var(--muted);max-width:500px;line-height:1.6}
+        .features-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--border);border-radius:16px;overflow:hidden;border:1px solid var(--border);margin-top:64px}
+        .feature-card{background:var(--surface);padding:32px;transition:background .2s}
+        .feature-card:hover{background:var(--surface2)}
+        .feature-icon{width:44px;height:44px;border-radius:12px;margin-bottom:20px;display:flex;align-items:center;justify-content:center;background:rgba(255,145,77,.1);border:1px solid rgba(255,145,77,.15);font-size:20px}
+        .feature-icon.icon-purple{background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.2)}
+        .feature-icon.icon-green{background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.2)}
+        .feature-icon.icon-blue{background:rgba(96,165,250,.1);border-color:rgba(96,165,250,.2)}
+        .feature-title{font-size:16px;font-weight:600;letter-spacing:-.3px;margin-bottom:8px}
+        .feature-desc{font-size:14px;color:var(--muted);line-height:1.6}
+
+        /* STEPS */
+        .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:64px}
+        .step{position:relative}
+        .step-num{font-size:48px;font-weight:700;font-family:'DM Mono',monospace;background:linear-gradient(135deg,var(--accent),transparent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:16px;opacity:.6}
+        .step-title{font-size:18px;font-weight:600;margin-bottom:8px;letter-spacing:-.3px}
+        .step-desc{font-size:14px;color:var(--muted);line-height:1.6}
+        .step-connector{position:absolute;top:24px;right:-20px;color:var(--border);font-size:20px}
+
+        /* CTA */
+        .cta-section{padding:100px 0;text-align:center}
+        .cta-box{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:72px 40px;position:relative;overflow:hidden}
+        .cta-box::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% -20%,rgba(255,145,77,.12) 0%,transparent 60%)}
+        .cta-box h2{font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-1.5px;margin-bottom:16px;position:relative}
+        .cta-btns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;position:relative}
+        .os-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:6px;font-size:12px;font-weight:500;background:var(--surface2);border:1px solid var(--border);color:var(--muted);font-family:'DM Mono',monospace;margin-top:20px}
+
+        /* FOOTER */
+        footer{border-top:1px solid var(--border);padding:40px 0}
+        footer .container{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+        .footer-logo{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+        .footer-links{display:flex;gap:24px}
+        .footer-links a{font-size:13px;color:var(--muted);transition:color .15s}
+        .footer-links a:hover{color:var(--text)}
+        .footer-copy{font-size:13px;color:var(--muted)}
+
+        @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+        .reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+        .reveal.visible{opacity:1;transform:translateY(0)}
+
+        @media(max-width:768px){
+            .nav-links a:not(.btn-nav){display:none}.lang-toggle{display:flex!important}.btn-nav{padding:7px 14px;font-size:13px;color:#fff!important}
+            .hero{padding:120px 0 60px}.hero h1{letter-spacing:-1px}
+            .hero-ctas{flex-direction:column;align-items:stretch}.hero-ctas .btn-primary,.hero-ctas .btn-ghost{justify-content:center}
+            .mockup-wrap{display:none}.section{padding:64px 0}.section-title br{display:none}
+            .features-grid{grid-template-columns:1fr}.whats-new-grid{grid-template-columns:1fr}
+            .steps{grid-template-columns:1fr;gap:32px}.step-connector{display:none}.step-num{font-size:36px}
+            .cta-section{padding:64px 0}.cta-box{padding:48px 24px}
+            .cta-btns{flex-direction:column;align-items:stretch}.cta-btns .btn-primary{justify-content:center}
+            footer .container{flex-direction:column;align-items:flex-start;gap:20px}.footer-links{flex-wrap:wrap;gap:16px}
         }
-
-        :root {
-            --bg: #0f0f11;
-            --surface: #16161a;
-            --surface2: #1e1e24;
-            --border: #2a2a32;
-            --accent: #ff914d;
-            --accent2: #ff6b1a;
-            --text: #e8e8ec;
-            --muted: #7a7a8a;
-            --success: #4ade80;
-            --info: #60a5fa;
-            --purple: #a78bfa;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'DM Sans', sans-serif;
-            font-size: 16px;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
-
-        a { color: inherit; text-decoration: none; }
-
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-            opacity: .4;
-        }
-
-        .blob {
-            position: fixed;
-            border-radius: 50%;
-            filter: blur(120px);
-            pointer-events: none;
-            z-index: 0;
-            opacity: .12;
-        }
-        .blob-1 { width: 600px; height: 600px; background: var(--accent); top: -200px; left: -100px; }
-        .blob-2 { width: 400px; height: 400px; background: #6b5bff; bottom: -100px; right: -100px; }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0 24px;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* ── NAV ── */
-        nav {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            z-index: 100;
-            padding: 16px 0;
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,.04);
-            background: rgba(15,15,17,.7);
-        }
-
-        nav .container { display: flex; align-items: center; justify-content: space-between; }
-
-        .nav-logo { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; letter-spacing: -.3px; }
-
-        .nav-links { display: flex; align-items: center; gap: 8px; }
-
-        .nav-links a {
-            padding: 7px 14px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text);
-            transition: color .15s, background .15s;
-        }
-        .nav-links a:not(.btn-nav) { color: var(--muted); }
-        .nav-links a:not(.btn-nav):hover { color: var(--text); background: var(--surface2); }
-
-        .lang-toggle {
-            display: flex;
-            align-items: center;
-            background: var(--surface2);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-            margin-right: 4px;
-        }
-
-        .lang-btn {
-            padding: 6px 11px;
-            font-size: 12px;
-            font-weight: 600;
-            font-family: 'DM Mono', monospace;
-            color: var(--muted);
-            cursor: pointer;
-            border: none;
-            background: none;
-            transition: color .15s, background .15s;
-            letter-spacing: .3px;
-        }
-        .lang-btn.active { background: var(--surface); color: var(--accent); }
-        .lang-btn:hover:not(.active) { color: var(--text); }
-
-        .btn-nav {
-            padding: 8px 18px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            color: #fff;
-            transition: box-shadow .2s, transform .15s;
-            box-shadow: 0 4px 16px rgba(255,145,77,.3);
-        }
-        .btn-nav:hover { color: #fff; box-shadow: 0 6px 24px rgba(255,145,77,.5); transform: translateY(-1px); }
-
-        /* ── HERO ── */
-        .hero { padding: 160px 0 100px; text-align: center; }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 14px;
-            border-radius: 99px;
-            margin-bottom: 32px;
-            background: rgba(255,145,77,.08);
-            border: 1px solid rgba(255,145,77,.2);
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--accent);
-            font-family: 'DM Mono', monospace;
-            animation: fadeUp .6s .1s both;
-        }
-        .hero-badge .dot {
-            width: 6px; height: 6px; border-radius: 50%;
-            background: var(--accent);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
-
-        .hero h1 {
-            font-size: clamp(42px, 7vw, 80px);
-            font-weight: 700;
-            letter-spacing: -2px;
-            line-height: 1.05;
-            margin-bottom: 24px;
-            animation: fadeUp .6s .2s both;
-        }
-        .hero h1 .accent-word {
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-sub {
-            font-size: clamp(17px, 2.5vw, 20px);
-            color: var(--muted);
-            max-width: 580px;
-            margin: 0 auto 40px;
-            font-weight: 400;
-            line-height: 1.6;
-            animation: fadeUp .6s .3s both;
-        }
-
-        .hero-ctas {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            animation: fadeUp .6s .4s both;
-        }
-
-        .btn-primary {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            color: #fff;
-            transition: box-shadow .2s, transform .15s;
-            box-shadow: 0 4px 24px rgba(255,145,77,.3);
-        }
-        .btn-primary:hover { box-shadow: 0 6px 32px rgba(255,145,77,.5); transform: translateY(-2px); }
-
-        .btn-ghost {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 600;
-            border: 1px solid var(--border);
-            color: var(--text);
-            transition: border-color .15s, background .15s, transform .15s;
-        }
-        .btn-ghost:hover { border-color: var(--muted); background: var(--surface2); transform: translateY(-2px); }
-
-        .hero-note { margin-top: 16px; font-size: 13px; color: var(--muted); animation: fadeUp .6s .5s both; }
-        .hero-note strong { color: var(--success); }
-
-        /* ── MOCKUP ── */
-        .mockup-wrap {
-            margin-top: 72px;
-            position: relative;
-            animation: fadeUp .8s .5s both;
-        }
-        .mockup-glow {
-            position: absolute;
-            inset: -40px;
-            border-radius: 24px;
-            background: radial-gradient(ellipse at 50% 0%, rgba(255,145,77,.15) 100%, transparent 70%);
-            pointer-events: none;
-        }
-        .mockup-window {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 40px 100px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.04);
-            position: relative;
-        }
-        .mockup-titlebar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 16px;
-            background: var(--surface2);
-            border-bottom: 1px solid var(--border);
-        }
-        .titlebar-dot { width: 12px; height: 12px; border-radius: 50%; }
-        .titlebar-dots { display: flex; gap: 6px; }
-        .titlebar-dot:nth-child(1) { background: #ff5f57; }
-        .titlebar-dot:nth-child(2) { background: #febc2e; }
-        .titlebar-dot:nth-child(3) { background: #28c840; }
-        .titlebar-title { flex: 1; text-align: center; font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
-
-        .mockup-body { display: flex; height: 440px; }
-
-        .mock-sidebar {
-            width: 200px;
-            flex-shrink: 0;
-            background: var(--surface);
-            border-right: 1px solid var(--border);
-            padding: 16px 0;
-        }
-        .mock-logo {
-            padding: 0 16px 16px;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 12px;
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: -.2px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .mock-logo-icon {
-            width: 26px; height: 26px;
-            border-radius: 6px;
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            display: flex; align-items: center; justify-content: center;
-            font-size: 12px;
-        }
-        .mock-section { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); padding: 8px 16px 4px; }
-        .mock-item { display: flex; align-items: center; gap: 8px; padding: 7px 16px; font-size: 12px; color: var(--muted); cursor: default; }
-        .mock-item.active { color: var(--accent); background: rgba(255,145,77,.07); border-left: 2px solid var(--accent); }
-        .mock-icon { width: 14px; height: 14px; opacity: .7; flex-shrink: 0; }
-        .mock-badge { margin-left: auto; background: #e05454; color: #fff; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 20px; font-family: 'DM Mono', monospace; }
-
-        .mock-main { flex: 1; overflow: hidden; }
-        .mock-topbar { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--border); }
-        .mock-topbar-title { font-size: 16px; font-weight: 700; letter-spacing: -.3px; }
-        .mock-btn { display: flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff; }
-
-        .mock-filters { display: flex; gap: 6px; padding: 10px 20px; border-bottom: 1px solid var(--border); overflow: hidden; }
-        .mock-qf { padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 500; background: var(--surface2); color: var(--muted); white-space: nowrap; }
-        .mock-qf.active { background: rgba(255,145,77,.12); color: var(--accent); }
-
-        .mock-table { padding: 8px 0; }
-        .mock-row { display: flex; align-items: center; gap: 12px; padding: 8px 20px; border-bottom: 1px solid rgba(42,42,50,.6); font-size: 11px; }
-        .mock-row:hover { background: rgba(255,255,255,.02); }
-        .mock-status { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-        .mock-task-title { flex: 1; font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .mock-priority { font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; font-family: 'DM Mono', monospace; }
-        .mock-date { font-size: 10px; color: var(--muted); white-space: nowrap; }
-
-        .mock-recur { font-size: 9px; color: #a78bfa; background: rgba(167,139,250,.1); border-radius: 4px; padding: 2px 5px; font-family: 'DM Mono', monospace; flex-shrink: 0; }
-        .mock-time-bar { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
-        .mock-time-track { width: 36px; height: 3px; border-radius: 99px; background: var(--border); overflow: hidden; }
-        .mock-time-fill { height: 100%; background: var(--accent); border-radius: 99px; }
-        .mock-time-label { font-size: 9px; color: var(--muted); font-family: 'DM Mono', monospace; }
-
-        .p-urgent { background: rgba(224,84,84,.12); color: #e05454; }
-        .p-high { background: rgba(240,160,90,.12); color: #f0a05a; }
-        .p-medium { background: rgba(96,165,250,.12); color: #60a5fa; }
-        .p-low { background: rgba(74,222,128,.12); color: #4ade80; }
-        .s-prog { background: #f0a05a; }
-        .s-pend { background: #60a5fa; }
-        .s-done { background: #4ade80; }
-
-        /* ── WHAT'S NEW SECTION ── */
-        .whats-new {
-            padding: 100px 0;
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .whats-new-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            margin-top: 56px;
-        }
-
-        .new-card {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 28px 32px;
-            position: relative;
-            overflow: hidden;
-            transition: border-color .2s, transform .2s;
-        }
-        .new-card:hover { border-color: rgba(255,145,77,.3); transform: translateY(-2px); }
-
-        .new-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255,145,77,.4), transparent);
-        }
-
-        /* GitHub card special glow */
-        .new-card.github-card::before {
-            background: linear-gradient(90deg, transparent, rgba(167,139,250,.5), transparent);
-        }
-        .new-card.github-card:hover { border-color: rgba(167,139,250,.4); }
-        .new-card.github-card .new-card-tag { background: rgba(167,139,250,.1); color: var(--purple); border: 1px solid rgba(167,139,250,.25); }
-
-        /* Performance card special glow */
-        .new-card.perf-card::before {
-            background: linear-gradient(90deg, transparent, rgba(74,222,128,.4), transparent);
-        }
-        .new-card.perf-card:hover { border-color: rgba(74,222,128,.3); }
-        .new-card.perf-card .new-card-tag { background: rgba(74,222,128,.08); color: var(--success); border: 1px solid rgba(74,222,128,.2); }
-
-        .new-card-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 3px 10px;
-            border-radius: 99px;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: .8px;
-            text-transform: uppercase;
-            font-family: 'DM Mono', monospace;
-            margin-bottom: 16px;
-        }
-        .tag-new { background: rgba(255,145,77,.1); color: var(--accent); border: 1px solid rgba(255,145,77,.2); }
-        .tag-improved { background: rgba(96,165,250,.1); color: var(--info); border: 1px solid rgba(96,165,250,.2); }
-
-        .new-card-icon { font-size: 28px; margin-bottom: 12px; display: block; }
-        .new-card-title { font-size: 17px; font-weight: 700; letter-spacing: -.3px; margin-bottom: 8px; }
-        .new-card-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
-
-        .new-card-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 14px;
-        }
-        .new-pill {
-            padding: 3px 9px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 500;
-            background: var(--surface2);
-            color: var(--muted);
-            font-family: 'DM Mono', monospace;
-            border: 1px solid var(--border);
-        }
-
-        /* version divider */
-        .version-divider {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin: 48px 0 32px;
-        }
-        .version-divider-line {
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
-        .version-divider-label {
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--muted);
-            font-family: 'DM Mono', monospace;
-            white-space: nowrap;
-        }
-
-        /* ── FEATURES ── */
-        .section { padding: 100px 0; }
-
-        .section-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 16px;
-            font-family: 'DM Mono', monospace;
-        }
-        .section-title { font-size: clamp(28px, 4vw, 44px); font-weight: 700; letter-spacing: -1.5px; margin-bottom: 16px; }
-        .section-sub { font-size: 17px; color: var(--muted); max-width: 500px; line-height: 1.6; }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1px;
-            background: var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            margin-top: 64px;
-        }
-
-        .feature-card { background: var(--surface); padding: 32px; transition: background .2s; }
-        .feature-card:hover { background: var(--surface2); }
-        .feature-icon { width: 44px; height: 44px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; background: rgba(255,145,77,.1); border: 1px solid rgba(255,145,77,.15); font-size: 20px; }
-        .feature-icon.icon-purple { background: rgba(167,139,250,.1); border-color: rgba(167,139,250,.2); }
-        .feature-icon.icon-green { background: rgba(74,222,128,.1); border-color: rgba(74,222,128,.2); }
-        .feature-title { font-size: 16px; font-weight: 600; letter-spacing: -.3px; margin-bottom: 8px; }
-        .feature-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
-
-        /* ── STRIP ── */
-        .strip { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 24px 0; overflow: hidden; position: relative; }
-        .strip-inner { display: flex; gap: 40px; white-space: nowrap; animation: marquee 20s linear infinite; }
-        .strip-item { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 500; color: var(--muted); flex-shrink: 0; }
-        .strip-item span { color: var(--accent); font-size: 16px; }
-        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-        /* ── STEPS ── */
-        .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 64px; }
-        .step { position: relative; }
-        .step-num { font-size: 48px; font-weight: 700; font-family: 'DM Mono', monospace; background: linear-gradient(135deg, var(--accent), transparent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; margin-bottom: 16px; opacity: .6; }
-        .step-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; letter-spacing: -.3px; }
-        .step-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
-        .step-connector { position: absolute; top: 24px; right: -20px; color: var(--border); font-size: 20px; }
-
-        /* ── CTA ── */
-        .cta-section { padding: 100px 0; text-align: center; }
-        .cta-box { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 72px 40px; position: relative; overflow: hidden; }
-        .cta-box::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 50% -20%, rgba(255,145,77,.12) 0%, transparent 60%); }
-        .cta-box h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 700; letter-spacing: -1.5px; margin-bottom: 16px; position: relative; }
-        .cta-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; position: relative; }
-
-        .os-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: 500; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 20px; }
-
-        /* ── FOOTER ── */
-        footer { border-top: 1px solid var(--border); padding: 40px 0; }
-        footer .container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
-        .footer-logo { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-        .footer-links { display: flex; gap: 24px; }
-        .footer-links a { font-size: 13px; color: var(--muted); transition: color .15s; }
-        .footer-links a:hover { color: var(--text); }
-        .footer-copy { font-size: 13px; color: var(--muted); }
-
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-
-        .reveal { opacity: 0; transform: translateY(30px); transition: opacity .7s ease, transform .7s ease; }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
-
-        @media (max-width: 768px) {
-            .nav-links a:not(.btn-nav) { display: none; }
-            .lang-toggle { display: flex !important; }
-            .btn-nav { padding: 7px 14px; font-size: 13px; color: #fff !important; }
-            .hero { padding: 120px 0 60px; }
-            .hero h1 { letter-spacing: -1px; }
-            .hero-ctas { flex-direction: column; align-items: stretch; }
-            .hero-ctas .btn-primary, .hero-ctas .btn-ghost { justify-content: center; }
-            .mockup-wrap { display: none; }
-            .section { padding: 64px 0; }
-            .section-title br { display: none; }
-            .features-grid { grid-template-columns: 1fr; }
-            .whats-new-grid { grid-template-columns: 1fr; }
-            .steps { grid-template-columns: 1fr; gap: 32px; }
-            .step-connector { display: none; }
-            .step-num { font-size: 36px; }
-            .cta-section { padding: 64px 0; }
-            .cta-box { padding: 48px 24px; }
-            .cta-btns { flex-direction: column; align-items: stretch; }
-            .cta-btns .btn-primary { justify-content: center; }
-            footer .container { flex-direction: column; align-items: flex-start; gap: 20px; }
-            .footer-links { flex-wrap: wrap; gap: 16px; }
-        }
-
-        @media (max-width: 480px) {
-            .container { padding: 0 16px; }
-            .hero { padding: 100px 0 48px; }
-            .hero-badge { font-size: 11px; }
-            .hero-sub { font-size: 16px; }
-            .nav-logo img { max-height: 32px; }
-            .feature-card { padding: 24px; }
-            .cta-box { padding: 40px 20px; border-radius: 16px; }
-            .os-badge { font-size: 11px; }
-            .strip-item { font-size: 12px; }
-            .new-card { padding: 24px; }
+        @media(max-width:480px){
+            .container{padding:0 16px}.hero{padding:100px 0 48px}.hero-badge{font-size:11px}.hero-sub{font-size:16px}
+            .nav-logo img{max-height:32px}.feature-card{padding:24px}.cta-box{padding:40px 20px;border-radius:16px}
+            .os-badge{font-size:11px}.strip-item{font-size:12px}.new-card{padding:24px}
         }
     </style>
 </head>
-
 <body>
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
@@ -607,9 +169,7 @@
     <!-- NAV -->
     <nav>
         <div class="container">
-            <div class="nav-logo">
-                <img src="logo.png" style="max-height:30px" alt="Taskletto">
-            </div>
+            <div class="nav-logo"><img src="logo.png" style="max-height:30px" alt="Taskletto"></div>
             <div class="nav-links">
                 <a href="#features" data-i18n="nav_features">Funcionalidades</a>
                 <a href="#como-funciona" data-i18n="nav_how">Como funciona</a>
@@ -626,77 +186,66 @@
     <!-- HERO -->
     <section class="hero">
         <div class="container">
-            <div class="hero-badge">
-                <span class="dot"></span>
-                <span data-i18n="badge">v2.0 · Grátis e Open Source</span>
-            </div>
+            <div class="hero-badge"><span class="dot"></span><span data-i18n="badge">v2.0 · Grátis e Open Source</span></div>
             <h1>
                 <span data-i18n="hero_line1">Suas tarefas.</span><br>
                 <span data-i18n="hero_line2">Suas notas.</span><br>
                 <span class="accent-word" data-i18n="hero_line3">Tudo no desktop.</span>
             </h1>
-            <p class="hero-sub" data-i18n="hero_sub">
-                Taskletto é um app desktop leve e focado para quem precisa organizar tarefas e escrever notas — agora com subtarefas, sincronização com GitHub e início instantâneo.
-            </p>
+            <p class="hero-sub" data-i18n="hero_sub">Taskletto é um app desktop leve para organizar tarefas e escrever notas — com subtarefas, sync com GitHub, atalhos rápidos e início instantâneo.</p>
             <div class="hero-ctas">
                 <a href="https://github.com/lbonavina/taskletto/releases" class="btn-primary">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M8 2v8M4 7l4 4 4-4M2 13h12" />
-                    </svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M4 7l4 4 4-4M2 13h12"/></svg>
                     <span data-i18n="btn_download">Baixar para Windows</span>
                 </a>
                 <a href="https://github.com/lbonavina/taskletto" target="_blank" class="btn-ghost">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
-                    </svg>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
                     <span data-i18n="btn_github">Ver no GitHub</span>
                 </a>
             </div>
             <p class="hero-note"><strong data-i18n="hero_note_strong">100% gratuito.</strong> <span data-i18n="hero_note">Totalmente open source.</span></p>
-
-            <!-- MOCKUP -->
-            <div class="mockup-wrap">
-                <img style="width: 100%;" src="task.gif" alt="Taskletto">
-            </div>
+            <div class="mockup-wrap"><img style="width:100%;border-radius:12px;border:1px solid var(--border);box-shadow:0 40px 100px rgba(0,0,0,.6)" src="task.gif" alt="Taskletto"></div>
         </div>
     </section>
 
     <!-- STRIP -->
     <div class="strip">
         <div class="strip-inner">
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip_subtask">Subtarefas</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip_github">GitHub Sync</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip_perf">Início instantâneo</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip1">Tarefas com prioridade</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip2">Editor de notas rico</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip3">Categorias personalizadas</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip_recur">Recorrência de tarefas</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip_time">Time tracking</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip_callout">Callout blocks</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip4">Filtros avançados</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip5">Modo claro e escuro</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip6">Atalhos de teclado</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip_export">Export / Import JSON</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip7">100% offline</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip8">Open source</span></div>
-            <div class="strip-item"><span>✦</span> <span>Windows</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip_subtask">Subtarefas</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip_github">GitHub Sync</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip_shortcuts">Atalhos rápidos</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip_perf">Início instantâneo</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip1">Tarefas com prioridade</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip2">Editor de notas rico</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip3">Categorias personalizadas</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip_recur">Recorrência de tarefas</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip_time">Time tracking</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip_callout">Callout blocks</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip4">Filtros avançados</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip5">Modo claro e escuro</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip6">Atalhos de teclado</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip_export">Export / Import JSON</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip7">100% offline</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip8">Open source</span></div>
+            <div class="strip-item"><span>✦</span><span>Windows</span></div>
             <!-- duplicate for infinite scroll -->
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip_subtask">Subtarefas</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip_github">GitHub Sync</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip_perf">Início instantâneo</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip1">Tarefas com prioridade</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip2">Editor de notas rico</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip3">Categorias personalizadas</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip_recur">Recorrência de tarefas</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip_time">Time tracking</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip_callout">Callout blocks</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip4">Filtros avançados</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip5">Modo claro e escuro</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip6">Atalhos de teclado</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip_export">Export / Import JSON</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip7">100% offline</span></div>
-            <div class="strip-item"><span>✦</span> <span data-i18n="strip8">Open source</span></div>
-            <div class="strip-item"><span>✦</span> Windows</div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip_subtask">Subtarefas</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip_github">GitHub Sync</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip_shortcuts">Atalhos rápidos</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip_perf">Início instantâneo</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip1">Tarefas com prioridade</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip2">Editor de notas rico</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip3">Categorias personalizadas</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip_recur">Recorrência de tarefas</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip_time">Time tracking</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip_callout">Callout blocks</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip4">Filtros avançados</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip5">Modo claro e escuro</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip6">Atalhos de teclado</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip_export">Export / Import JSON</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip7">100% offline</span></div>
+            <div class="strip-item"><span>✦</span><span data-i18n="strip8">Open source</span></div>
+            <div class="strip-item"><span>✦</span><span>Windows</span></div>
         </div>
     </div>
 
@@ -706,13 +255,12 @@
             <div class="reveal">
                 <div class="section-label">✦ <span data-i18n="new_label">Novidades</span></div>
                 <h2 class="section-title" data-i18n="new_title">O que há de novo na v2.0</h2>
-                <p class="section-sub" data-i18n="new_sub">Subtarefas, sincronização com GitHub e início instantâneo — a maior atualização do Taskletto até hoje.</p>
+                <p class="section-sub" data-i18n="new_sub">Subtarefas, sync com GitHub, atalhos no sidebar e UX repensada — a maior atualização do Taskletto até hoje.</p>
             </div>
 
-            <!-- v2.0 cards -->
+            <!-- Subtarefas — full width -->
             <div class="whats-new-grid reveal">
-                <!-- Subtasks — full width highlight -->
-                <div class="new-card" style="grid-column: 1 / -1;">
+                <div class="new-card" style="grid-column:1/-1">
                     <div class="new-card-tag tag-new" data-i18n="tag_new">✦ Novo</div>
                     <span class="new-card-icon">✅</span>
                     <div class="new-card-title" data-i18n="v2_n1_title">Subtarefas</div>
@@ -723,21 +271,36 @@
                         <span class="new-pill" data-i18n="v2_pill_subtask_list">Visível na lista</span>
                     </div>
                 </div>
+            </div>
 
-                <!-- GitHub Sync -->
+            <!-- GitHub Sync + Atalhos -->
+            <div class="whats-new-grid reveal" style="margin-top:16px">
                 <div class="new-card github-card">
                     <div class="new-card-tag" data-i18n="tag_new">✦ Novo</div>
                     <span class="new-card-icon">🔗</span>
                     <div class="new-card-title" data-i18n="v2_n2_title">GitHub Sync</div>
-                    <div class="new-card-desc" data-i18n="v2_n2_desc">Sincronize suas tarefas e notas com um repositório GitHub privado. Seus dados ficam versionados e acessíveis de qualquer lugar, sem depender de nenhum servidor próprio.</div>
+                    <div class="new-card-desc" data-i18n="v2_n2_desc">Sincronize suas tarefas e notas com um Gist privado no GitHub. Seus dados ficam versionados e acessíveis de qualquer dispositivo, sem depender de nenhum servidor próprio.</div>
                     <div class="new-card-pills">
                         <span class="new-pill" data-i18n="v2_pill_gh_backup">Backup automático</span>
                         <span class="new-pill" data-i18n="v2_pill_gh_versioned">Versionado</span>
-                        <span class="new-pill">Git</span>
+                        <span class="new-pill">Gist</span>
                     </div>
                 </div>
+                <div class="new-card" style="border-color:rgba(255,145,77,.15)">
+                    <div class="new-card-tag tag-new" data-i18n="tag_new">✦ Novo</div>
+                    <span class="new-card-icon">⭐</span>
+                    <div class="new-card-title" data-i18n="v2_n4_title">Atalhos no sidebar</div>
+                    <div class="new-card-desc" data-i18n="v2_n4_desc">Fixe tarefas e notas no menu lateral para acessá-las com um clique. Adicione pelo botão ⭐ na página ou direto na lista — o label atualiza automaticamente quando você renomeia o item.</div>
+                    <div class="new-card-pills">
+                        <span class="new-pill" data-i18n="v2_pill_pin_task">Tasks e notas</span>
+                        <span class="new-pill" data-i18n="v2_pill_pin_local">localStorage</span>
+                        <span class="new-pill" data-i18n="v2_pill_pin_sync">Label sincronizado</span>
+                    </div>
+                </div>
+            </div>
 
-                <!-- Performance -->
+            <!-- Performance + UI/UX -->
+            <div class="whats-new-grid reveal" style="margin-top:16px">
                 <div class="new-card perf-card">
                     <div class="new-card-tag" data-i18n="tag_improved">⚡ Melhorado</div>
                     <span class="new-card-icon">⚡</span>
@@ -749,22 +312,33 @@
                         <span class="new-pill" data-i18n="v2_pill_perf_views">View cache</span>
                     </div>
                 </div>
+                <div class="new-card ux-card">
+                    <div class="new-card-tag tag-improved" data-i18n="tag_improved">⚡ Melhorado</div>
+                    <span class="new-card-icon">🎨</span>
+                    <div class="new-card-title" data-i18n="v2_n5_title">UI/UX melhorada</div>
+                    <div class="new-card-desc" data-i18n="v2_n5_desc">Dashboard com saudação dinâmica por período do dia, editor de notas com novos recursos de formatação, instalador Windows atualizado e dezenas de ajustes visuais em todo o app.</div>
+                    <div class="new-card-pills">
+                        <span class="new-pill" data-i18n="v2_pill_ux_dash">Dashboard redesenhado</span>
+                        <span class="new-pill" data-i18n="v2_pill_ux_editor">Editor melhorado</span>
+                        <span class="new-pill" data-i18n="v2_pill_ux_installer">Novo instalador</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- version divider v1.3 -->
+            <!-- divider v1.3 -->
             <div class="version-divider reveal">
                 <div class="version-divider-line"></div>
                 <div class="version-divider-label" data-i18n="prev_version_13">v1.3 — versão anterior</div>
                 <div class="version-divider-line"></div>
             </div>
 
-            <!-- v1.3 cards -->
+            <!-- v1.3 -->
             <div class="whats-new-grid reveal">
-                <div class="new-card" style="grid-column: 1 / -1;">
+                <div class="new-card" style="grid-column:1/-1">
                     <div class="new-card-tag tag-new" data-i18n="tag_new">✦ Novo</div>
                     <span class="new-card-icon">📣</span>
                     <div class="new-card-title" data-i18n="n5_title">Callout Blocks</div>
-                    <div class="new-card-desc" data-i18n="n5_desc">Caixas de destaque estilo Notion diretamente no editor de notas. Disponíveis via menu slash (/) ou pelo novo botão na toolbar, com 6 tipos: Info, Sucesso, Aviso, Perigo, Dica e Nota. Cada bloco tem cor e ícone próprios, e o tipo pode ser alterado clicando no ícone do bloco.</div>
+                    <div class="new-card-desc" data-i18n="n5_desc">Caixas de destaque estilo Notion diretamente no editor de notas. Disponíveis via menu slash (/) ou pelo novo botão na toolbar, com 6 tipos: Info, Sucesso, Aviso, Perigo, Dica e Nota.</div>
                     <div class="new-card-pills">
                         <span class="new-pill">ℹ️ Info</span>
                         <span class="new-pill">✅ <span data-i18n="callout_success">Sucesso</span></span>
@@ -776,14 +350,14 @@
                 </div>
             </div>
 
-            <!-- version divider v1.2 -->
+            <!-- divider v1.2 -->
             <div class="version-divider reveal">
                 <div class="version-divider-line"></div>
                 <div class="version-divider-label" data-i18n="prev_version">v1.2 — versão anterior</div>
                 <div class="version-divider-line"></div>
             </div>
 
-            <!-- v1.2 cards -->
+            <!-- v1.2 -->
             <div class="whats-new-grid reveal">
                 <div class="new-card">
                     <div class="new-card-tag tag-new" data-i18n="tag_new">✦ Novo</div>
@@ -800,7 +374,7 @@
                     <div class="new-card-tag tag-new" data-i18n="tag_new">✦ Novo</div>
                     <span class="new-card-icon">⏱️</span>
                     <div class="new-card-title" data-i18n="n2_title">Time tracking</div>
-                    <div class="new-card-desc" data-i18n="n2_desc">Timer start/stop direto na sidebar da tarefa. Defina o tempo estimado em horas e minutos e acompanhe o progresso com uma barra visual.</div>
+                    <div class="new-card-desc" data-i18n="n2_desc">Timer start/stop direto na sidebar da tarefa. Defina o tempo estimado e acompanhe o progresso com uma barra visual.</div>
                     <div class="new-card-pills">
                         <span class="new-pill" data-i18n="pill_timer">Start / Stop</span>
                         <span class="new-pill" data-i18n="pill_estimate">Tempo estimado</span>
@@ -845,42 +419,47 @@
                 <div class="feature-card">
                     <div class="feature-icon">📋</div>
                     <div class="feature-title" data-i18n="f1_title">Gestão de tarefas completa</div>
-                    <div class="feature-desc" data-i18n="f1_desc">Status, prioridade, vencimento, categorias e descrição. Tudo em um lugar só com filtros rápidos e busca.</div>
+                    <div class="feature-desc" data-i18n="f1_desc">Status, prioridade, vencimento, categorias e descrição. Tudo em um lugar com filtros rápidos e busca.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon icon-purple">✅</div>
                     <div class="feature-title" data-i18n="f10_title">Subtarefas</div>
-                    <div class="feature-desc" data-i18n="f10_desc">Quebre qualquer tarefa em etapas menores. O progresso é calculado automaticamente e exibido diretamente na lista de tarefas.</div>
+                    <div class="feature-desc" data-i18n="f10_desc">Quebre qualquer tarefa em etapas menores. O progresso é calculado automaticamente e exibido na lista.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon icon-purple">🔗</div>
                     <div class="feature-title" data-i18n="f11_title">GitHub Sync</div>
-                    <div class="feature-desc" data-i18n="f11_desc">Sincronize tarefas e notas com um repositório GitHub privado. Backup automático, versionado e sem servidor próprio.</div>
+                    <div class="feature-desc" data-i18n="f11_desc">Sincronize tarefas e notas com um Gist privado. Backup automático, versionado, sem servidor próprio.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon icon-blue">⭐</div>
+                    <div class="feature-title" data-i18n="f13_title">Atalhos no sidebar</div>
+                    <div class="feature-desc" data-i18n="f13_desc">Fixe qualquer tarefa ou nota no menu lateral para acesso imediato. O label atualiza sozinho ao renomear.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">📝</div>
                     <div class="feature-title" data-i18n="f2_title">Editor de notas rico</div>
-                    <div class="feature-desc" data-i18n="f2_desc">Baseado no Tiptap — suporta negrito, itálico, tabelas, checklists, blocos de código, links e muito mais.</div>
+                    <div class="feature-desc" data-i18n="f2_desc">Baseado no Tiptap — negrito, itálico, tabelas, checklists, blocos de código, callouts e muito mais.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">📣</div>
                     <div class="feature-title" data-i18n="f9_title">Callout blocks</div>
-                    <div class="feature-desc" data-i18n="f9_desc">Caixas de destaque estilo Notion no editor de notas. 6 tipos com cores e ícones próprios, inseríveis via slash (/) ou toolbar.</div>
+                    <div class="feature-desc" data-i18n="f9_desc">Caixas de destaque estilo Notion. 6 tipos com cores e ícones, inseríveis via slash (/) ou toolbar.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🔁</div>
                     <div class="feature-title" data-i18n="f7_title">Recorrência automática</div>
-                    <div class="feature-desc" data-i18n="f7_desc">Configure tarefas para repetirem diária, semanal ou mensalmente. A próxima ocorrência é criada automaticamente ao concluir.</div>
+                    <div class="feature-desc" data-i18n="f7_desc">Configure tarefas para repetirem diária, semanal ou mensalmente. A próxima ocorrência é criada automaticamente.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">⏱️</div>
                     <div class="feature-title" data-i18n="f8_title">Time tracking integrado</div>
-                    <div class="feature-desc" data-i18n="f8_desc">Meça quanto tempo você gasta em cada tarefa com timer embutido, tempo estimado e barra de progresso visual.</div>
+                    <div class="feature-desc" data-i18n="f8_desc">Timer embutido por tarefa com tempo estimado e barra de progresso visual.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon icon-green">⚡</div>
                     <div class="feature-title" data-i18n="f12_title">Início instantâneo</div>
-                    <div class="feature-desc" data-i18n="f12_desc">Cache de configurações, rotas e views no startup. O app abre mais rápido, sem espera — direto para o seu fluxo de trabalho.</div>
+                    <div class="feature-desc" data-i18n="f12_desc">Cache no startup. O app abre mais rápido, sem tela de loading — direto para o seu fluxo.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🏷️</div>
@@ -888,19 +467,14 @@
                     <div class="feature-desc" data-i18n="f3_desc">Organize tarefas em categorias visuais com ícone emoji personalizado e cor de identificação.</div>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <div class="feature-title" data-i18n="f4_title">Atalhos de teclado</div>
-                    <div class="feature-desc" data-i18n="f4_desc">Navegue, crie e filtre sem tirar as mãos do teclado. Cada ação tem um atalho pensado para produtividade.</div>
-                </div>
-                <div class="feature-card">
                     <div class="feature-icon">🌙</div>
                     <div class="feature-title" data-i18n="f5_title">Tema claro e escuro</div>
-                    <div class="feature-desc" data-i18n="f5_desc">Alterne entre dark e light mode com um clique. O tema é salvo automaticamente entre sessões.</div>
+                    <div class="feature-desc" data-i18n="f5_desc">Alterne entre dark e light mode com um clique. O tema é salvo entre sessões.</div>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">🔒</div>
                     <div class="feature-title" data-i18n="f6_title">100% local e offline</div>
-                    <div class="feature-desc" data-i18n="f6_desc">Seus dados ficam no seu computador. Sem conta, sem servidor, sem nada sendo enviado para nenhum lugar.</div>
+                    <div class="feature-desc" data-i18n="f6_desc">Seus dados ficam no seu computador. Sem conta, sem servidor, sem nada sendo enviado.</div>
                 </div>
             </div>
         </div>
@@ -943,9 +517,7 @@
                 <h2 data-i18n="cta_title">Baixe agora. É grátis.</h2>
                 <div class="cta-btns">
                     <a href="https://github.com/lbonavina/taskletto/releases" class="btn-primary">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M8 2v8M4 7l4 4 4-4M2 13h12" />
-                        </svg>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v8M4 7l4 4 4-4M2 13h12"/></svg>
                         <span data-i18n="btn_download">Baixar para Windows</span>
                     </a>
                 </div>
@@ -973,170 +545,162 @@
     </footer>
 
     <script>
-        const i18n = {
-            pt: {
-                meta_title: 'Taskletto — Gerenciador de Tarefas e Notas para Desktop',
-                meta_desc: 'Taskletto é um app desktop gratuito para gerenciar tarefas, subtarefas e notas com foco em produtividade. Disponível para Windows.',
-                nav_features: 'Funcionalidades', nav_how: 'Como funciona', nav_download: '↓ Download grátis',
-                badge: 'v2.0 · Grátis e Open Source',
-                hero_line1: 'Suas tarefas.', hero_line2: 'Suas notas.', hero_line3: 'Tudo no desktop.',
-                hero_sub: 'Taskletto é um app desktop leve e focado para quem precisa organizar tarefas e escrever notas — agora com subtarefas, sincronização com GitHub e início instantâneo.',
-                btn_download: 'Baixar para Windows', btn_github: 'Ver no GitHub',
-                hero_note_strong: '100% gratuito.', hero_note: 'Totalmente open source.',
-                strip_subtask: 'Subtarefas', strip_github: 'GitHub Sync', strip_perf: 'Início instantâneo',
-                strip1: 'Tarefas com prioridade', strip2: 'Editor de notas rico', strip3: 'Categorias personalizadas',
-                strip4: 'Filtros avançados', strip5: 'Modo claro e escuro', strip6: 'Atalhos de teclado',
-                strip7: '100% offline', strip8: 'Open source',
-                strip_recur: 'Recorrência de tarefas', strip_time: 'Time tracking', strip_export: 'Export / Import JSON',
-                strip_callout: 'Callout blocks',
-                new_label: 'Novidades', new_title: 'O que há de novo na v2.0',
-                new_sub: 'Subtarefas, sincronização com GitHub e início instantâneo — a maior atualização do Taskletto até hoje.',
-                tag_new: '✦ Novo', tag_improved: '⚡ Melhorado',
-                v2_n1_title: 'Subtarefas',
-                v2_n1_desc: 'Quebre tarefas complexas em etapas menores. Cada tarefa agora pode ter subtarefas independentes, com progresso calculado automaticamente e exibido na lista principal.',
-                v2_pill_subtask_nested: 'Subtarefas aninhadas', v2_pill_subtask_progress: 'Progresso automático', v2_pill_subtask_list: 'Visível na lista',
-                v2_n2_title: 'GitHub Sync',
-                v2_n2_desc: 'Sincronize suas tarefas e notas com um repositório GitHub privado. Seus dados ficam versionados e acessíveis de qualquer lugar, sem depender de nenhum servidor próprio.',
-                v2_pill_gh_backup: 'Backup automático', v2_pill_gh_versioned: 'Versionado',
-                v2_n3_title: 'Início instantâneo',
-                v2_n3_desc: 'Cache de configurações, rotas e views no startup. O app abre significativamente mais rápido — sem tela de loading, direto para as suas tarefas.',
-                v2_pill_perf_cache: 'Config cache', v2_pill_perf_routes: 'Route cache', v2_pill_perf_views: 'View cache',
-                prev_version_13: 'v1.3 — versão anterior',
-                n5_title: 'Callout Blocks',
-                n5_desc: 'Caixas de destaque estilo Notion diretamente no editor de notas. Disponíveis via menu slash (/) ou pelo novo botão na toolbar, com 6 tipos: Info, Sucesso, Aviso, Perigo, Dica e Nota. Cada bloco tem cor e ícone próprios, e o tipo pode ser alterado clicando no ícone do bloco.',
-                callout_success: 'Sucesso', callout_warning: 'Aviso', callout_danger: 'Perigo',
-                callout_tip: 'Dica', callout_note: 'Nota',
-                prev_version: 'v1.2 — versão anterior',
-                n1_title: 'Recorrência de tarefas',
-                n1_desc: 'Tarefas que se repetem automaticamente. Ao concluir uma tarefa recorrente, a próxima ocorrência é criada na hora.',
-                n2_title: 'Time tracking',
-                n2_desc: 'Timer start/stop direto na sidebar da tarefa. Defina o tempo estimado em horas e minutos e acompanhe o progresso com uma barra visual.',
-                n3_title: 'Dashboard redesenhado',
-                n3_desc: 'KPIs com destaque visual, seção "Hoje" com as tarefas do dia, streak de produtividade e gráfico com tooltip interativo.',
-                n4_title: 'Export / Import JSON',
-                n4_desc: 'Faça backup de todas as suas tarefas e notas em um arquivo JSON ou migre seus dados entre dispositivos com um clique.',
-                recur_daily: 'Diária', recur_weekly_pill: 'Semanal', recur_monthly_pill: 'Mensal',
-                pill_timer: 'Start / Stop', pill_estimate: 'Tempo estimado', pill_progress: 'Barra de progresso',
-                pill_today: 'Hoje', pill_backup: 'Backup', pill_migrate: 'Migração',
-                feat_label: 'Funcionalidades', feat_title: 'Tudo que você precisa,<br>nada que não precisa.',
-                feat_sub: 'Sem bloat, sem assinatura. Só o essencial para manter o foco no que importa.',
-                f1_title: 'Gestão de tarefas completa', f1_desc: 'Status, prioridade, vencimento, categorias e descrição. Tudo em um lugar só com filtros rápidos e busca.',
-                f2_title: 'Editor de notas rico', f2_desc: 'Baseado no Tiptap — suporta negrito, itálico, tabelas, checklists, blocos de código, links e muito mais.',
-                f3_title: 'Categorias com emoji e cor', f3_desc: 'Organize tarefas em categorias visuais com ícone emoji personalizado e cor de identificação.',
-                f4_title: 'Atalhos de teclado', f4_desc: 'Navegue, crie e filtre sem tirar as mãos do teclado. Cada ação tem um atalho pensado para produtividade.',
-                f5_title: 'Tema claro e escuro', f5_desc: 'Alterne entre dark e light mode com um clique. O tema é salvo automaticamente entre sessões.',
-                f6_title: '100% local e offline', f6_desc: 'Seus dados ficam no seu computador. Sem conta, sem servidor, sem nada sendo enviado para nenhum lugar.',
-                f7_title: 'Recorrência automática', f7_desc: 'Configure tarefas para repetirem diária, semanal ou mensalmente. A próxima ocorrência é criada automaticamente ao concluir.',
-                f8_title: 'Time tracking integrado', f8_desc: 'Meça quanto tempo você gasta em cada tarefa com timer embutido, tempo estimado e barra de progresso visual.',
-                f9_title: 'Callout blocks', f9_desc: 'Caixas de destaque estilo Notion no editor de notas. 6 tipos com cores e ícones próprios, inseríveis via slash (/) ou toolbar.',
-                f10_title: 'Subtarefas', f10_desc: 'Quebre qualquer tarefa em etapas menores. O progresso é calculado automaticamente e exibido diretamente na lista de tarefas.',
-                f11_title: 'GitHub Sync', f11_desc: 'Sincronize tarefas e notas com um repositório GitHub privado. Backup automático, versionado e sem servidor próprio.',
-                f12_title: 'Início instantâneo', f12_desc: 'Cache de configurações, rotas e views no startup. O app abre mais rápido, sem espera — direto para o seu fluxo de trabalho.',
-                how_label: 'Como funciona', how_title: 'Pronto em 3 passos.', how_sub: 'Sem cadastro, sem configuração complicada. Baixa e usa.',
-                step1_title: 'Baixe o instalador', step1_desc: 'Clique em Download, escolha Windows e execute o instalador. Leva menos de um minuto.',
-                step2_title: 'Crie suas categorias', step2_desc: 'Defina categorias com cores e emojis para organizar tarefas por projeto, área ou contexto.',
-                step3_title: 'Comece a produzir', step3_desc: 'Adicione tarefas, escreva notas e use os filtros para focar no que precisa ser feito agora.',
-                cta_title: 'Baixe agora. É grátis.',
-                badge_free: '🎉 Gratuito',
-                footer_made: 'Feito por',
-            },
-            en: {
-                meta_title: 'Taskletto — Desktop Task & Notes Manager',
-                meta_desc: 'Taskletto is a free desktop app to manage tasks, subtasks and notes focused on productivity. Available for Windows.',
-                nav_features: 'Features', nav_how: 'How it works', nav_download: '↓ Free Download',
-                badge: 'v2.0 · Free & Open Source',
-                hero_line1: 'Your tasks.', hero_line2: 'Your notes.', hero_line3: 'All on the desktop.',
-                hero_sub: 'Taskletto is a lightweight, focused desktop app for people who need to organize tasks and write notes — now with subtasks, GitHub sync and instant startup.',
-                btn_download: 'Download for Windows', btn_github: 'View on GitHub',
-                hero_note_strong: '100% free.', hero_note: 'No account, no subscription, no telemetry.',
-                strip_subtask: 'Subtasks', strip_github: 'GitHub Sync', strip_perf: 'Instant startup',
-                strip1: 'Priority tasks', strip2: 'Rich notes editor', strip3: 'Custom categories',
-                strip4: 'Advanced filters', strip5: 'Light & dark mode', strip6: 'Keyboard shortcuts',
-                strip7: '100% offline', strip8: 'Open source',
-                strip_recur: 'Task recurrence', strip_time: 'Time tracking', strip_export: 'Export / Import JSON',
-                strip_callout: 'Callout blocks',
-                new_label: "What's new", new_title: "What's new in v2.0",
-                new_sub: 'Subtasks, GitHub sync and instant startup — the biggest Taskletto update yet.',
-                tag_new: '✦ New', tag_improved: '⚡ Improved',
-                v2_n1_title: 'Subtasks',
-                v2_n1_desc: 'Break complex tasks into smaller steps. Each task can now have independent subtasks, with progress calculated automatically and displayed in the main list.',
-                v2_pill_subtask_nested: 'Nested subtasks', v2_pill_subtask_progress: 'Auto progress', v2_pill_subtask_list: 'Shown in list',
-                v2_n2_title: 'GitHub Sync',
-                v2_n2_desc: 'Sync your tasks and notes with a private GitHub repository. Your data is versioned and accessible from anywhere, without relying on any proprietary server.',
-                v2_pill_gh_backup: 'Auto backup', v2_pill_gh_versioned: 'Versioned',
-                v2_n3_title: 'Instant startup',
-                v2_n3_desc: 'Config, route and view cache on startup. The app opens significantly faster — no loading screen, straight to your tasks.',
-                v2_pill_perf_cache: 'Config cache', v2_pill_perf_routes: 'Route cache', v2_pill_perf_views: 'View cache',
-                prev_version_13: 'v1.3 — previous version',
-                n5_title: 'Callout Blocks',
-                n5_desc: 'Notion-style highlight boxes directly in the notes editor. Available via the slash (/) menu or the new toolbar button, with 6 types: Info, Success, Warning, Danger, Tip, and Note. Each block has its own color and icon, and the type can be changed by clicking the block\'s icon.',
-                callout_success: 'Success', callout_warning: 'Warning', callout_danger: 'Danger',
-                callout_tip: 'Tip', callout_note: 'Note',
-                prev_version: 'v1.2 — previous version',
-                n1_title: 'Task recurrence',
-                n1_desc: 'Tasks that repeat automatically. When you complete a recurring task, the next occurrence is created instantly.',
-                n2_title: 'Time tracking',
-                n2_desc: 'Start/stop timer right in the task sidebar. Set estimated time in hours and minutes and track progress with a visual bar.',
-                n3_title: 'Redesigned dashboard',
-                n3_desc: 'KPI cards with visual highlights, a "Today" section with daily tasks, productivity streak, and an interactive chart with tooltips.',
-                n4_title: 'Export / Import JSON',
-                n4_desc: 'Back up all your tasks and notes to a JSON file or migrate data between devices with a single click.',
-                recur_daily: 'Daily', recur_weekly_pill: 'Weekly', recur_monthly_pill: 'Monthly',
-                pill_timer: 'Start / Stop', pill_estimate: 'Estimated time', pill_progress: 'Progress bar',
-                pill_today: 'Today', pill_backup: 'Backup', pill_migrate: 'Migration',
-                feat_label: 'Features', feat_title: "Everything you need,<br>nothing you don't.",
-                feat_sub: 'No bloat, no subscription. Just the essentials to keep you focused on what matters.',
-                f1_title: 'Full task management', f1_desc: 'Status, priority, due dates, categories and description. All in one place with quick filters and search.',
-                f2_title: 'Rich notes editor', f2_desc: 'Powered by Tiptap — supports bold, italic, tables, checklists, code blocks, links and much more.',
-                f3_title: 'Emoji & color categories', f3_desc: 'Organize tasks into visual categories with a custom emoji icon and color.',
-                f4_title: 'Keyboard shortcuts', f4_desc: 'Navigate, create and filter without taking your hands off the keyboard. Every action has a shortcut.',
-                f5_title: 'Light & dark theme', f5_desc: 'Switch between dark and light mode with one click. The theme is automatically saved between sessions.',
-                f6_title: '100% local & offline', f6_desc: 'Your data stays on your computer. No account, no server, nothing is ever sent anywhere.',
-                f7_title: 'Automatic recurrence', f7_desc: 'Set tasks to repeat daily, weekly or monthly. The next occurrence is automatically created on completion.',
-                f8_title: 'Built-in time tracking', f8_desc: 'Measure how long you spend on each task with a built-in timer, estimated time and visual progress bar.',
-                f9_title: 'Callout blocks', f9_desc: 'Notion-style highlight boxes in the notes editor. 6 types with their own colors and icons, insertable via slash (/) or toolbar.',
-                f10_title: 'Subtasks', f10_desc: 'Break any task into smaller steps. Progress is calculated automatically and shown directly in the task list.',
-                f11_title: 'GitHub Sync', f11_desc: 'Sync tasks and notes with a private GitHub repo. Auto backup, versioned, no proprietary server needed.',
-                f12_title: 'Instant startup', f12_desc: 'Config, route and view cache on startup. The app opens faster with no waiting — straight into your workflow.',
-                how_label: 'How it works', how_title: 'Ready in 3 steps.', how_sub: 'No sign-up, no complex setup. Download and use.',
-                step1_title: 'Download the installer', step1_desc: 'Click Download, choose Windows and run the installer. Takes less than a minute.',
-                step2_title: 'Create your categories', step2_desc: 'Set up categories with colors and emojis to organize tasks by project, area or context.',
-                step3_title: 'Start being productive', step3_desc: 'Add tasks, write notes and use filters to focus on what needs to be done right now.',
-                cta_title: "Download now. It's free.",
-                badge_free: '🎉 Free',
-                footer_made: 'Made by',
-            }
-        };
-
-        let currentLang = localStorage.getItem('lp_lang') || 'pt';
-
-        function setLang(lang) {
-            currentLang = lang;
-            localStorage.setItem('lp_lang', lang);
-            document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
-
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === lang);
-            });
-
-            const t = i18n[lang];
-
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.dataset.i18n;
-                if (t[key] !== undefined) el.innerHTML = t[key];
-            });
-
-            document.title = t.meta_title;
-            const metaDesc = document.querySelector('meta[name="description"]');
-            if (metaDesc) metaDesc.setAttribute('content', t.meta_desc);
+    const i18n = {
+        pt: {
+            meta_title:'Taskletto — Gerenciador de Tarefas e Notas para Desktop',
+            meta_desc:'Taskletto é um app desktop gratuito para gerenciar tarefas, subtarefas e notas com foco em produtividade. Disponível para Windows.',
+            nav_features:'Funcionalidades',nav_how:'Como funciona',nav_download:'↓ Download grátis',
+            badge:'v2.0 · Grátis e Open Source',
+            hero_line1:'Suas tarefas.',hero_line2:'Suas notas.',hero_line3:'Tudo no desktop.',
+            hero_sub:'Taskletto é um app desktop leve para organizar tarefas e escrever notas — com subtarefas, sync com GitHub, atalhos rápidos e início instantâneo.',
+            btn_download:'Baixar para Windows',btn_github:'Ver no GitHub',
+            hero_note_strong:'100% gratuito.',hero_note:'Totalmente open source.',
+            strip_subtask:'Subtarefas',strip_github:'GitHub Sync',strip_shortcuts:'Atalhos rápidos',strip_perf:'Início instantâneo',
+            strip1:'Tarefas com prioridade',strip2:'Editor de notas rico',strip3:'Categorias personalizadas',
+            strip4:'Filtros avançados',strip5:'Modo claro e escuro',strip6:'Atalhos de teclado',
+            strip7:'100% offline',strip8:'Open source',strip_recur:'Recorrência de tarefas',strip_time:'Time tracking',
+            strip_export:'Export / Import JSON',strip_callout:'Callout blocks',
+            new_label:'Novidades',new_title:'O que há de novo na v2.0',
+            new_sub:'Subtarefas, sync com GitHub, atalhos no sidebar e UX repensada — a maior atualização do Taskletto até hoje.',
+            tag_new:'✦ Novo',tag_improved:'⚡ Melhorado',
+            v2_n1_title:'Subtarefas',
+            v2_n1_desc:'Quebre tarefas complexas em etapas menores. Cada tarefa agora pode ter subtarefas independentes, com progresso calculado automaticamente e exibido na lista principal.',
+            v2_pill_subtask_nested:'Subtarefas aninhadas',v2_pill_subtask_progress:'Progresso automático',v2_pill_subtask_list:'Visível na lista',
+            v2_n2_title:'GitHub Sync',
+            v2_n2_desc:'Sincronize suas tarefas e notas com um Gist privado no GitHub. Seus dados ficam versionados e acessíveis de qualquer dispositivo, sem depender de nenhum servidor próprio.',
+            v2_pill_gh_backup:'Backup automático',v2_pill_gh_versioned:'Versionado',
+            v2_n3_title:'Início instantâneo',
+            v2_n3_desc:'Cache de configurações, rotas e views no startup. O app abre significativamente mais rápido — sem tela de loading, direto para as suas tarefas.',
+            v2_pill_perf_cache:'Config cache',v2_pill_perf_routes:'Route cache',v2_pill_perf_views:'View cache',
+            v2_n4_title:'Atalhos no sidebar',
+            v2_n4_desc:'Fixe tarefas e notas no menu lateral para acessá-las com um clique. Adicione pelo botão ⭐ na página ou direto na lista — o label atualiza automaticamente quando você renomeia o item.',
+            v2_pill_pin_task:'Tasks e notas',v2_pill_pin_local:'localStorage',v2_pill_pin_sync:'Label sincronizado',
+            v2_n5_title:'UI/UX melhorada',
+            v2_n5_desc:'Dashboard com saudação dinâmica por período do dia, editor de notas com novos recursos de formatação, instalador Windows atualizado e dezenas de ajustes visuais em todo o app.',
+            v2_pill_ux_dash:'Dashboard redesenhado',v2_pill_ux_editor:'Editor melhorado',v2_pill_ux_installer:'Novo instalador',
+            prev_version_13:'v1.3 — versão anterior',
+            n5_title:'Callout Blocks',
+            n5_desc:'Caixas de destaque estilo Notion diretamente no editor de notas. Via menu slash (/) ou botão na toolbar, com 6 tipos: Info, Sucesso, Aviso, Perigo, Dica e Nota.',
+            callout_success:'Sucesso',callout_warning:'Aviso',callout_danger:'Perigo',callout_tip:'Dica',callout_note:'Nota',
+            prev_version:'v1.2 — versão anterior',
+            n1_title:'Recorrência de tarefas',n1_desc:'Tarefas que se repetem automaticamente. Ao concluir, a próxima ocorrência é criada na hora.',
+            n2_title:'Time tracking',n2_desc:'Timer start/stop direto na sidebar. Defina o tempo estimado e acompanhe com uma barra visual.',
+            n3_title:'Dashboard redesenhado',n3_desc:'KPIs com destaque visual, seção "Hoje", streak de produtividade e gráfico com tooltip interativo.',
+            n4_title:'Export / Import JSON',n4_desc:'Backup de tarefas e notas em JSON ou migração entre dispositivos com um clique.',
+            recur_daily:'Diária',recur_weekly_pill:'Semanal',recur_monthly_pill:'Mensal',
+            pill_timer:'Start / Stop',pill_estimate:'Tempo estimado',pill_progress:'Barra de progresso',
+            pill_today:'Hoje',pill_backup:'Backup',pill_migrate:'Migração',
+            feat_label:'Funcionalidades',feat_title:'Tudo que você precisa,<br>nada que não precisa.',
+            feat_sub:'Sem bloat, sem assinatura. Só o essencial para manter o foco no que importa.',
+            f1_title:'Gestão de tarefas completa',f1_desc:'Status, prioridade, vencimento, categorias e descrição. Tudo em um lugar com filtros rápidos e busca.',
+            f2_title:'Editor de notas rico',f2_desc:'Baseado no Tiptap — negrito, itálico, tabelas, checklists, blocos de código, callouts e muito mais.',
+            f3_title:'Categorias com emoji e cor',f3_desc:'Organize tarefas em categorias visuais com ícone emoji e cor de identificação.',
+            f5_title:'Tema claro e escuro',f5_desc:'Alterne entre dark e light mode com um clique. O tema é salvo entre sessões.',
+            f6_title:'100% local e offline',f6_desc:'Seus dados ficam no seu computador. Sem conta, sem servidor.',
+            f7_title:'Recorrência automática',f7_desc:'Configure tarefas para repetirem diária, semanal ou mensalmente. A próxima ocorrência é criada automaticamente.',
+            f8_title:'Time tracking integrado',f8_desc:'Timer embutido por tarefa com tempo estimado e barra de progresso visual.',
+            f9_title:'Callout blocks',f9_desc:'Caixas de destaque estilo Notion. 6 tipos com cores e ícones, via slash (/) ou toolbar.',
+            f10_title:'Subtarefas',f10_desc:'Quebre qualquer tarefa em etapas menores. Progresso calculado automaticamente e exibido na lista.',
+            f11_title:'GitHub Sync',f11_desc:'Sincronize com um Gist privado. Backup automático, versionado, sem servidor próprio.',
+            f12_title:'Início instantâneo',f12_desc:'Cache no startup. Abre mais rápido, sem loading — direto para o seu fluxo.',
+            f13_title:'Atalhos no sidebar',f13_desc:'Fixe qualquer tarefa ou nota no menu lateral para acesso imediato. Label atualiza ao renomear.',
+            how_label:'Como funciona',how_title:'Pronto em 3 passos.',how_sub:'Sem cadastro, sem configuração complicada. Baixa e usa.',
+            step1_title:'Baixe o instalador',step1_desc:'Clique em Download, escolha Windows e execute o instalador. Menos de um minuto.',
+            step2_title:'Crie suas categorias',step2_desc:'Defina categorias com cores e emojis para organizar por projeto, área ou contexto.',
+            step3_title:'Comece a produzir',step3_desc:'Adicione tarefas, escreva notas e use os filtros para focar no que precisa ser feito agora.',
+            cta_title:'Baixe agora. É grátis.',badge_free:'🎉 Gratuito',footer_made:'Feito por',
+        },
+        en: {
+            meta_title:'Taskletto — Desktop Task & Notes Manager',
+            meta_desc:'Taskletto is a free desktop app to manage tasks, subtasks and notes focused on productivity. Available for Windows.',
+            nav_features:'Features',nav_how:'How it works',nav_download:'↓ Free Download',
+            badge:'v2.0 · Free & Open Source',
+            hero_line1:'Your tasks.',hero_line2:'Your notes.',hero_line3:'All on the desktop.',
+            hero_sub:'Taskletto is a lightweight desktop app for organizing tasks and writing notes — with subtasks, GitHub sync, quick shortcuts and instant startup.',
+            btn_download:'Download for Windows',btn_github:'View on GitHub',
+            hero_note_strong:'100% free.',hero_note:'No account, no subscription, no telemetry.',
+            strip_subtask:'Subtasks',strip_github:'GitHub Sync',strip_shortcuts:'Quick shortcuts',strip_perf:'Instant startup',
+            strip1:'Priority tasks',strip2:'Rich notes editor',strip3:'Custom categories',
+            strip4:'Advanced filters',strip5:'Light & dark mode',strip6:'Keyboard shortcuts',
+            strip7:'100% offline',strip8:'Open source',strip_recur:'Task recurrence',strip_time:'Time tracking',
+            strip_export:'Export / Import JSON',strip_callout:'Callout blocks',
+            new_label:"What's new",new_title:"What's new in v2.0",
+            new_sub:'Subtasks, GitHub sync, sidebar shortcuts and a rethought UX — the biggest Taskletto update yet.',
+            tag_new:'✦ New',tag_improved:'⚡ Improved',
+            v2_n1_title:'Subtasks',
+            v2_n1_desc:'Break complex tasks into smaller steps. Each task can now have independent subtasks, with progress calculated automatically and displayed in the main list.',
+            v2_pill_subtask_nested:'Nested subtasks',v2_pill_subtask_progress:'Auto progress',v2_pill_subtask_list:'Shown in list',
+            v2_n2_title:'GitHub Sync',
+            v2_n2_desc:'Sync your tasks and notes with a private GitHub Gist. Your data is versioned and accessible from any device, without relying on any proprietary server.',
+            v2_pill_gh_backup:'Auto backup',v2_pill_gh_versioned:'Versioned',
+            v2_n3_title:'Instant startup',
+            v2_n3_desc:'Config, route and view cache on startup. The app opens significantly faster — no loading screen, straight to your tasks.',
+            v2_pill_perf_cache:'Config cache',v2_pill_perf_routes:'Route cache',v2_pill_perf_views:'View cache',
+            v2_n4_title:'Sidebar shortcuts',
+            v2_n4_desc:'Pin tasks and notes to the sidebar for one-click access. Add via the ⭐ button on the page or directly from the list — the label updates automatically when you rename the item.',
+            v2_pill_pin_task:'Tasks & notes',v2_pill_pin_local:'localStorage',v2_pill_pin_sync:'Synced label',
+            v2_n5_title:'Improved UI/UX',
+            v2_n5_desc:'Dashboard with dynamic time-of-day greeting, notes editor with new formatting features, updated Windows installer and dozens of visual improvements throughout the app.',
+            v2_pill_ux_dash:'Redesigned dashboard',v2_pill_ux_editor:'Better editor',v2_pill_ux_installer:'New installer',
+            prev_version_13:'v1.3 — previous version',
+            n5_title:'Callout Blocks',
+            n5_desc:'Notion-style highlight boxes in the notes editor. Available via slash (/) menu or toolbar, with 6 types: Info, Success, Warning, Danger, Tip, and Note.',
+            callout_success:'Success',callout_warning:'Warning',callout_danger:'Danger',callout_tip:'Tip',callout_note:'Note',
+            prev_version:'v1.2 — previous version',
+            n1_title:'Task recurrence',n1_desc:'Tasks that repeat automatically. When you complete one, the next occurrence is created instantly.',
+            n2_title:'Time tracking',n2_desc:'Start/stop timer in the task sidebar. Set estimated time and track progress with a visual bar.',
+            n3_title:'Redesigned dashboard',n3_desc:'KPI cards, a "Today" section, productivity streak, and an interactive chart with tooltips.',
+            n4_title:'Export / Import JSON',n4_desc:'Back up tasks and notes to JSON or migrate between devices with a single click.',
+            recur_daily:'Daily',recur_weekly_pill:'Weekly',recur_monthly_pill:'Monthly',
+            pill_timer:'Start / Stop',pill_estimate:'Estimated time',pill_progress:'Progress bar',
+            pill_today:'Today',pill_backup:'Backup',pill_migrate:'Migration',
+            feat_label:'Features',feat_title:"Everything you need,<br>nothing you don't.",
+            feat_sub:'No bloat, no subscription. Just the essentials to keep you focused on what matters.',
+            f1_title:'Full task management',f1_desc:'Status, priority, due dates, categories and description. All in one place with quick filters and search.',
+            f2_title:'Rich notes editor',f2_desc:'Powered by Tiptap — bold, italic, tables, checklists, code blocks, callouts and much more.',
+            f3_title:'Emoji & color categories',f3_desc:'Organize tasks into visual categories with a custom emoji icon and color.',
+            f5_title:'Light & dark theme',f5_desc:'Switch between dark and light mode with one click. The theme is automatically saved.',
+            f6_title:'100% local & offline',f6_desc:"Your data stays on your computer. No account, no server.",
+            f7_title:'Automatic recurrence',f7_desc:'Set tasks to repeat daily, weekly or monthly. The next occurrence is automatically created on completion.',
+            f8_title:'Built-in time tracking',f8_desc:'Per-task timer with estimated time and visual progress bar.',
+            f9_title:'Callout blocks',f9_desc:'Notion-style highlight boxes. 6 types with their own colors and icons, via slash (/) or toolbar.',
+            f10_title:'Subtasks',f10_desc:'Break any task into smaller steps. Progress is calculated automatically and shown in the list.',
+            f11_title:'GitHub Sync',f11_desc:'Sync with a private Gist. Auto backup, versioned, no proprietary server needed.',
+            f12_title:'Instant startup',f12_desc:'Startup cache. Opens faster, no loading screen — straight into your workflow.',
+            f13_title:'Sidebar shortcuts',f13_desc:'Pin any task or note to the sidebar for immediate access. Label updates automatically on rename.',
+            how_label:'How it works',how_title:'Ready in 3 steps.',how_sub:'No sign-up, no complex setup. Download and use.',
+            step1_title:'Download the installer',step1_desc:'Click Download, choose Windows and run the installer. Takes less than a minute.',
+            step2_title:'Create your categories',step2_desc:'Set up categories with colors and emojis to organize tasks by project, area or context.',
+            step3_title:'Start being productive',step3_desc:'Add tasks, write notes and use filters to focus on what needs to be done right now.',
+            cta_title:"Download now. It's free.",badge_free:'🎉 Free',footer_made:'Made by',
         }
+    };
 
-        setLang(currentLang);
+    let currentLang = localStorage.getItem('lp_lang') || 'pt';
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-        }, { threshold: 0.1 });
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    function setLang(lang) {
+        currentLang = lang;
+        localStorage.setItem('lp_lang', lang);
+        document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.textContent.trim().toLowerCase() === lang);
+        });
+        const t = i18n[lang];
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.dataset.i18n;
+            if (t[key] !== undefined) el.innerHTML = t[key];
+        });
+        document.title = t.meta_title;
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc) metaDesc.setAttribute('content', t.meta_desc);
+    }
+
+    setLang(currentLang);
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
     </script>
 </body>
 </html>
