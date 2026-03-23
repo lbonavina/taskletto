@@ -369,7 +369,8 @@ html[data-theme=light] .note-card-tag { background: #e8eaf2; color: #555570; bor
             <div class="notes-section-label">📌 Fixadas</div>
             <div class="notes-grid">
                 @foreach($pinned as $note)
-                <a href="/notes/{{ $note->id }}" class="note-card" style="--note-color:{{ $note->color }}">
+                <a href="/notes/{{ $note->id }}" class="note-card" style="--note-color:{{ $note->color }};position:relative">
+                    <button class="shortcut-inline-btn note-shortcut-btn" data-url="/notes/{{ $note->id }}" data-label="{{ addslashes($note->title ?: __('app.notes_untitled')) }}" data-type="note" data-emoji="📄" title="Adicionar/remover atalho">☆</button>
                     <div class="note-card-header">
                         <div class="note-card-dot-wrap"><div class="note-card-dot"></div></div>
                         <span class="note-card-pin">📌</span>
@@ -400,7 +401,8 @@ html[data-theme=light] .note-card-tag { background: #e8eaf2; color: #555570; bor
             @if($pinned->isNotEmpty())<div class="notes-section-label">Todas as notas</div>@endif
             <div class="notes-grid">
                 @foreach($others as $note)
-                <a href="/notes/{{ $note->id }}" class="note-card" style="--note-color:{{ $note->color }}">
+                <a href="/notes/{{ $note->id }}" class="note-card" style="--note-color:{{ $note->color }};position:relative">
+                    <button class="shortcut-inline-btn note-shortcut-btn" data-url="/notes/{{ $note->id }}" data-label="{{ addslashes($note->title ?: __('app.notes_untitled')) }}" data-type="note" data-emoji="📄" title="Adicionar/remover atalho">☆</button>
                     <div class="note-card-header">
                         <div class="note-card-dot-wrap"><div class="note-card-dot"></div></div>
                     </div>

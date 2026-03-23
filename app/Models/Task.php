@@ -17,6 +17,15 @@ class Task extends Model
 {
     use HasFactory, SoftDeletes;
 
+    /**
+     * Executa um callback desabilitando os observers do model.
+     * Necessário pois o Laravel 12 exige declaração explícita em alguns contextos.
+     */
+    public static function withoutObservers(callable $callback): mixed
+    {
+        return static::withoutEvents($callback);
+    }
+
     protected $fillable = [
         'title',
         'description',

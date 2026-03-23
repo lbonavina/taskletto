@@ -208,6 +208,7 @@
                                     <button class="btn btn-ghost btn-sm quick-complete" data-id="{{ $task->id }}" title="{{ __('app.tasks_quick_complete') }}"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 8l5 5L14 4"/></svg></button>
                                 @endif
                                 <a href="/tasks/{{ $task->id }}" class="btn btn-ghost btn-sm">{{ __('app.tasks_view') }}</a>
+                                <button class="btn btn-ghost btn-sm shortcut-inline-btn" data-url="/tasks/{{ $task->id }}" data-label="{{ addslashes($task->title) }}" data-type="task" data-emoji="📋" title="Adicionar/remover atalho" style="font-size:14px;padding:4px 8px">☆</button>
                             </td>
                         </tr>
                     @endforeach
@@ -839,11 +840,15 @@ document.getElementById('btn-empty-new')?.addEventListener('click', () => {
                         <td style="text-align:right;white-space:nowrap" onclick="event.stopPropagation()">
                             <button class="btn btn-ghost btn-sm quick-complete" data-id="${task.id}" title="{{ __('app.tasks_quick_complete') }}"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 8l5 5L14 4"/></svg></button>
                             <a href="/tasks/${task.id}" class="btn btn-ghost btn-sm">{{ __('app.tasks_view') }}</a>
+                            <button class="btn btn-ghost btn-sm shortcut-inline-btn" data-url="/tasks/${task.id}" data-label="${task.title.replace(/"/g, '&quot;')}" data-type="task" data-emoji="📋" title="Adicionar/remover atalho" style="font-size:14px;padding:4px 8px">${window.Shortcuts && window.Shortcuts.has('/tasks/${task.id}') ? '★' : '☆'}</button>
                         </td>
                     `;
                     // Insert before the quick-add-row
                     const qaRow = document.getElementById('quick-add-row');
                     tbody.insertBefore(tr, qaRow);
+
+                    // Sync shortcut star state on new row
+                    if (window.syncShortcutBtns) window.syncShortcutBtns();
 
                     // Wire up the new checkbox and quick-complete button
                     tr.querySelector('.task-checkbox')?.addEventListener('change', function() {

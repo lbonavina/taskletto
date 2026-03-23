@@ -125,6 +125,26 @@
 .gist-meta { font-size: 11px; color: var(--muted); margin-bottom: 12px; }
 .gist-sync-error { color: var(--danger); margin-left: 8px; display: none; }
 
+.gist-picker-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px; border-radius: 9px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--surface2);
+    transition: border-color .15s, background .15s;
+    user-select: none;
+}
+.gist-picker-item:hover { border-color: rgba(255,145,77,.3); background: rgba(255,145,77,.04); }
+.gist-picker-item.selected { border-color: var(--accent); background: rgba(255,145,77,.08); }
+.gist-picker-item.taskletto-badge { border-color: rgba(74,222,128,.3); }
+.gist-picker-item.taskletto-badge.selected { border-color: var(--accent); }
+.gist-pick-radio { width:16px; height:16px; border-radius:50%; border:2px solid var(--border); flex-shrink:0; transition: border-color .15s, background .15s; }
+.gist-picker-item.selected .gist-pick-radio { border-color: var(--accent); background: var(--accent); }
+.gist-pick-info { flex:1; min-width:0; }
+.gist-pick-desc { font-size:12.5px; font-weight:500; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.gist-pick-meta { font-size:10.5px; color:var(--muted); margin-top:2px; }
+.gist-pick-badge { font-size:9.5px; font-weight:700; padding:1px 7px; border-radius:20px; background:rgba(74,222,128,.1); color:var(--success); border:1px solid rgba(74,222,128,.2); flex-shrink:0; }
+.gist-pick-new { border-style: dashed; }
+.gist-pick-new:hover { border-color: rgba(255,145,77,.4); }
+
 .gist-sync-row {
     display: flex; align-items: center; gap: 8px;
     flex-wrap: wrap;
@@ -230,16 +250,29 @@
             </p>
 
             <div id="gist-config-section">
-                <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;margin-bottom:10px">
-                    <div class="form-group" style="margin:0">
-                        <label>Token GitHub</label>
-                        <input type="password" id="gist-token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off">
+                {{-- Step 1: token input --}}
+                <div id="gist-step-token">
+                    <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">
+                        <div class="form-group" style="margin:0">
+                            <label>Token GitHub</label>
+                            <input type="password" id="gist-token-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off"
+                                onkeydown="if(event.key==='Enter') verifyToken()">
+                        </div>
+                        <button class="btn btn-primary" onclick="verifyToken()" id="btn-verify" style="height:42px;white-space:nowrap">Verificar</button>
                     </div>
-                    <button class="btn btn-primary" onclick="saveGistConfig()" style="height:40px;white-space:nowrap">Conectar</button>
+                    <div id="gist-token-error" style="display:none;margin-top:8px"></div>
                 </div>
-                <div class="form-group" style="margin:0">
-                    <label>Gist ID <span style="font-weight:400;opacity:.6">(opcional)</span></label>
-                    <input type="text" id="gist-id-input" placeholder="ex: a1b2c3d4e5f6..." autocomplete="off">
+
+                {{-- Step 2: gist picker (shown after token verified) --}}
+                <div id="gist-step-picker" style="display:none;margin-top:14px">
+                    <div style="font-size:12px;color:var(--muted);margin-bottom:8px">
+                        Selecione o Gist do Taskletto ou crie um novo:
+                    </div>
+                    <div id="gist-picker-list" style="display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;margin-bottom:10px"></div>
+                    <div style="display:flex;gap:8px;justify-content:flex-end">
+                        <button class="btn btn-ghost btn-sm" onclick="resetGistStep()">← Voltar</button>
+                        <button class="btn btn-primary btn-sm" id="btn-confirm-gist" onclick="confirmGistSelection()" disabled>Usar este Gist</button>
+                    </div>
                 </div>
             </div>
 
@@ -417,8 +450,22 @@ async function handleImport(input) {
 
 const CSRF = document.querySelector('meta[name=csrf-token]').content;
 async function apiPost(url, body={}) {
-    const r = await fetch(url, { method:'POST', headers:{'Content-Type':'application/json','X-CSRF-TOKEN':CSRF}, body:JSON.stringify(body) });
-    return r.json();
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
+    try {
+        const r = await fetch(url, {
+            method: 'POST',
+            headers: {'Content-Type':'application/json','X-CSRF-TOKEN':CSRF},
+            body: JSON.stringify(body),
+            signal: controller.signal
+        });
+        clearTimeout(timeout);
+        return r.json();
+    } catch(e) {
+        clearTimeout(timeout);
+        if (e.name === 'AbortError') return { ok: false, message: 'Tempo limite esgotado. Tente novamente.' };
+        return { ok: false, message: 'Erro de conexão: ' + e.message };
+    }
 }
 function showGistAlert(msg, type='success') {
     const el = document.getElementById('gist-alert');
@@ -450,24 +497,146 @@ async function loadGistStatus() {
         } else { config.style.display='block'; connected.style.display='none'; badge.style.display='none'; }
     } catch(e){}
 }
-async function saveGistConfig() {
-    const token=document.getElementById('gist-token-input').value.trim();
-    const gistId=document.getElementById('gist-id-input').value.trim();
-    if(!token){showGistAlert('Informe o token.','danger');return;}
-    const d=await apiPost('/settings/gist/config',{token,gist_id:gistId||undefined});
-    if(d.ok){showGistAlert('Conectado! Faça um Push para criar o Gist.');loadGistStatus();}else showGistAlert(d.message,'danger');
+// ── Gist picker flow ─────────────────────────────────────────────────────────
+let _pickerToken = null;
+let _selectedGistId = null; // null = criar novo
+
+async function verifyToken() {
+    const token = document.getElementById('gist-token-input').value.trim();
+    if (!token) { showTokenError('Informe o token.'); return; }
+
+    setBtnLoading('btn-verify', true);
+    let d;
+    try {
+        d = await apiPost('/settings/gist/list-gists', { token });
+    } catch(e) {
+        showTokenError('Erro inesperado: ' + e.message);
+        return;
+    } finally {
+        setBtnLoading('btn-verify', false);
+    }
+
+    if (!d || !d.ok) { showTokenError(d ? d.message : 'Erro desconhecido.'); return; }
+
+    _pickerToken = token;
+    _selectedGistId = null;
+    hideTokenError();
+    renderGistPicker(d.gists || []);
+    document.getElementById('gist-step-token').style.display = 'none';
+    document.getElementById('gist-step-picker').style.display = 'block';
+}
+
+function renderGistPicker(gists) {
+    const list = document.getElementById('gist-picker-list');
+
+    // "Criar novo Gist" always first option
+    list.innerHTML = `
+        <div class="gist-picker-item gist-pick-new selected" data-id="__new__" onclick="selectGist(this,'__new__')">
+            <div class="gist-pick-radio"></div>
+            <div class="gist-pick-info">
+                <div class="gist-pick-desc">➕ Criar novo Gist</div>
+                <div class="gist-pick-meta">Um novo arquivo de sync será criado na sua conta</div>
+            </div>
+        </div>`;
+
+    gists.forEach(g => {
+        const date = new Date(g.updated_at).toLocaleDateString('pt-BR');
+        const fileList = g.files.slice(0,3).join(', ') + (g.files.length > 3 ? '...' : '');
+        const badge = g.is_taskletto ? '<span class="gist-pick-badge">✓ Taskletto</span>' : '';
+        const cls = g.is_taskletto ? 'taskletto-badge' : '';
+        list.innerHTML += `
+            <div class="gist-picker-item ${cls}" data-id="${g.id}" onclick="selectGist(this,'${g.id}')">
+                <div class="gist-pick-radio"></div>
+                <div class="gist-pick-info">
+                    <div class="gist-pick-desc">${escHtml(g.description)}</div>
+                    <div class="gist-pick-meta">${fileList} · atualizado ${date}</div>
+                </div>
+                ${badge}
+            </div>`;
+    });
+
+    // Auto-select the Taskletto gist if found
+    const taskletto = gists.find(g => g.is_taskletto);
+    if (taskletto) {
+        const newItem = list.querySelector('[data-id="__new__"]');
+        const taskItem = list.querySelector('[data-id="' + taskletto.id + '"]');
+        if (newItem) newItem.classList.remove('selected');
+        if (taskItem) { taskItem.classList.add('selected'); _selectedGistId = taskletto.id; }
+    }
+
+    document.getElementById('btn-confirm-gist').disabled = false;
+}
+
+function selectGist(el, id) {
+    document.querySelectorAll('.gist-picker-item').forEach(i => {
+        i.classList.remove('selected');
+    });
+    el.classList.add('selected');
+    _selectedGistId = id === '__new__' ? null : id;
+}
+
+async function confirmGistSelection() {
+    const body = { token: _pickerToken };
+    if (_selectedGistId) body.gist_id = _selectedGistId;
+
+    setBtnLoading('btn-confirm-gist', true);
+    const d = await apiPost('/settings/gist/config', body);
+    setBtnLoading('btn-confirm-gist', false);
+
+    if (d.ok) {
+        const msg = _selectedGistId
+            ? 'Gist vinculado! Clique em Pull para restaurar seus dados.'
+            : 'Conectado! Clique em Push para criar o Gist.';
+        showGistAlert(msg);
+        loadGistStatus();
+    } else {
+        showGistAlert(d.message, 'danger');
+    }
+}
+
+function resetGistStep() {
+    document.getElementById('gist-step-picker').style.display = 'none';
+    document.getElementById('gist-step-token').style.display = 'block';
+    document.getElementById('gist-token-error').style.display = 'none';
+    _pickerToken = null;
+    _selectedGistId = null;
+}
+
+function showTokenError(msg) {
+    const el = document.getElementById('gist-token-error');
+    el.innerHTML = `<div class="alert-inline danger">${msg}</div>`;
+    el.style.display = 'block';
+}
+function hideTokenError() {
+    const el = document.getElementById('gist-token-error');
+    if (el) el.style.display = 'none';
+}
+function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 async function disconnectGist() {
     if(!confirm('Desconectar o sync?')) return;
     await apiPost('/settings/gist/disconnect'); loadGistStatus(); showGistAlert('Sync desconectado.');
 }
 async function manualPush() {
-    setBtnLoading('btn-push',true); const d=await apiPost('/settings/gist/push'); setBtnLoading('btn-push',false);
-    showGistAlert(d.message,d.ok?'success':'danger'); if(d.ok) loadGistStatus();
+    setBtnLoading('btn-push', true);
+    try {
+        const d = await apiPost('/settings/gist/push');
+        showGistAlert(d.message, d.ok ? 'success' : 'danger');
+        if (d.ok) loadGistStatus();
+    } finally {
+        setBtnLoading('btn-push', false);
+    }
 }
 async function manualPull() {
-    setBtnLoading('btn-pull',true); const d=await apiPost('/settings/gist/pull'); setBtnLoading('btn-pull',false);
-    showGistAlert(d.message,d.ok?'success':'danger'); if(d.ok) loadGistStatus();
+    setBtnLoading('btn-pull', true);
+    try {
+        const d = await apiPost('/settings/gist/pull');
+        showGistAlert(d.message, d.ok ? 'success' : 'danger');
+        if (d.ok) loadGistStatus();
+    } finally {
+        setBtnLoading('btn-pull', false);
+    }
 }
 async function setGistInterval(val) {
     await apiPost('/settings/gist/interval',{interval:parseInt(val)});

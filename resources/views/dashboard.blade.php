@@ -67,12 +67,12 @@
 
 .dc-pad { padding: 14px 16px; }
 .dc-label {
-    font-size: 9px; font-weight: 700; text-transform: uppercase;
+    font-size: 10.5px; font-weight: 700; text-transform: uppercase;
     letter-spacing: 1.2px; color: var(--muted);
     display: flex; align-items: center; justify-content: space-between;
     margin-bottom: 8px;
 }
-.dc-label a { font-size: 10px; color: var(--accent); text-decoration: none; opacity: .8; letter-spacing: 0; text-transform: none; font-weight: 500; transition: opacity .15s; }
+.dc-label a { font-size: 11.5px; color: var(--accent); text-decoration: none; opacity: .8; letter-spacing: 0; text-transform: none; font-weight: 500; transition: opacity .15s; }
 .dc-label a:hover { opacity: 1; }
 
 /* ─── Grid areas ───────────────────────────────────────────── */
@@ -90,8 +90,8 @@
 .progress-kpis { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-bottom:12px; }
 .kpi-card { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:8px 10px; position:relative; overflow:hidden; }
 .kpi-stripe { position:absolute; top:0; left:0; right:0; height:2px; opacity:.7; }
-.kpi-val { font-size:22px; font-weight:800; letter-spacing:-.5px; line-height:1; margin-bottom:3px; }
-.kpi-label { font-size:9px; color:var(--muted); font-weight:500; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.kpi-val { font-size:26px; font-weight:800; letter-spacing:-.5px; line-height:1; margin-bottom:3px; }
+.kpi-label { font-size:10.5px; color:var(--muted); font-weight:500; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
 /* ─── Greeting ─────────────────────────────────────────────── */
 .greet-bg { position:absolute; inset:0; z-index:0; background-size:cover; background-position:center; }
@@ -103,31 +103,65 @@ html[data-theme=light] .greet-date  { color: rgba(255,255,255,.65); }
 html[data-theme=light] .greet-title { color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.5); }
 html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
 .greet-content { position:relative; z-index:1; padding:14px 16px; width:100%; }
-.greet-date { font-size:8.5px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:4px; }
-.greet-title { font-size:18px; font-weight:800; letter-spacing:-.4px; color:#fff; line-height:1.15; margin-bottom:3px; text-shadow: 0 1px 3px rgba(0,0,0,.4); }
-.greet-sub { font-size:11px; color:rgba(255,255,255,.65); line-height:1.5; }
+.greet-date { font-size:10px; font-weight:700; letter-spacing:1.4px; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:4px; }
+.greet-title { font-size:22px; font-weight:800; letter-spacing:-.4px; color:#fff; line-height:1.15; margin-bottom:3px; text-shadow: 0 1px 3px rgba(0,0,0,.4); }
+.greet-sub { font-size:12.5px; color:rgba(255,255,255,.65); line-height:1.5; }
 
-.period-badge { position:absolute; top:10px; right:12px; z-index:2; font-size:8.5px; font-weight:700; letter-spacing:.9px; text-transform:uppercase; padding:3px 9px; border-radius:20px; background:rgba(255,145,77,.15); color:var(--accent); border:1px solid rgba(255,145,77,.2); display:flex; align-items:center; gap:4px; }
-.period-dot { width:5px; height:5px; border-radius:50%; background:var(--accent); animation:pulse-dot 2s ease-in-out infinite; }
-@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.7)} }
 
-/* ─── Weather widget (compacto) ────────────────────────────── */
-.wx-main { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
-.wx-icon { font-size:32px; line-height:1; }
-.wx-temp { font-size:26px; font-weight:800; letter-spacing:-1px; color:var(--text); line-height:1; }
-.wx-feels { font-size:9.5px; color:var(--muted); margin-top:1px; }
-.wx-desc { font-size:10.5px; color:var(--text); font-weight:600; margin-bottom:6px; }
-.wx-location { font-size:9px; color:var(--muted); display:flex; align-items:center; gap:3px; margin-bottom:8px; }
-.wx-pills { display:flex; gap:5px; flex-wrap:wrap; }
-.wx-pill { font-size:9px; padding:2px 8px; border-radius:20px; background:var(--surface2); border:1px solid var(--border); color:var(--muted); }
-.wx-skeleton { height:11px; background:var(--surface2); border-radius:5px; animation:shimmer 1.4s ease-in-out infinite; margin-bottom:7px; }
-.wx-error { font-size:11px; color:var(--muted); text-align:center; padding:16px 0; }
+
+/* ─── Weather widget — card animado estilo AccuWeather ──────── */
+.dc-weather { padding: 0 !important; overflow: hidden; }
+.wx-card {
+    position: relative; border-radius: 13px; overflow: hidden;
+    min-height: 150px; padding: 16px;
+    background: linear-gradient(135deg, #1a6ab1 0%, #2d9ecf 40%, #e8a832 100%);
+    background-size: 200% 200%;
+    animation: wxGradShift 8s ease infinite;
+}
+@keyframes wxGradShift {
+    0%   { background-position: 0%   50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0%   50%; }
+}
+/* day/night overrides via JS */
+.wx-card.night { background: linear-gradient(135deg, #0d1b3e 0%, #1a3a6e 50%, #2a1a5e 100%); animation: wxGradNight 8s ease infinite; }
+@keyframes wxGradNight {
+    0%   { background-position: 0%   50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0%   50%; }
+}
+.wx-card.rain   { background: linear-gradient(135deg, #2b3e5a 0%, #3d5978 50%, #546e8a 100%); animation: none; }
+.wx-card.storm  { background: linear-gradient(135deg, #1a1a2e 0%, #2d2d4e 50%, #3d2d4e 100%); animation: none; }
+.wx-card.fog    { background: linear-gradient(135deg, #5a6a7a 0%, #7a8a9a 50%, #8a9aaa 100%); animation: none; }
+
+/* floating cloud shapes */
+.wx-cloud1, .wx-cloud2 {
+    position: absolute; border-radius: 50%;
+    background: rgba(255,255,255,.07); pointer-events: none;
+}
+.wx-cloud1 { width: 120px; height: 80px; top: -20px; right: -15px; animation: wxFloat1 6s ease-in-out infinite; }
+.wx-cloud2 { width: 80px; height: 55px; bottom: 20px; right: 30px; animation: wxFloat2 8s ease-in-out infinite; }
+@keyframes wxFloat1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-8px,6px)} }
+@keyframes wxFloat2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(6px,-5px)} }
+
+.wx-content { position: relative; z-index: 1; }
+.wx-location { font-size:11px; color:rgba(255,255,255,.75); display:flex; align-items:center; gap:4px; margin-bottom:10px; font-weight:500; }
+.wx-main { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+.wx-icon { font-size:44px; line-height:1; filter: drop-shadow(0 2px 8px rgba(0,0,0,.3)); animation: wxIconPop .4s cubic-bezier(.34,1.4,.64,1) both; }
+@keyframes wxIconPop { from{transform:scale(.6);opacity:0} to{transform:scale(1);opacity:1} }
+.wx-temp { font-size:38px; font-weight:800; letter-spacing:-1.5px; color:#fff; line-height:1; text-shadow: 0 2px 8px rgba(0,0,0,.25); }
+.wx-feels { font-size:11px; color:rgba(255,255,255,.7); margin-top:2px; }
+.wx-desc { font-size:12.5px; color:rgba(255,255,255,.9); font-weight:600; margin-bottom:10px; }
+.wx-pills { display:flex; gap:6px; flex-wrap:wrap; }
+.wx-pill { font-size:10px; padding:3px 10px; border-radius:20px; background:rgba(255,255,255,.18); border:1px solid rgba(255,255,255,.25); color:#fff; backdrop-filter:blur(4px); }
+.wx-skeleton { height:13px; background:rgba(255,255,255,.15); border-radius:5px; animation:shimmer 1.4s ease-in-out infinite; margin-bottom:8px; }
+.wx-error { font-size:12px; color:rgba(255,255,255,.7); text-align:center; padding:20px 0; }
 
 /* ─── Quote widget (compacto) ──────────────────────────────── */
 .quote-body { display:flex; flex-direction:column; justify-content:center; gap:8px; height:100%; }
-.quote-mark { font-size:28px; line-height:1; color:var(--accent); opacity:.3; font-family:Georgia,serif; margin-bottom:-6px; }
-.quote-text { font-size:11.5px; font-weight:500; color:var(--text); line-height:1.6; font-style:italic; }
-.quote-author { font-size:9.5px; color:var(--muted); font-weight:600; letter-spacing:.4px; }
+.quote-mark { font-size:32px; line-height:1; color:var(--accent); opacity:.3; font-family:Georgia,serif; margin-bottom:-6px; }
+.quote-text { font-size:13px; font-weight:500; color:var(--text); line-height:1.6; font-style:italic; }
+.quote-author { font-size:11px; color:var(--muted); font-weight:600; letter-spacing:.4px; }
 .quote-skeleton { height:12px; background:var(--surface2); border-radius:5px; animation:shimmer 1.4s ease-in-out infinite; }
 @keyframes shimmer { 0%,100%{opacity:.4} 50%{opacity:1} }
 
@@ -138,18 +172,18 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
 .tr:hover { background:var(--surface2); }
 .tr-pri { width:2.5px; height:24px; border-radius:99px; background:var(--tr-color,var(--muted)); flex-shrink:0; }
 .tr-body { flex:1; min-width:0; }
-.tr-name { font-size:11.5px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-bottom:1px; }
-.tr-sub { font-size:9.5px; color:var(--muted); display:flex; align-items:center; gap:4px; }
+.tr-name { font-size:13px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-bottom:1px; }
+.tr-sub { font-size:11px; color:var(--muted); display:flex; align-items:center; gap:4px; }
 .tr-meta { display:flex; align-items:center; gap:4px; flex-shrink:0; }
-.tr-tag { font-size:9px; padding:1px 6px; border-radius:4px; font-weight:600; background:var(--surface2); color:var(--muted); }
+.tr-tag { font-size:10px; padding:2px 7px; border-radius:4px; font-weight:600; background:var(--surface2); color:var(--muted); }
 .tr-tag.overdue { background:rgba(224,84,84,.12); color:var(--danger); }
 .tr-tag.today   { background:rgba(255,145,77,.12); color:var(--accent); }
 .tr-arr { opacity:0; transition:opacity .12s; color:var(--muted); flex-shrink:0; }
 .tr:hover .tr-arr { opacity:1; }
 .tr-time-bar { position:absolute; bottom:0; left:16px; right:16px; height:2px; background:var(--border); border-radius:99px; overflow:hidden; }
 .tr-time-fill { height:100%; border-radius:99px; width:0; transition:width 1s cubic-bezier(.34,1.2,.64,1); }
-.dash-empty { padding:12px 16px; color:var(--muted); font-size:11px; display:flex; align-items:center; gap:7px; }
-.dash-sect { font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; color:var(--muted); padding:6px 16px 3px; opacity:.5; }
+.dash-empty { padding:12px 16px; color:var(--muted); font-size:12.5px; display:flex; align-items:center; gap:7px; }
+.dash-sect { font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:1.2px; color:var(--muted); padding:6px 16px 3px; opacity:.5; }
 
 /* ─── Note rows ────────────────────────────────────────────── */
 .nl { display:flex; align-items:center; gap:9px; padding:8px 16px; text-decoration:none; color:var(--text); border-bottom:1px solid var(--border); transition:background .12s; }
@@ -157,9 +191,9 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
 .nl:hover { background:var(--surface2); }
 .nl-bar { width:2.5px; height:24px; border-radius:99px; flex-shrink:0; }
 .nl-body { flex:1; min-width:0; }
-.nl-title { font-size:11.5px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-bottom:1px; }
-.nl-excerpt { font-size:9.5px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-.nl-time { font-size:9px; color:var(--muted); flex-shrink:0; }
+.nl-title { font-size:13px; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-bottom:1px; }
+.nl-excerpt { font-size:11px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.nl-time { font-size:10.5px; color:var(--muted); flex-shrink:0; }
 .nl-arr { opacity:0; transition:opacity .12s; color:var(--muted); }
 .nl:hover .nl-arr { opacity:1; }
 .nc-new { border:none; border-top:1px dashed var(--border); display:flex; align-items:center; justify-content:center; gap:6px; padding:9px 16px; color:var(--muted); font-size:11px; font-weight:500; text-decoration:none; transition:color .15s, background .15s; cursor:pointer; background:none; font-family:inherit; width:100%; }
@@ -174,20 +208,20 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
 .ring-sub { font-size:10px; color:var(--muted); margin-top:2px; }
 .sbar { margin-bottom:6px; }
 .sbar-head { display:flex; justify-content:space-between; margin-bottom:3px; }
-.sbar-lbl { font-size:10.5px; color:var(--muted); }
-.sbar-cnt { font-size:10.5px; color:var(--muted); }
+.sbar-lbl { font-size:12px; color:var(--muted); }
+.sbar-cnt { font-size:12px; color:var(--muted); }
 .sbar-track { height:2px; background:var(--surface2); border-radius:99px; overflow:hidden; }
 .sbar-fill { height:100%; border-radius:99px; width:0; transition:width 1.1s cubic-bezier(.34,1.2,.64,1); }
 
 /* ─── Mini Calendar ────────────────────────────────────────── */
 .cal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
-.cal-month-label { font-size:12px; font-weight:700; color:var(--text); }
+.cal-month-label { font-size:13.5px; font-weight:700; color:var(--text); }
 .cal-nav { display:flex; gap:3px; }
-.cal-nav-btn { width:20px; height:20px; border-radius:5px; border:1px solid var(--border); background:var(--surface2); color:var(--muted); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .12s; font-size:10px; }
+.cal-nav-btn { width:22px; height:22px; border-radius:5px; border:1px solid var(--border); background:var(--surface2); color:var(--muted); cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .12s; font-size:11px; }
 .cal-nav-btn:hover { background:var(--surface); color:var(--text); }
 .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:1px 2px; }
-.cal-dow { text-align:center; font-size:9px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); padding-bottom:3px; }
-.cal-day { height:26px; display:flex; align-items:center; justify-content:center; border-radius:5px; font-size:11px; font-weight:500; color:var(--muted); cursor:pointer; transition:background .12s, color .12s; position:relative; }
+.cal-dow { text-align:center; font-size:10px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--muted); padding-bottom:3px; }
+.cal-day { height:28px; display:flex; align-items:center; justify-content:center; border-radius:5px; font-size:12px; font-weight:500; color:var(--muted); cursor:pointer; transition:background .12s, color .12s; position:relative; }
 .cal-day:hover { background:var(--surface2); color:var(--text); }
 .cal-day.other-month { opacity:.2; pointer-events:none; }
 .cal-day.today { background:var(--accent); color:#fff; font-weight:700; }
@@ -216,7 +250,7 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
 
 /* ─── Pomodoro ─────────────────────────────────────────────── */
 .pom-mode-tabs { display:flex; gap:4px; margin-bottom:8px; }
-.pom-tab { padding:2px 8px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:9px; font-weight:600; font-family:inherit; cursor:pointer; transition:all .15s; }
+.pom-tab { padding:3px 10px; border-radius:6px; border:1px solid var(--border); background:transparent; color:var(--muted); font-size:10.5px; font-weight:600; font-family:inherit; cursor:pointer; transition:all .15s; }
 .pom-tab.active { background:rgba(255,145,77,.12); border-color:rgba(255,145,77,.3); color:var(--accent); }
 /* horizontal layout: ring left, controls right */
 .pom-body { display:flex; align-items:center; gap:12px; }
@@ -225,8 +259,8 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
 .pom-track { fill:none; stroke:var(--border); stroke-width:6; }
 .pom-fill { fill:none; stroke:var(--accent); stroke-width:6; stroke-linecap:round; stroke-dasharray:352; stroke-dashoffset:0; transition:stroke-dashoffset .5s linear, stroke .3s; }
 .pom-center { position:absolute; display:flex; flex-direction:column; align-items:center; }
-.pom-time { font-size:18px; font-weight:800; letter-spacing:-.8px; color:var(--text); line-height:1; }
-.pom-rounds { font-size:8px; color:var(--muted); margin-top:2px; }
+.pom-time { font-size:22px; font-weight:800; letter-spacing:-.8px; color:var(--text); line-height:1; }
+.pom-rounds { font-size:9.5px; color:var(--muted); margin-top:2px; }
 /* right side */
 .pom-side { display:flex; flex-direction:column; gap:8px; flex:1; }
 .pom-progress-bars { display:flex; gap:4px; }
@@ -238,13 +272,13 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
 .pom-btn-main { width:36px; height:36px; border-radius:10px; background:var(--accent); border:none; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s, transform .1s; box-shadow:0 3px 12px rgba(255,145,77,.3); }
 .pom-btn-main:hover { background:var(--accent2); }
 .pom-btn-main:active { transform:scale(.97); }
-.pom-session-label { font-size:8px; font-weight:700; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); }
-.pom-next-label { font-size:8.5px; color:var(--muted); }
+.pom-session-label { font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); }
+.pom-next-label { font-size:10px; color:var(--muted); }
 /* ─── Activity ─────────────────────────────────────────────── */
 .act-summary { display:flex; align-items:center; gap:0; margin-bottom:0; background:var(--surface2); border-radius:8px; border:1px solid var(--border); overflow:hidden; }
 .act-sum-item { flex:1; padding:10px 4px; text-align:center; }
-.act-sum-val { font-size:20px; font-weight:800; letter-spacing:-.5px; line-height:1; }
-.act-sum-lbl { font-size:9px; color:var(--muted); margin-top:3px; text-transform:uppercase; letter-spacing:.5px; }
+.act-sum-val { font-size:22px; font-weight:800; letter-spacing:-.5px; line-height:1; }
+.act-sum-lbl { font-size:10px; color:var(--muted); margin-top:3px; text-transform:uppercase; letter-spacing:.5px; }
 .act-sum-sep { width:1px; background:var(--border); align-self:stretch; }
 
 /* ─── Activity chart ───────────────────────────────────────── */
@@ -254,17 +288,17 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
 .chart-pair { width:100%; display:flex; gap:1px; align-items:flex-end; height:40px; }
 .chart-b { flex:1; border-radius:2px 2px 0 0; height:3px; transition:height .7s cubic-bezier(.34,1.2,.64,1), opacity .15s; }
 .chart-col:hover .chart-b { opacity:.65; }
-.chart-lbl { font-size:9.5px; color:var(--muted); }
+.chart-lbl { font-size:11px; color:var(--muted); }
 .chart-leg { display:flex; gap:8px; margin-top:10px; }
-.cl-item { display:flex; align-items:center; gap:4px; font-size:9.5px; color:var(--muted); }
+.cl-item { display:flex; align-items:center; gap:4px; font-size:11px; color:var(--muted); }
 .cl-dot { width:6px; height:6px; border-radius:2px; }
 .chart-tooltip { position:fixed; background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:6px 10px; font-size:11px; color:var(--text); pointer-events:none; z-index:9999; white-space:nowrap; box-shadow:0 4px 16px rgba(0,0,0,.4); opacity:0; transition:opacity .1s; }
 
 /* ─── Streak + Notes inline ────────────────────────────────── */
 .stat-mini-row { display:flex; gap:6px; margin-top:8px; }
 .stat-mini { flex:1; background:var(--surface2); border-radius:8px; padding:9px 12px; border:1px solid var(--border); }
-.stat-mini-val { font-size:18px; font-weight:800; letter-spacing:-.4px; line-height:1; }
-.stat-mini-lbl { font-size:9px; color:var(--muted); margin-top:2px; }
+.stat-mini-val { font-size:20px; font-weight:800; letter-spacing:-.4px; line-height:1; }
+.stat-mini-lbl { font-size:10.5px; color:var(--muted); margin-top:2px; }
 
 /* ─── Responsive ───────────────────────────────────────────── */
 @media (max-width: 900px) {
@@ -281,10 +315,6 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
     {{-- ── Greeting Card ──────────────────────────────────────── --}}
     <div class="dc dc-greeting">
         <div class="greet-bg" id="greet-bg"></div>
-        <div class="period-badge" id="period-badge">
-            <div class="period-dot"></div>
-            <span id="period-label">Dia</span>
-        </div>
         <div class="greet-content">
             <div class="greet-date" id="dash-date"></div>
             <div class="greet-title" id="dash-greet">{{ __('app.dash_good_morning') }} ☀️</div>
@@ -398,12 +428,18 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
     </div>
 
     {{-- ── Clima ───────────────────────────────────────────────── --}}
-    <div class="dc dc-weather dc-pad">
-        <div class="dc-label"><span>Clima</span></div>
+    <div class="dc dc-weather">
         <div id="wx-body">
-            <div class="wx-skeleton" style="width:60%"></div>
-            <div class="wx-skeleton" style="width:40%;margin-top:6px"></div>
-            <div class="wx-skeleton" style="width:80%;margin-top:10px"></div>
+            <div class="wx-card">
+                <div class="wx-cloud1"></div>
+                <div class="wx-cloud2"></div>
+                <div class="wx-content">
+                    <div class="wx-skeleton" style="width:50%;margin-bottom:10px"></div>
+                    <div class="wx-skeleton" style="width:35%;height:32px;margin-bottom:8px"></div>
+                    <div class="wx-skeleton" style="width:70%"></div>
+                    <div class="wx-skeleton" style="width:80%;margin-top:10px"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -587,19 +623,13 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
     const h = new Date().getHours();
     const greetEl = document.getElementById('dash-greet');
     const bgEl = document.getElementById('greet-bg');
-    const labelEl = document.getElementById('period-label');
-    const badgeEl = document.getElementById('period-badge');
 
     // Period detection
     let period, emoji, greet;
-    if (h >= 5 && h < 12)      { period = 'morning'; emoji = '☀️'; greet = '{{ __('app.dash_good_morning') }}'; labelEl.textContent = 'Manhã'; }
-    else if (h >= 12 && h < 18){ period = 'afternoon'; emoji = '🌤️'; greet = '{{ __('app.dash_good_afternoon') }}'; labelEl.textContent = 'Tarde'; }
-    else if (h >= 18 && h < 21){ period = 'evening'; emoji = '🌆'; greet = '{{ __('app.dash_good_evening') }}'; labelEl.textContent = 'Tarde'; }
-    else                        { period = 'night'; emoji = '🌙'; greet = '{{ __('app.dash_good_evening') }}'; labelEl.textContent = 'Noite';
-        badgeEl.style.background = 'rgba(147,100,255,.15)';
-        badgeEl.style.borderColor = 'rgba(147,100,255,.2)';
-        badgeEl.style.color = '#9364ff';
-        badgeEl.querySelector('.period-dot').style.background = '#9364ff';
+    if (h >= 5 && h < 12)      { period = 'morning'; emoji = '☀️'; greet = '{{ __('app.dash_good_morning') }}'; }
+    else if (h >= 12 && h < 18){ period = 'afternoon'; emoji = '🌤️'; greet = '{{ __('app.dash_good_afternoon') }}'; }
+    else if (h >= 18 && h < 21){ period = 'evening'; emoji = '🌆'; greet = '{{ __('app.dash_good_evening') }}'; }
+    else                        { period = 'night'; emoji = '🌙'; greet = '{{ __('app.dash_good_evening') }}';
     }
 
     greetEl.textContent = greet + ' ' + emoji;
@@ -1105,22 +1135,34 @@ document.querySelectorAll('#chart-wrap .chart-col').forEach(col => {
         if (!isDay && code === 0) icon = '🌙';
         if (!isDay && code === 1) icon = '🌙';
 
+        // Card theme class
+        let cardClass = isDay ? '' : 'night';
+        if ([61,63,65,51,53,55,80,81,82].includes(code)) cardClass = 'rain';
+        if ([95,96,99].includes(code)) cardClass = 'storm';
+        if ([45,48].includes(code)) cardClass = 'fog';
+
         el.innerHTML = `
-            <div class="wx-location">
-                <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2a4 4 0 0 1 4 4c0 3-4 8-4 8S4 9 4 6a4 4 0 0 1 4-4z"/><circle cx="8" cy="6" r="1.5"/></svg>
-                ${cityName}
-            </div>
-            <div class="wx-main">
-                <div class="wx-icon">${icon}</div>
-                <div>
-                    <div class="wx-temp">${temp}°C</div>
-                    <div class="wx-feels">Sensação ${feels}°C</div>
+            <div class="wx-card ${cardClass}">
+                <div class="wx-cloud1"></div>
+                <div class="wx-cloud2"></div>
+                <div class="wx-content">
+                    <div class="wx-location">
+                        <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2a4 4 0 0 1 4 4c0 3-4 8-4 8S4 9 4 6a4 4 0 0 1 4-4z"/><circle cx="8" cy="6" r="1.5"/></svg>
+                        ${cityName}
+                    </div>
+                    <div class="wx-main">
+                        <div class="wx-icon">${icon}</div>
+                        <div>
+                            <div class="wx-temp">${temp}°C</div>
+                            <div class="wx-feels">Sensação ${feels}°C</div>
+                        </div>
+                    </div>
+                    <div class="wx-desc">${wx.desc}</div>
+                    <div class="wx-pills">
+                        <div class="wx-pill">💧 ${humidity}%</div>
+                        <div class="wx-pill">💨 ${wind} km/h</div>
+                    </div>
                 </div>
-            </div>
-            <div class="wx-desc">${wx.desc}</div>
-            <div class="wx-pills">
-                <div class="wx-pill">💧 ${humidity}%</div>
-                <div class="wx-pill">💨 ${wind} km/h</div>
             </div>`;
     }
 
@@ -1144,7 +1186,7 @@ document.querySelectorAll('#chart-wrap .chart-col').forEach(col => {
                 renderWx(data, cityName);
             })
             .catch(() => {
-                el.innerHTML = '<div class="wx-error">🌡️<span>Não foi possível<br>carregar o clima</span></div>';
+                el.innerHTML = '<div class="wx-card"><div class="wx-content"><div class="wx-error">🌡️ Não foi possível carregar o clima</div></div></div>';
             });
     }
 

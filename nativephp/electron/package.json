@@ -1,10 +1,10 @@
 {
-    "name": "taskletto-dev",
+    "name": "nativephp",
     "version": "2.0.0",
-    "description": "Gerenciador de tarefas e notas",
+    "description": "A NativePHP Electron application",
     "main": "./out/main/index.js",
-    "author": "Lucas Bonavina",
-    "homepage": "https://github.com/lbonavina/taskletto",
+    "author": "NativePHP",
+    "homepage": "https://nativephp.com",
     "type": "module",
     "engines": {
         "node": ">=22.0.0"

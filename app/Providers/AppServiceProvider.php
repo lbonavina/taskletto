@@ -18,18 +18,26 @@ class AppServiceProvider extends ServiceProvider
         // Register the Task observer for history tracking
         Task::observe(TaskObserver::class);
 
-        // Apply saved timezone from settings — cacheado por 1h para evitar query no boot
-        $timezone = cache()->remember('app_timezone', 3600, fn () =>
-            \App\Models\AppSetting::get('timezone', config('app.timezone'))
-        );
-        if ($timezone && in_array($timezone, timezone_identifiers_list())) {
-            config(['app.timezone' => $timezone]);
-            date_default_timezone_set($timezone);
+        // Só aplica o timezone se o banco já estiver disponível (evita crash na primeira inicialização)
+        try {
+            $timezone = cache()->remember('app_timezone', 3600, fn () =>
+                \App\Models\AppSetting::get('timezone', config('app.timezone'))
+            );
+            if ($timezone && in_array($timezone, timezone_identifiers_list())) {
+                config(['app.timezone' => $timezone]);
+                date_default_timezone_set($timezone);
+            }
+        } catch (\Throwable $e) {
+            // Banco ainda não inicializado (primeira execução) — ignora silenciosamente
         }
 
         // Compartilha overdueCount com todas as views que usam o layout
         View::composer('layouts.app', function ($view) {
-            $view->with('overdueCount', Task::overdue()->count());
+            try {
+                $view->with('overdueCount', Task::overdue()->count());
+            } catch (\Throwable $e) {
+                $view->with('overdueCount', 0);
+            }
         });
     }
 }

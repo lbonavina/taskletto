@@ -9,6 +9,7 @@ use App\Http\Controllers\Web\TaskDetailController;
 use App\Http\Controllers\Web\TaskSortController;
 use App\Http\Controllers\Web\TaskWebController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Window;
 use Illuminate\Http\Request;
 
 Route::get('/', fn() => redirect()->route('dashboard'));
@@ -25,6 +26,11 @@ Route::get('/open-external', function (Request $request) {
 })->name('open-external');
 
 Route::get('/dashboard', [DashboardController::class , 'index'])->name('dashboard');
+
+Route::post('/window/hide', function () {
+    Window::hide('main');
+    return response()->noContent();
+})->middleware('web');
 
 Route::prefix('tasks')->name('tasks.')->group(function () {
     Route::get('/', [TaskWebController::class , 'index'])->name('index');
@@ -61,6 +67,7 @@ Route::prefix('settings/gist')->name('settings.gist.')->group(function () {
     Route::post('/push',        [GistSyncController::class, 'push'])->name('push');
     Route::post('/pull',        [GistSyncController::class, 'pull'])->name('pull');
     Route::post('/interval',    [GistSyncController::class, 'setInterval'])->name('interval');
+    Route::post('/list-gists',  [GistSyncController::class, 'listGists'])->name('listGists');
 });
 
 Route::get('/native/autostart/toggle', function () {

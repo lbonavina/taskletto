@@ -1124,6 +1124,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const el = document.getElementById('sidebar-updated');
                 if (el) el.textContent = data.updated_at;
                 setTimeout(() => { const s = document.getElementById('save-status'); if (s) s.style.opacity = '0'; }, 3000);
+                // Atualiza label nos atalhos se esta nota estiver fixada
+                if (window.Shortcuts) {
+                    const url = '/notes/' + noteId;
+                    const newTitle = document.getElementById('note-title')?.value.trim() || 'Nota sem título';
+                    window.Shortcuts.updateLabel(url, newTitle);
+                    // Atualiza também o data-label do botão de atalho
+                    const pinBtn = document.getElementById('btn-add-shortcut');
+                    if (pinBtn) pinBtn.dataset.label = newTitle;
+                }
             } else { setStatus('Erro ao salvar', 'var(--danger)'); }
         } catch { setStatus('Erro de conexão', 'var(--danger)'); }
         finally  { isSaving = false; }

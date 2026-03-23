@@ -2,6 +2,18 @@
 @section('page-title', __('app.nav_notes'))
 
 @section('topbar-actions')
+    <button
+        id="btn-add-shortcut"
+        class="btn btn-ghost btn-sm"
+        data-url="/notes/{{ $note->id }}"
+        data-label="{{ addslashes($note->title ?: 'Nota sem título') }}"
+        data-type="note"
+        data-emoji="📄"
+        title="Adicionar/remover dos atalhos"
+        style="gap:5px">
+        <span class="pin-star" style="font-size:14px;line-height:1">☆</span>
+        <span class="pin-label">Adicionar atalho</span>
+    </button>
     <div style="display:flex;align-items:center;gap:8px">
         <span id="save-status" style="font-size:12px;color:var(--muted);font-family:'Montserrat',sans-serif;transition:opacity .3s"></span>
         <button id="btn-pin" class="btn btn-ghost btn-sm" title="{{ $note->pinned ? __('app.note_unpin_title') : __('app.note_pin_title') }}">
@@ -1208,6 +1220,44 @@ html[data-theme=light] .ttb-more-menu { background: #fff; border-color: #dddde8;
         <button class="btn btn-primary btn-sm" id="link-insert-btn">Inserir link</button>
     </div>
 </div>
+@endpush
+
+@push('scripts')
+<script>
+// ── Pin button logic ──────────────────────────────────────────────────────
+(function() {
+    const btn = document.getElementById('btn-add-shortcut');
+    if (!btn) return;
+
+    function sync() {
+        if (!window.Shortcuts) return;
+        const pinned = window.Shortcuts.has(btn.dataset.url);
+        btn.classList.toggle('pinned', pinned);
+        btn.querySelector('.pin-star').textContent = pinned ? '★' : '☆';
+        btn.querySelector('.pin-label').textContent = pinned ? 'Nos atalhos' : 'Adicionar atalho';
+        btn.style.color = pinned ? 'var(--accent)' : '';
+        btn.style.borderColor = pinned ? 'rgba(255,145,77,.35)' : '';
+    }
+
+    btn.addEventListener('click', function() {
+        if (!window.Shortcuts) return;
+        const item = {
+            id:    btn.dataset.url,
+            type:  btn.dataset.type,
+            label: btn.dataset.label,
+            url:   btn.dataset.url,
+            emoji: btn.dataset.emoji,
+        };
+        const pinned = window.Shortcuts.toggle(item);
+        sync();
+        toast(pinned ? 'Atalho adicionado!' : 'Atalho removido', pinned ? 'success' : 'info', 2200);
+        document.dispatchEvent(new CustomEvent('shortcut-changed', { detail: { url: item.url, pinned } }));
+    });
+
+    document.addEventListener('shortcut-changed', sync);
+    const t = setInterval(() => { if (window.Shortcuts) { sync(); clearInterval(t); } }, 50);
+})();
+</script>
 @endpush
 
 @push('scripts')

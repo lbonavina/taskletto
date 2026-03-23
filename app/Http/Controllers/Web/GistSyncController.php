@@ -80,4 +80,33 @@ class GistSyncController extends Controller
         AppSetting::set('gist_sync_interval', $request->interval);
         return response()->json(['ok' => true]);
     }
+
+    // ── List gists from GitHub account (for picker UI) ────────────────────────
+
+    public function listGists(Request $request): JsonResponse
+    {
+        $request->validate(['token' => ['required', 'string', 'min:10', 'max:200']]);
+
+        $response = \Illuminate\Support\Facades\Http::withToken(trim($request->token))
+            ->withHeaders(['Accept' => 'application/vnd.github+json', 'User-Agent' => 'Taskletto-App'])
+            ->timeout(15)
+            ->get('https://api.github.com/gists?per_page=50');
+
+        if (!$response->successful()) {
+            $msg = $response->status() === 401
+                ? 'Token inválido ou sem permissão. Verifique o escopo "gist".'
+                : ($response->json('message') ?? 'Erro ao acessar o GitHub.');
+            return response()->json(['ok' => false, 'message' => $msg]);
+        }
+
+        $gists = collect($response->json())->map(fn($g) => [
+            'id'           => $g['id'],
+            'description'  => $g['description'] ?: '(sem descrição)',
+            'files'        => array_keys($g['files'] ?? []),
+            'updated_at'   => $g['updated_at'],
+            'is_taskletto' => isset($g['files']['taskletto-sync.json']),
+        ])->sortByDesc('is_taskletto')->values();
+
+        return response()->json(['ok' => true, 'gists' => $gists]);
+    }
 }

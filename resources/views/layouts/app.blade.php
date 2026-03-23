@@ -266,22 +266,22 @@
         }
 
         .nav-label {
-            font-size: 9.5px;
+            font-size: 11px;
             font-weight: 700;
-            letter-spacing: 1.4px;
+            letter-spacing: 1.2px;
             text-transform: uppercase;
             color: var(--muted);
-            padding: 6px 16px 3px;
+            padding: 8px 16px 4px;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
             gap: 9px;
-            padding: 7px 16px;
+            padding: 8px 16px;
             color: var(--muted);
             text-decoration: none;
-            font-size: 12px;
+            font-size: 13.5px;
             font-weight: 400;
             transition: color .2s ease, background .2s ease, padding-left .2s cubic-bezier(.25, .46, .45, .94);
             border-left: 2px solid transparent;
@@ -303,8 +303,8 @@
         }
 
         .nav-icon {
-            width: 16px;
-            height: 16px;
+            width: 17px;
+            height: 17px;
             flex-shrink: 0;
             opacity: .8;
             transition: opacity .15s;
@@ -319,9 +319,9 @@
             margin-left: auto;
             background: var(--danger);
             color: #fff;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 700;
-            padding: 2px 7px;
+            padding: 2px 8px;
             border-radius: 20px;
             font-family: 'Montserrat', sans-serif;
             letter-spacing: 0.2px;
@@ -358,18 +358,18 @@
 
         .sidebar-version-name {
             font-family: 'Montserrat', sans-serif;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--text);
             letter-spacing: 0px;
         }
 
         .sidebar-version-badge {
-            font-size: 9.5px;
+            font-size: 11px;
             font-weight: 700;
             font-family: 'Montserrat', sans-serif;
             letter-spacing: 0.3px;
-            padding: 1px 6px;
+            padding: 2px 8px;
             border-radius: 20px;
             background: rgba(255, 145, 77, .12);
             color: var(--accent);
@@ -381,13 +381,13 @@
             align-items: center;
             gap: 8px;
             width: 100%;
-            padding: 6px 8px;
+            padding: 7px 8px;
             border-radius: 7px;
             border: none;
             background: none;
             cursor: pointer;
             color: var(--muted);
-            font-size: 11.5px;
+            font-size: 13px;
             font-weight: 500;
             font-family: inherit;
             text-align: left;
@@ -423,20 +423,20 @@
         }
 
         .sidebar-footer-btn .sfb-hint {
-            font-size: 10px;
+            font-size: 11.5px;
             font-family: 'Montserrat', sans-serif;
             opacity: .35;
             letter-spacing: .3px;
         }
 
         #theme-toggle .sfb-icon {
-            font-size: 14px;
+            font-size: 15px;
         }
 
         /* Creator section — very subtle */
         .sidebar-creator-btn {
             opacity: .4;
-            font-size: 11px;
+            font-size: 12px;
             padding: 4px 8px;
             transition: background .12s, color .12s, opacity .15s;
         }
@@ -792,6 +792,31 @@
             align-items: center;
         }
 
+        /* ── Botão fechar para bandeja ── */
+        .btn-tray-close {
+            width: 28px;
+            height: 28px;
+            border-radius: 7px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background .12s, color .12s, border-color .12s;
+            flex-shrink: 0;
+        }
+        .btn-tray-close:hover {
+            background: rgba(224, 84, 84, .12);
+            border-color: rgba(224, 84, 84, .25);
+            color: var(--danger);
+        }
+        .btn-tray-close:active {
+            background: rgba(224, 84, 84, .22);
+            transform: scale(.93);
+        }
+
         .page-content {
             flex: 1;
             overflow-y: auto;
@@ -926,7 +951,7 @@
 
         /* ── Section title (replaces inline font-size:11px uppercase labels) ── */
         .section-title {
-            font-size: 10px;
+            font-size: 11.5px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -1019,9 +1044,9 @@
             display: inline-flex;
             align-items: center;
             gap: 3px;
-            font-size: 9.5px;
+            font-size: 11px;
             font-weight: 600;
-            padding: 1px 6px;
+            padding: 2px 7px;
             border-radius: var(--radius-xs);
             font-family: 'Montserrat', sans-serif;
             vertical-align: middle;
@@ -1076,7 +1101,7 @@
         }
 
         .stat-label {
-            font-size: 9.5px;
+            font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -1105,7 +1130,7 @@
             gap: 4px;
             padding: 2px 9px;
             border-radius: 20px;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 600;
             font-family: 'Montserrat', sans-serif;
             letter-spacing: 0.15px;
@@ -1170,7 +1195,7 @@
 
         th {
             text-align: left;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: .7px;
@@ -1183,7 +1208,7 @@
             padding: 11px 14px;
             border-bottom: 1px solid var(--border);
             color: var(--text);
-            font-size: 12.5px;
+            font-size: 13px;
             vertical-align: middle;
             transition: background .1s;
         }
@@ -1223,7 +1248,7 @@
 
         label {
             display: block;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
             letter-spacing: .6px;
             text-transform: uppercase;
@@ -1248,7 +1273,7 @@
             border-radius: 10px;
             color: var(--text);
             padding: 10px 14px;
-            font-size: 12.5px;
+            font-size: 13px;
             font-family: inherit;
             line-height: 1.5;
             transition: border-color .15s, box-shadow .15s, background .15s;
@@ -1305,7 +1330,7 @@
             border-radius: 10px;
             color: var(--text);
             padding: 10px 36px 10px 14px;
-            font-size: 12.5px;
+            font-size: 13px;
             font-family: inherit;
             line-height: 1.5;
             cursor: pointer;
@@ -1396,7 +1421,7 @@
             gap: 9px;
             padding: 9px 14px;
             cursor: pointer;
-            font-size: 12.5px;
+            font-size: 13px;
             transition: background .1s;
             white-space: nowrap;
         }
@@ -1917,6 +1942,108 @@
             }
         }
     </style>
+    <style>
+
+
+        /* ── Sidebar Shortcuts ── */
+        .shortcut-item {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            padding: 0 8px 0 16px;
+            height: 32px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 400;
+            transition: color .15s, background .15s;
+            border-left: 2px solid transparent;
+            position: relative;
+        }
+        .shortcut-item:hover {
+            color: var(--text);
+            background: var(--surface2);
+        }
+        .shortcut-item.active {
+            color: var(--accent);
+            border-left-color: var(--accent);
+            background: rgba(255,145,77,.07);
+            font-weight: 600;
+        }
+        .shortcut-item-icon { font-size: 13px; flex-shrink: 0; margin-right: 8px; line-height: 1; }
+        .shortcut-item-label {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 12.5px;
+        }
+        .shortcut-item-type {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+            opacity: .45;
+            margin-right: 4px;
+            flex-shrink: 0;
+        }
+        .shortcut-remove {
+            opacity: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            border: none;
+            background: none;
+            color: var(--muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            flex-shrink: 0;
+            transition: opacity .12s, background .12s, color .12s;
+            padding: 0;
+        }
+        .shortcut-item:hover .shortcut-remove { opacity: 1; }
+        .shortcut-remove:hover { background: rgba(224,84,84,.18); color: var(--danger); }
+        #shortcuts-label { transition: opacity .2s; }
+
+
+        /* ── Inline shortcut button (lista de tasks e cards de notas) ── */
+        .shortcut-inline-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+            color: var(--muted);
+            opacity: 0;
+            transition: opacity .15s, color .15s, transform .15s;
+            padding: 3px 5px;
+            border-radius: 5px;
+        }
+        tr:hover .shortcut-inline-btn,
+        .note-card:hover .note-shortcut-btn { opacity: 1; }
+        .shortcut-inline-btn.pinned { opacity: 1 !important; color: var(--accent); }
+        .shortcut-inline-btn:hover { color: var(--accent); transform: scale(1.2); }
+
+        /* Botão flutuante sobre o card de nota */
+        .note-shortcut-btn {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+            z-index: 2;
+            font-size: 15px;
+            background: var(--surface);
+            border: 1px solid var(--border) !important;
+            border-radius: 6px;
+            padding: 2px 6px;
+            box-shadow: 0 2px 6px rgba(0,0,0,.2);
+        }
+        .note-shortcut-btn.pinned { color: var(--accent); opacity: 1 !important; }
+
+
+    </style>
     @stack('styles')
     <script>
         // Apply theme before paint (no flash)
@@ -1990,6 +2117,14 @@
                     </svg>
                     {{ __('app.nav_notes') }}
                 </a>
+                {{-- ── Atalhos ── --}}
+                <div class="nav-label" style="margin-top:4px" id="shortcuts-label">Atalhos</div>
+                <div id="sidebar-shortcuts-list">
+                    <div id="shortcuts-empty" style="display:none;padding:5px 16px 8px;font-size:11.5px;color:var(--muted);line-height:1.5;opacity:.7">
+                        Nenhum atalho ainda.<br>
+                        <span style="opacity:.7">Abra uma tarefa ou nota e clique em ⭐</span>
+                    </div>
+                </div>
                 <div class="nav-label" style="margin-top:4px">{{ __('app.nav_system') }}</div>
                 <a href="/settings" class="nav-item {{ request()->is('settings') ? 'active' : '' }}">
                     <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -2081,6 +2216,16 @@
             <div class="topbar">
                 <h1 class="topbar-title">@yield('page-title', 'Dashboard')</h1>
                 <div class="topbar-actions">@yield('topbar-actions')</div>
+                @if(app()->runningInConsole() === false && class_exists(\Native\Desktop\Facades\Window::class))
+                <button
+                    class="btn-tray-close"
+                    onclick="closeToTray()"
+                    title="Minimizar para bandeja">
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                        <path d="M1 1l10 10M11 1L1 11"/>
+                    </svg>
+                </button>
+                @endif
             </div>
             <div class="page-content">
                 @if(session('success'))
@@ -2176,6 +2321,189 @@
     @stack('modals')
 
     @stack('scripts')
+
+    <script>
+    // ── Inline shortcut buttons (listas) ─────────────────────────────────────
+    (function() {
+        // Exposto globalmente para rows dinâmicas chamarem após inserção
+        window.syncShortcutBtns = function() {
+            if (!window.Shortcuts) return;
+            document.querySelectorAll('.shortcut-inline-btn').forEach(btn => {
+                const pinned = window.Shortcuts.has(btn.dataset.url);
+                btn.classList.toggle('pinned', pinned);
+                btn.textContent = pinned ? '★' : '☆';
+                btn.title = pinned ? 'Remover dos atalhos' : 'Adicionar aos atalhos';
+            });
+        };
+
+        // Usa fase de CAPTURA (true) para rodar antes de qualquer stopPropagation nos filhos
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.shortcut-inline-btn');
+            if (!btn || !window.Shortcuts) return;
+            e.stopPropagation();
+            e.preventDefault(); // evita navegação quando o botão está dentro de <a>
+            const item = {
+                id:    btn.dataset.url,
+                type:  btn.dataset.type,
+                label: btn.dataset.label,
+                url:   btn.dataset.url,
+                emoji: btn.dataset.emoji,
+            };
+            const pinned = window.Shortcuts.toggle(item);
+            window.syncShortcutBtns();
+            toast(pinned ? 'Atalho adicionado!' : 'Atalho removido', pinned ? 'success' : 'info', 2200);
+        }, true);
+
+        document.addEventListener('shortcut-changed', window.syncShortcutBtns);
+        // Roda no DOMContentLoaded (botões já existem) e aguarda Shortcuts estar pronto
+        function trySync() {
+            if (window.Shortcuts) { window.syncShortcutBtns(); }
+            else { setTimeout(trySync, 30); }
+        }
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', trySync);
+        } else {
+            trySync();
+        }
+    })();
+    </script>
+
+    <script>
+    // ── Sidebar Shortcuts (localStorage) ─────────────────────────────────────────
+    (function() {
+        const KEY = 'taskletto-shortcuts-v1';
+        const MAX = 8;
+
+        function load() {
+            try { return JSON.parse(localStorage.getItem(KEY) || '[]'); }
+            catch { return []; }
+        }
+        function save(list) {
+            localStorage.setItem(KEY, JSON.stringify(list));
+        }
+
+        window.Shortcuts = {
+            list: load,
+
+            add(item) {
+                // item: { id, type, label, url, emoji }
+                let list = load();
+                if (list.find(s => s.url === item.url)) return false; // já existe
+                if (list.length >= MAX) list = list.slice(1); // remove o mais antigo
+                list.push(item);
+                save(list);
+                render();
+                return true;
+            },
+
+            remove(url) {
+                save(load().filter(s => s.url !== url));
+                render();
+            },
+
+            has(url) {
+                return !!load().find(s => s.url === url);
+            },
+
+            toggle(item) {
+                if (this.has(item.url)) { this.remove(item.url); return false; }
+                else { this.add(item); return true; }
+            },
+
+            updateLabel(url, newLabel) {
+                const list = load();
+                const entry = list.find(s => s.url === url);
+                if (!entry) return; // não está nos atalhos, nada a fazer
+                entry.label = newLabel;
+                save(list);
+                render();
+            }
+        };
+
+        function render() {
+            const list = load();
+            const container = document.getElementById('sidebar-shortcuts-list');
+            const emptyEl   = document.getElementById('shortcuts-empty');
+            const label     = document.getElementById('shortcuts-label');
+            if (!container) return;
+
+            // Remove itens antigos (manter o empty placeholder)
+            container.querySelectorAll('.shortcut-item').forEach(el => el.remove());
+
+            if (list.length === 0) {
+                if (emptyEl) emptyEl.style.display = '';
+                if (label) label.style.opacity = '.55';
+            } else {
+                if (emptyEl) emptyEl.style.display = 'none';
+                if (label) label.style.opacity = '1';
+
+                const currentUrl = window.location.pathname;
+
+                list.forEach(s => {
+                    const a = document.createElement('a');
+                    a.href = s.url;
+                    a.className = 'shortcut-item' + (currentUrl === s.url ? ' active' : '');
+                    a.title = s.label;
+
+                    const iconEl = document.createElement('span');
+                    iconEl.className = 'shortcut-item-icon';
+                    iconEl.textContent = s.emoji || (s.type === 'task' ? '✓' : '📄');
+
+                    const labelEl = document.createElement('span');
+                    labelEl.className = 'shortcut-item-label';
+                    labelEl.textContent = s.label;
+
+                    const typeEl = document.createElement('span');
+                    typeEl.className = 'shortcut-item-type';
+                    typeEl.textContent = s.type === 'task' ? 'T' : 'N';
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'shortcut-remove';
+                    removeBtn.title = 'Remover atalho';
+                    removeBtn.innerHTML = '×';
+                    removeBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        window.Shortcuts.remove(s.url);
+                        // Notifica botões da página atual
+                        document.dispatchEvent(new CustomEvent('shortcut-changed', { detail: { url: s.url, pinned: false } }));
+                    });
+
+                    a.appendChild(iconEl);
+                    a.appendChild(labelEl);
+                    a.appendChild(typeEl);
+                    a.appendChild(removeBtn);
+
+                    // inserir antes do emptyEl
+                    if (emptyEl) container.insertBefore(a, emptyEl);
+                    else container.appendChild(a);
+                });
+            }
+
+            // Atualiza botão da página atual se existir
+            updatePinBtn();
+        }
+
+        function updatePinBtn() {
+            const btn = document.getElementById('btn-add-shortcut');
+            if (!btn) return;
+            const url = btn.dataset.url;
+            const pinned = window.Shortcuts.has(url);
+            btn.classList.toggle('pinned', pinned);
+            const star = btn.querySelector('.pin-star');
+            if (star) star.textContent = pinned ? '★' : '☆';
+            const lbl = btn.querySelector('.pin-label');
+            if (lbl) lbl.textContent = pinned ? 'Nos atalhos' : 'Adicionar atalho';
+        }
+
+        // Escuta mudanças disparadas por outras partes
+        document.addEventListener('shortcut-changed', updatePinBtn);
+
+        // Render inicial
+        render();
+    })();
+    </script>
+
 
     <script>
         /* ── Global Custom Select ─────────────────────────────────────────────────── */
@@ -2625,13 +2953,24 @@
         })();
     </script>
     <script>
+    // ── Minimizar para bandeja (botão X customizado) ─────────────────────────────
+    function closeToTray() {
+        fetch('/window/hide', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+            },
+            keepalive: true
+        });
+    }
+
+    // Fallback: Alt+F4 ou outros eventos de fechamento forçado
     if (window.__nativephp_electron) {
-        window.addEventListener('beforeunload', function (e) {
-            e.preventDefault();
-                e.returnValue = '';
-                window.__nativephp_electron.hideWindow();
-            });
-        }
+        window.addEventListener('beforeunload', function () {
+            window.__nativephp_electron.hideWindow();
+        });
+    }
     </script>
 </body>
 

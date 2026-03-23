@@ -3,6 +3,18 @@
 @section('page-title', __('app.task_detail_title'))
 
 @section('topbar-actions')
+    <button
+        id="btn-add-shortcut"
+        class="btn btn-ghost btn-sm"
+        data-url="/tasks/{{ $task->id }}"
+        data-label="{{ addslashes($task->title) }}"
+        data-type="task"
+        data-emoji="📋"
+        title="Adicionar/remover dos atalhos"
+        style="gap:5px">
+        <span class="pin-star" style="font-size:14px;line-height:1">☆</span>
+        <span class="pin-label">Adicionar atalho</span>
+    </button>
     <a href="/tasks" class="btn btn-ghost btn-sm">{{ __('app.task_back') }}</a>
 @endsection
 
@@ -695,6 +707,44 @@
     @endif
 
     @push('scripts')
+    <script>
+    // ── Pin button logic ──────────────────────────────────────────────────────
+    (function() {
+        const btn = document.getElementById('btn-add-shortcut');
+        if (!btn) return;
+
+        function sync() {
+            if (!window.Shortcuts) return;
+            const pinned = window.Shortcuts.has(btn.dataset.url);
+            btn.classList.toggle('pinned', pinned);
+            btn.querySelector('.pin-star').textContent = pinned ? '★' : '☆';
+            btn.querySelector('.pin-label').textContent = pinned ? 'Nos atalhos' : 'Adicionar atalho';
+            btn.style.color = pinned ? 'var(--accent)' : '';
+            btn.style.borderColor = pinned ? 'rgba(255,145,77,.35)' : '';
+        }
+
+        btn.addEventListener('click', function() {
+            if (!window.Shortcuts) return;
+            const item = {
+                id:    btn.dataset.url,
+                type:  btn.dataset.type,
+                label: btn.dataset.label,
+                url:   btn.dataset.url,
+                emoji: btn.dataset.emoji,
+            };
+            const pinned = window.Shortcuts.toggle(item);
+            sync();
+            toast(pinned ? 'Atalho adicionado!' : 'Atalho removido', pinned ? 'success' : 'info', 2200);
+            document.dispatchEvent(new CustomEvent('shortcut-changed', { detail: { url: item.url, pinned } }));
+        });
+
+        document.addEventListener('shortcut-changed', sync);
+        // Aguarda o Shortcuts ser inicializado
+        const t = setInterval(() => { if (window.Shortcuts) { sync(); clearInterval(t); } }, 50);
+    })();
+    </script>
+    @endpush
+    @push('scripts')
         <script type="module">
             import { Editor } from 'https://esm.sh/@tiptap/core@3';
             import StarterKit from 'https://esm.sh/@tiptap/starter-kit@3';
@@ -830,6 +880,14 @@
                     const data = await res.json();
                     if (res.ok) {
                         toast('{{ __('app.task_toast_saved') }}', 'success');
+                        // Atualiza label nos atalhos se esta task estiver fixada
+                        if (window.Shortcuts) {
+                            const url = '/tasks/' + taskId;
+                            const newTitle = document.getElementById('inline-title')?.textContent.trim() || '';
+                            if (newTitle) window.Shortcuts.updateLabel(url, newTitle);
+                            const pinBtn = document.getElementById('btn-add-shortcut');
+                            if (pinBtn && newTitle) pinBtn.dataset.label = newTitle;
+                        }
                         setTimeout(() => location.reload(), 700);
                     } else {
                         const msgs = data.errors ? Object.values(data.errors).flat().join(' ') : (data.message||'Erro.');
