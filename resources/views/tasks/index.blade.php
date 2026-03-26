@@ -37,7 +37,7 @@
         {{ __('app.tasks_in_progress_filter') }}
     </a>
     <a href="/tasks?quick=recurring" class="qf {{ request('quick') === 'recurring' ? 'active' : '' }}" style="color:var(--purple);border-color:var(--purple-border);background:var(--purple-bg)">
-        ↻ Recorrentes
+        {{ __('app.filter_recurring') }}
     </a>
     <div style="flex:1"></div>
 </div>
@@ -219,7 +219,7 @@
                             <div class="quick-add-row" id="quick-add-wrap">
                                 <button class="quick-add-trigger" id="quick-add-trigger" title="Adicionar tarefa rápida (Q)">
                                     <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v12M2 8h12"/></svg>
-                                    <span>Adicionar tarefa</span>
+                                    <span>{{ __('app.tasks_add_quick') }}</span>
                                 </button>
                                 <div class="quick-add-form" id="quick-add-form" style="display:none">
                                     <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="2" style="flex-shrink:0"><path d="M8 2v12M2 8h12"/></svg>
@@ -548,7 +548,7 @@ async function applyInline(field, taskId, val, btn) {
     if (res.ok) {
         toast(field === 'status' ? '{{ __('app.tasks_inline_status') }}' : '{{ __('app.tasks_inline_priority') }}', 'success');
         setTimeout(() => location.reload(), 500);
-    } else { toast('Erro ao atualizar.', 'error'); }
+    } else { toast('{{ __("app.task_err_update") }}', 'error'); }
 }
 
 function closePopup() { popup.style.display = 'none'; popupOpen = false; }
@@ -627,6 +627,9 @@ document.getElementById('bulk-delete')?.addEventListener('click', () => {
         `{{ __('app.tasks_delete_confirm', ['n' => '']) }}`.replace(':n', selected.size),
         async () => {
             await Promise.all([...selected].map(id => api('DELETE', `/api/v1/tasks/${id}`)));
+            if (window.Shortcuts) {
+                [...selected].forEach(id => window.Shortcuts.remove(`/tasks/${id}`));
+            }
             toast(`${selected.size} {{ __('app.tasks_deleted_toast') }}`, 'info');
             setTimeout(() => location.reload(), 500);
         }
@@ -884,7 +887,7 @@ document.getElementById('btn-empty-new')?.addEventListener('click', () => {
                 submit.classList.remove('visible');
                 input.focus();
             } else {
-                toast('Erro ao criar tarefa.', 'error');
+                toast('{{ __("app.task_err_create") }}', 'error');
                 submit.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 8l4 4 8-8"/></svg>';
                 submit.disabled  = false;
             }

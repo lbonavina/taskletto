@@ -3,23 +3,13 @@
 namespace App\Providers;
 
 use Native\Desktop\Facades\Window;
-use Native\Desktop\Facades\MenuBar;
 use Native\Desktop\Contracts\ProvidesPhpIni;
-use Native\Desktop\Events\Windows\WindowMinimized;
-use Native\Desktop\Events\MenuBar\MenuBarClicked;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
 
 class NativeAppServiceProvider implements ProvidesPhpIni
 {
     public function boot(): void
     {
-        try {
-            Artisan::call('migrate', ['--force' => true]);
-        } catch (\Throwable $e) {
-            Log::error('[NativePHP] migrate falhou no boot: ' . $e->getMessage());
-        }
 
         Window::open('main')
             ->title('Taskletto - Gerenciador de Tarefas e Notas')
@@ -28,6 +18,7 @@ class NativeAppServiceProvider implements ProvidesPhpIni
             ->minWidth(960)
             ->minHeight(600)
             ->hideMenu()
+            ->rememberState()
             ->closable(true)
             ->showDevTools(false);
     }

@@ -440,7 +440,7 @@ async function handleImport(input) {
         const res = await fetch('{{ route('settings.import') }}', { method: 'POST', body: fd });
         const data = await res.json();
         const type = res.ok ? 'success' : 'danger';
-        alertEl.innerHTML = `<div class="alert-inline ${type}"><span>${data.message || (res.ok ? 'Importado!' : 'Erro ao importar.')}</span></div>`;
+        alertEl.innerHTML = `<div class="alert-inline ${type}"><span>${data.message || (res.ok ? '{{ __("app.settings_import_ok") }}' : '{{ __("app.settings_err_import") }}')}</span></div>`;
         alertEl.style.display = 'block';
     } catch(e) {
         alertEl.innerHTML = `<div class="alert-inline danger"><span>Erro de conexão.</span></div>`;

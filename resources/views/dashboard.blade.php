@@ -333,8 +333,8 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
     {{-- ── Tasks ───────────────────────────────────────────────── --}}
     <div class="dc dc-tasks">
         <div class="dc-label">
-            <span>Tarefas @if($todayTasks->isNotEmpty() || $urgentTasks->isNotEmpty())<span style="background:rgba(255,145,77,.12);color:var(--accent);padding:1px 8px;border-radius:20px;font-size:9px;font-weight:700">{{ $todayTasks->count() + $urgentTasks->count() }}</span>@endif</span>
-            <a href="/tasks">ver todas →</a>
+            <span>{{ __('app.dash_tasks_label') }} @if($todayTasks->isNotEmpty() || $urgentTasks->isNotEmpty())<span style="background:rgba(255,145,77,.12);color:var(--accent);padding:1px 8px;border-radius:20px;font-size:9px;font-weight:700">{{ $todayTasks->count() + $urgentTasks->count() }}</span>@endif</span>
+            <a href="/tasks">{{ __('app.dash_see_all_arrow') }}</a>
         </div>
         @if($todayTasks->isNotEmpty())
             <div class="dash-sect">Hoje</div>
@@ -402,7 +402,7 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
     </script>
     <div class="dc dc-calendar dc-pad">
         <div class="dc-label">
-            <span>Calendário</span>
+            <span>{{ __('app.dash_calendar') }}</span>
             <span id="cal-holiday-name" style="font-size:8.5px;color:var(--accent);text-transform:none;letter-spacing:0;font-weight:500;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
         </div>
         <div class="cal-header">
@@ -467,12 +467,12 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
 
     {{-- ── Pomodoro Timer ─────────────────────────────────────── --}}
     <div class="dc dc-pomodoro dc-pad">
-        <div class="dc-label"><span>Pomodoro</span><span class="pom-session-label" id="pom-session-label">Sessão de foco</span></div>
+        <div class="dc-label"><span>{{ __('app.dash_pomodoro') }}</span><span class="pom-session-label" id="pom-session-label">{{ __('app.dash_pom_session') }}</span></div>
         {{-- Tabs --}}
         <div class="pom-mode-tabs">
-            <button class="pom-tab active" data-mode="focus" data-dur="1500">Foco</button>
-            <button class="pom-tab" data-mode="short" data-dur="300">Pausa curta</button>
-            <button class="pom-tab" data-mode="long" data-dur="900">Pausa longa</button>
+            <button class="pom-tab active" data-mode="focus" data-dur="1500">{{ __('app.dash_pom_focus') }}</button>
+            <button class="pom-tab" data-mode="short" data-dur="300">{{ __('app.dash_pom_short') }}</button>
+            <button class="pom-tab" data-mode="long" data-dur="900">{{ __('app.dash_pom_long') }}</button>
         </div>
         {{-- Ring + controls side by side --}}
         <div class="pom-body">
@@ -502,14 +502,14 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
                         <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3l7 5-7 5zM13 3v10"/></svg>
                     </button>
                 </div>
-                <div class="pom-next-label" id="pom-next-label">Próxima: pausa curta</div>
+                <div class="pom-next-label" id="pom-next-label">{{ __('app.dash_pom_next_short') }}</div>
             </div>
         </div>
     </div>
 
     {{-- ── Quote do dia ────────────────────────────────────────── --}}
     <div class="dc dc-quote dc-pad">
-        <div class="dc-label"><span>Frase do dia</span></div>
+        <div class="dc-label"><span>{{ __('app.dash_quote') }}</span></div>
         <div class="quote-body" id="quote-body">
             <div class="quote-skeleton" style="width:90%"></div>
             <div class="quote-skeleton" style="width:70%;margin-top:4px"></div>
@@ -519,7 +519,7 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
 
     {{-- ── Progress + KPIs ──────────────────────────────────────── --}}
     <div class="dc dc-progress dc-pad">
-        <div class="dc-label"><span>Resumo</span><span style="color:var(--accent);font-size:11px;font-weight:700;text-transform:none;letter-spacing:0">{{ $completionRate }}% concluído</span></div>
+        <div class="dc-label"><span>{{ __('app.dash_summary') }}</span><span style="color:var(--accent);font-size:11px;font-weight:700;text-transform:none;letter-spacing:0">{{ $completionRate }}% {{ __('app.dash_completed_pct') }}</span></div>
         {{-- KPIs --}}
         <div class="progress-kpis">
             <div class="kpi-card">
@@ -571,7 +571,7 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
         $maxBar = collect($days)->flatMap(fn($d)=>[$d['created'],$d['completed']])->max() ?: 1;
     @endphp
     <div class="dc dc-activity dc-pad">
-        <div class="dc-label"><span>{{ __('app.dash_activity') }}</span><span style="font-size:8.5px;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400">Últimos 7 dias</span></div>
+        <div class="dc-label"><span>{{ __('app.dash_activity') }}</span><span style="font-size:8.5px;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400">{{ __('app.dash_last_7_days') }}</span></div>
         {{-- Summary row --}}
         <div class="act-summary">
             <div class="act-sum-item">
@@ -586,7 +586,7 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
             <div class="act-sum-sep"></div>
             <div class="act-sum-item">
                 <div class="act-sum-val" style="color:var(--accent)">{{ $totalCreated > 0 ? round($totalCompleted/$totalCreated*100) : 0 }}%</div>
-                <div class="act-sum-lbl">Taxa</div>
+                <div class="act-sum-lbl">{{ __('app.dash_rate') }}</div>
             </div>
         </div>
         {{-- Bar chart --}}
@@ -942,8 +942,8 @@ document.querySelectorAll('#chart-wrap .chart-col').forEach(col => {
     let interval = null;
     let rounds = 0;
     let mode = 'focus';
-    const modeLabels  = { focus: 'Sessão de foco', short: 'Pausa curta',  long: 'Pausa longa' };
-    const nextLabels  = { focus: 'Próxima: pausa curta', short: 'Próxima: foco', long: 'Próxima: foco' };
+    const modeLabels  = { focus: '{{ __('app.dash_pom_session') }}', short: '{{ __('app.dash_pom_short') }}',  long: '{{ __('app.dash_pom_long') }}' };
+    const nextLabels  = { focus: '{{ __('app.dash_pom_next_short') }}', short: '{{ __('app.dash_pom_next_focus') }}', long: '{{ __('app.dash_pom_next_focus') }}' };
     const dots = document.querySelectorAll('.pom-dot');
     const nextLbl = document.getElementById('pom-next-label');
 
@@ -955,10 +955,10 @@ document.querySelectorAll('#chart-wrap .chart-col').forEach(col => {
     }
     function updateNextLabel() {
         if (mode === 'focus') {
-            const nextBreak = rounds % 4 === 3 ? 'Próxima: pausa longa' : 'Próxima: pausa curta';
+            const nextBreak = rounds % 4 === 3 ? '{{ __('app.dash_pom_next_long') }}' : '{{ __('app.dash_pom_next_short') }}';
             if (nextLbl) nextLbl.textContent = nextBreak;
         } else {
-            if (nextLbl) nextLbl.textContent = 'Próxima: foco';
+            if (nextLbl) nextLbl.textContent = '{{ __('app.dash_pom_next_focus') }}';
         }
     }
 
@@ -995,7 +995,7 @@ document.querySelectorAll('#chart-wrap .chart-col').forEach(col => {
         const wasFocus = mode === 'focus';
         if (wasFocus) rounds++;
         if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification('Taskletto ⏱', { body: wasFocus ? 'Sessão concluída! Hora de pausar.' : 'Pausa finalizada. Bora focar!' });
+            new Notification('Taskletto ⏱', { body: wasFocus ? '{{ __('app.dash_pom_done') }}' : '{{ __('app.dash_pom_break_done') }}' });
         }
         // Auto-advance to next mode
         let nextMode, nextDur;

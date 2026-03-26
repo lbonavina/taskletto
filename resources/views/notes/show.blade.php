@@ -985,7 +985,7 @@ html[data-theme=light] .ttb-more-menu { background: #fff; border-color: #dddde8;
         </div>
 
         {{-- Tags --}}
-        <div class="note-sidebar-section">🏷 Tags</div>
+        <div class="note-sidebar-section">{{ __('app.note_section_tags') }}</div>
         <div class="note-tags-section" style="position:relative">
             {{-- Chips --}}
             <div class="note-tags-chips" id="tags-chips-wrap">
@@ -1234,20 +1234,23 @@ html[data-theme=light] .ttb-more-menu { background: #fff; border-color: #dddde8;
         const pinned = window.Shortcuts.has(btn.dataset.url);
         btn.classList.toggle('pinned', pinned);
         btn.querySelector('.pin-star').textContent = pinned ? '★' : '☆';
-        btn.querySelector('.pin-label').textContent = pinned ? 'Nos atalhos' : 'Adicionar atalho';
+        btn.querySelector('.pin-label').textContent = pinned ? '{{ __("app.task_shortcut_pinned") }}' : '{{ __("app.task_shortcut_add") }}';
         btn.style.color = pinned ? 'var(--accent)' : '';
         btn.style.borderColor = pinned ? 'rgba(255,145,77,.35)' : '';
     }
 
     btn.addEventListener('click', function() {
         if (!window.Shortcuts) return;
+        const liveTitle = document.getElementById('note-title')?.value.trim() || btn.dataset.label || 'Nota sem título';
         const item = {
             id:    btn.dataset.url,
             type:  btn.dataset.type,
-            label: btn.dataset.label,
+            label: liveTitle,
             url:   btn.dataset.url,
             emoji: btn.dataset.emoji,
         };
+        // Garante que o data-label também esteja atualizado
+        btn.dataset.label = liveTitle;
         const pinned = window.Shortcuts.toggle(item);
         sync();
         toast(pinned ? 'Atalho adicionado!' : 'Atalho removido', pinned ? 'success' : 'info', 2200);
@@ -1255,7 +1258,15 @@ html[data-theme=light] .ttb-more-menu { background: #fff; border-color: #dddde8;
     });
 
     document.addEventListener('shortcut-changed', sync);
-    const t = setInterval(() => { if (window.Shortcuts) { sync(); clearInterval(t); } }, 50);
+    const t = setInterval(() => {
+        if (window.Shortcuts) {
+            sync();
+            // Sincroniza o label do atalho com o título atual da nota ao carregar a página
+            const currentTitle = document.getElementById('note-title')?.value.trim() || btn.dataset.label || 'Nota sem título';
+            window.Shortcuts.updateLabel(btn.dataset.url, currentTitle);
+            clearInterval(t);
+        }
+    }, 50);
 })();
 </script>
 @endpush

@@ -480,25 +480,25 @@
             <div class="card" id="comments-card">
                 <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
                     <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted)">
-                        Comentários
+                        {{ __('app.task_comments_label') }}
                         <span id="comment-count" style="margin-left:6px;background:var(--surface2);color:var(--muted);border-radius:20px;padding:1px 8px;font-size:10px;font-weight:700">{{ $task->comments()->count() }}</span>
                     </div>
-                    <span style="font-size:11px;color:var(--muted)">Suporta Markdown</span>
+                    <span style="font-size:11px;color:var(--muted)">{{ __('app.task_supports_md') }}</span>
                 </div>
                 <div id="comment-list" style="display:flex;flex-direction:column;gap:0"></div>
                 <div id="comments-load-more-wrap" style="display:none;text-align:center;padding:10px 0">
-                    <button id="btn-load-more" class="btn btn-ghost btn-sm">Carregar mais</button>
+                    <button id="btn-load-more" class="btn btn-ghost btn-sm">{{ __('app.task_load_more') }}</button>
                 </div>
                 <div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">
                     <div style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:4px">
-                        <button id="tab-write" style="background:none;border:none;padding:5px 14px;font-size:12px;font-weight:600;color:var(--accent);border-bottom:2px solid var(--accent);cursor:pointer;margin-bottom:-1px;font-family:inherit">Escrever</button>
-                        <button id="tab-preview" style="background:none;border:none;padding:5px 14px;font-size:12px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-1px;font-family:inherit">Pré-visualizar</button>
+                        <button id="tab-write" style="background:none;border:none;padding:5px 14px;font-size:12px;font-weight:600;color:var(--accent);border-bottom:2px solid var(--accent);cursor:pointer;margin-bottom:-1px;font-family:inherit">{{ __('app.task_tab_write') }}</button>
+                        <button id="tab-preview" style="background:none;border:none;padding:5px 14px;font-size:12px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;cursor:pointer;margin-bottom:-1px;font-family:inherit">{{ __('app.task_tab_preview') }}</button>
                     </div>
-                    <textarea id="comment-body" rows="3" placeholder="Escreva um comentário… Suporta **negrito**, _itálico_, `código`, listas, etc." style="width:100%;resize:vertical;min-height:72px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13.5px;font-family:inherit;color:var(--text);line-height:1.55;transition:border-color .15s,box-shadow .15s;outline:none;box-sizing:border-box" onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 3px rgba(255,145,77,.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"></textarea>
+                    <textarea id="comment-body" rows="3" placeholder="{{ __('app.task_comment_ph') }}" style="width:100%;resize:vertical;min-height:72px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13.5px;font-family:inherit;color:var(--text);line-height:1.55;transition:border-color .15s,box-shadow .15s;outline:none;box-sizing:border-box" onfocus="this.style.borderColor='var(--accent)';this.style.boxShadow='0 0 0 3px rgba(255,145,77,.1)'" onblur="this.style.borderColor='var(--border)';this.style.boxShadow='none'"></textarea>
                     <div id="comment-preview" style="display:none;min-height:72px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13.5px;color:var(--text);line-height:1.55" class="md-body"></div>
                     <div style="display:flex;align-items:center;justify-content:space-between">
                         <span id="comment-char-count" style="font-size:11px;color:var(--muted);font-family:'Montserrat',sans-serif">0 / 2000</span>
-                        <button id="btn-add-comment" class="btn btn-primary btn-sm">Comentar</button>
+                        <button id="btn-add-comment" class="btn btn-primary btn-sm">{{ __('app.task_comment_btn') }}</button>
                     </div>
                 </div>
             </div>{{-- /comments card --}}
@@ -510,7 +510,7 @@
                     onmouseover="this.style.color='var(--text)';this.style.background='var(--surface2)'"
                     onmouseout="this.style.color='var(--muted)';this.style.background='none'">
                     <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 2"/></svg>
-                    Ver histórico de alterações ({{ $task->histories->count() }})
+                    {{ __('app.task_view_history') }} ({{ $task->histories->count() }})
                 </button>
             </div>
             @endif
@@ -522,7 +522,7 @@
 
             {{-- Properties card --}}
             <div class="card" style="font-size:13px">
-                <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:14px">Propriedades</div>
+                <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:14px">{{ __('app.task_properties') }}</div>
                 <div style="display:flex;flex-direction:column;gap:12px">
 
                     <div>
@@ -567,23 +567,23 @@
                     </div>
 
                     <div>
-                        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Recorrência</div>
+                        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">{{ __('app.task_recurrence') }}</div>
                         <div class="select-wrap">
                             <select id="sidebar-recurrence" style="font-size:12px">
-                                <option value="none"    {{ $task->recurrence->value === 'none'    ? 'selected' : '' }}>Sem recorrência</option>
-                                <option value="daily"   {{ $task->recurrence->value === 'daily'   ? 'selected' : '' }}>Diária</option>
-                                <option value="weekly"  {{ $task->recurrence->value === 'weekly'  ? 'selected' : '' }}>Semanal</option>
-                                <option value="monthly" {{ $task->recurrence->value === 'monthly' ? 'selected' : '' }}>Mensal</option>
+                                <option value="none"    {{ $task->recurrence->value === 'none'    ? 'selected' : '' }}>{{ __('app.task_recurrence_none') }}</option>
+                                <option value="daily"   {{ $task->recurrence->value === 'daily'   ? 'selected' : '' }}>{{ __('app.task_recurrence_daily') }}</option>
+                                <option value="weekly"  {{ $task->recurrence->value === 'weekly'  ? 'selected' : '' }}>{{ __('app.task_recurrence_weekly') }}</option>
+                                <option value="monthly" {{ $task->recurrence->value === 'monthly' ? 'selected' : '' }}>{{ __('app.task_recurrence_monthly') }}</option>
                             </select>
                         </div>
                     </div>
 
                     <div id="sidebar-recurrence-ends-wrap" style="{{ $task->recurrence->value === 'none' ? 'display:none' : '' }}">
-                        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Termina em</div>
+                        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">{{ __('app.task_recurrence_ends') }}</div>
                         <input type="date" id="sidebar-recurrence-ends" value="{{ $task->recurrence_ends_at?->format('Y-m-d') }}" class="prop-date-input">
                     </div>
 
-                    <div id="props-saved" style="display:none;font-size:11px;color:var(--success);text-align:right">✓ Salvo</div>
+                    <div id="props-saved" style="display:none;font-size:11px;color:var(--success);text-align:right">{{ __('app.task_saved_inline') }}</div>
 
                 </div>
             </div>{{-- /properties card --}}
@@ -641,7 +641,7 @@
 
                 <button id="btn-save-estimate" class="btn btn-ghost" style="width:100%;justify-content:center;gap:6px;font-size:12px">
                     <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8l4 4 8-8"/></svg>
-                    Salvar estimativa
+                    {{ __('app.task_save_estimate') }}
                 </button>
             </div>{{-- /estimate-card --}}
 
@@ -657,7 +657,7 @@
                     <span id="timer-icon">
                         <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M6 3l8 5-8 5V3z"/></svg>
                     </span>
-                    <span id="timer-label">Iniciar timer</span>
+                    <span id="timer-label">{{ __('app.task_timer_start') }}</span>
                 </button>
                 <div id="timer-elapsed" style="display:none;font-size:11px;color:var(--accent);text-align:center;font-family:'Montserrat',sans-serif;margin-top:8px;font-weight:500"></div>
             </div>{{-- /time-card --}}
@@ -675,7 +675,7 @@
             <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0">
                 <div style="display:flex;align-items:center;gap:8px">
                     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="1.8"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 2"/></svg>
-                    <span style="font-size:13px;font-weight:600;color:var(--text)">Histórico de alterações</span>
+                    <span style="font-size:13px;font-weight:600;color:var(--text)">{{ __('app.task_history_title') }}</span>
                     <span style="background:var(--surface2);color:var(--muted);border-radius:20px;padding:1px 8px;font-size:10px;font-weight:700">{{ $task->histories->count() }}</span>
                 </div>
                 <button id="btn-close-history" style="background:none;border:none;cursor:pointer;color:var(--muted);padding:4px;border-radius:6px;display:flex;align-items:center"
@@ -718,7 +718,7 @@
             const pinned = window.Shortcuts.has(btn.dataset.url);
             btn.classList.toggle('pinned', pinned);
             btn.querySelector('.pin-star').textContent = pinned ? '★' : '☆';
-            btn.querySelector('.pin-label').textContent = pinned ? 'Nos atalhos' : 'Adicionar atalho';
+            btn.querySelector('.pin-label').textContent = pinned ? '{{ __("app.task_shortcut_pinned") }}' : '{{ __("app.task_shortcut_add") }}';
             btn.style.color = pinned ? 'var(--accent)' : '';
             btn.style.borderColor = pinned ? 'rgba(255,145,77,.35)' : '';
         }
@@ -804,9 +804,9 @@
                             indicator._t = setTimeout(() => { indicator.style.display = 'none'; }, 2000);
                         }
                     } else {
-                        toast('Erro ao salvar.', 'error');
+                        toast('{{ __("app.task_err_save") }}', 'error');
                     }
-                } catch { toast('Erro ao salvar.', 'error'); }
+                } catch { toast('{{ __("app.task_err_save") }}', 'error'); }
             }
 
             document.getElementById('sidebar-status')?.addEventListener('change', function () { saveProp('status', this.value); });
@@ -859,7 +859,11 @@
             document.getElementById('btn-delete').addEventListener('click', function () {
                 confirmDialog('{{ __('app.task_delete_title') }}', '{{ __('app.task_delete_msg') }}', async () => {
                     const res = await apiCall('DELETE', `/api/v1/tasks/${taskId}`);
-                    if (res.ok) { toast('{{ __('app.task_toast_deleted') }}', 'info'); setTimeout(()=>window.location.href='/tasks', 600); }
+                    if (res.ok) {
+                        if (window.Shortcuts) window.Shortcuts.remove(`/tasks/${taskId}`);
+                        toast('{{ __('app.task_toast_deleted') }}', 'info');
+                        setTimeout(()=>window.location.href='/tasks', 600);
+                    }
                     else toast('{{ __('app.task_toast_err_delete') }}', 'error');
                 });
             });
@@ -917,13 +921,13 @@
                 if (!btn) return;
                 if (running) {
                     btn.style.borderColor='var(--accent)'; btn.style.color='var(--accent)';
-                    icon.innerHTML='<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="3" width="10" height="10" rx="1"/></svg>'; lbl.textContent='Parar timer';
+                    icon.innerHTML='<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="3" width="10" height="10" rx="1"/></svg>'; lbl.textContent='{{ __("app.task_timer_stop") }}';
                     elapsed.style.display='block';
                     clearInterval(timerInterval);
-                    timerInterval=setInterval(()=>{ elapsed.textContent='Sessão atual: '+fmtSeconds(Math.floor((Date.now()-timerStartedAt)/1000)); },1000);
+                    timerInterval=setInterval(()=>{ elapsed.textContent='{{ __("app.task_timer_session") }} '+fmtSeconds(Math.floor((Date.now()-timerStartedAt)/1000)); },1000);
                 } else {
                     btn.style.borderColor=''; btn.style.color='';
-                    icon.innerHTML='<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M6 3l8 5-8 5V3z"/></svg>'; lbl.textContent='Iniciar timer';
+                    icon.innerHTML='<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M6 3l8 5-8 5V3z"/></svg>'; lbl.textContent='{{ __("app.task_timer_start") }}';
                     elapsed.style.display='none'; clearInterval(timerInterval);
                 }
                 if (trackedSeconds!==undefined) { const td=document.getElementById('tracked-display'); if(td) td.textContent=fmtTracked(trackedSeconds); }
@@ -941,7 +945,7 @@
                         const r=await apiCall('POST',`/api/v1/tasks/${taskId}/time/start`); const d=await r.json();
                         setTimerUI(true,d.started_at,d.tracked_seconds);
                     }
-                } catch { toast('Erro ao controlar timer','error'); }
+                } catch { toast('{{ __("app.task_err_timer") }}','error'); }
                 finally { this.disabled=false; }
             });
 
@@ -957,7 +961,7 @@
                     const res=await apiCall('PATCH',`/api/v1/tasks/${taskId}/estimate`,{estimated_minutes:totalMinutes});
                     if (res.ok) {
                         ['est-h-wrap','est-m-wrap'].forEach(id=>{ const el=document.getElementById(id); if(el){el.style.borderColor='var(--success)';setTimeout(()=>{el.style.borderColor='var(--border)';},1000);} });
-                    } else { toast('Erro ao salvar estimativa.','error'); }
+                    } else { toast('{{ __("app.task_err_save_estimate") }}','error'); }
                 } catch { toast('Erro ao salvar estimativa.','error'); }
             }
 
@@ -985,12 +989,12 @@
             function renderMd(text){ return marked.parse(text||''); }
             function setCount(n){ totalCount=n; if(countBadge) countBadge.textContent=n; }
             function deltaCount(d){ setCount(Math.max(0,totalCount+d)); }
-            function showEmpty(){ if(document.getElementById('comments-empty'))return; const el=document.createElement('div'); el.id='comments-empty'; el.style.cssText='text-align:center;padding:20px 0;color:var(--muted);font-size:13px'; el.textContent='Nenhum comentário ainda.'; commentList.appendChild(el); }
+            function showEmpty(){ if(document.getElementById('comments-empty'))return; const el=document.createElement('div'); el.id='comments-empty'; el.style.cssText='text-align:center;padding:20px 0;color:var(--muted);font-size:13px'; el.textContent='{{ __("app.task_comment_empty") }}'; commentList.appendChild(el); }
 
             function setTab(tab){
                 const accent='var(--accent)',muted='var(--muted)',none='transparent';
                 if(tab==='write'){commentBody.style.display='';commentPreview.style.display='none';tabWrite.style.color=accent;tabWrite.style.borderBottomColor=accent;tabPreview.style.color=muted;tabPreview.style.borderBottomColor=none;}
-                else{commentPreview.innerHTML=renderMd(commentBody.value)||'<em style="color:var(--muted)">Nada para pré-visualizar.</em>';commentBody.style.display='none';commentPreview.style.display='';tabPreview.style.color=accent;tabPreview.style.borderBottomColor=accent;tabWrite.style.color=muted;tabWrite.style.borderBottomColor=none;}
+                else{commentPreview.innerHTML=renderMd(commentBody.value)||'<em style="color:var(--muted)">{{ __("app.task_comment_nothing") }}</em>';commentBody.style.display='none';commentPreview.style.display='';tabPreview.style.color=accent;tabPreview.style.borderBottomColor=accent;tabWrite.style.color=muted;tabWrite.style.borderBottomColor=none;}
             }
             tabWrite?.addEventListener('click',()=>setTab('write'));
             tabPreview?.addEventListener('click',()=>setTab('preview'));
@@ -1000,8 +1004,8 @@
             function buildCommentEl(comment){
                 const div=document.createElement('div'); div.className='comment-item'; div.dataset.id=comment.id; div.dataset.body=comment.body;
                 div.style.cssText='display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)';
-                const editedLabel=comment.edited?`<span style="color:var(--muted);font-size:10px;margin-left:6px">(editado)</span>`:'';
-                div.innerHTML=`<div style="width:28px;height:28px;border-radius:50%;background:rgba(255,145,77,.15);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:1px">💬</div><div style="flex:1;min-width:0"><div class="comment-body-display md-body">${renderMd(comment.body)}</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px;flex-wrap:wrap;gap:4px"><span style="color:var(--muted);font-size:11px;font-family:'Montserrat',sans-serif">${comment.created_at}${editedLabel}</span><div style="display:flex;gap:4px"><button class="btn-edit-comment" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:2px 6px;border-radius:4px;transition:color .15s,background .15s">Editar</button><button class="btn-delete-comment" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:2px 6px;border-radius:4px;transition:color .15s,background .15s">Excluir</button></div></div></div>`;
+                const editedLabel=comment.edited?`<span style="color:var(--muted);font-size:10px;margin-left:6px">({{ __("app.task_comment_edited") }})</span>`:'';
+                div.innerHTML=`<div style="width:28px;height:28px;border-radius:50%;background:rgba(255,145,77,.15);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:1px">💬</div><div style="flex:1;min-width:0"><div class="comment-body-display md-body">${renderMd(comment.body)}</div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:5px;flex-wrap:wrap;gap:4px"><span style="color:var(--muted);font-size:11px;font-family:'Montserrat',sans-serif">${comment.created_at}${editedLabel}</span><div style="display:flex;gap:4px"><button class="btn-edit-comment" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:2px 6px;border-radius:4px;transition:color .15s,background .15s">{{ __("app.task_comment_edit") }}</button><button class="btn-delete-comment" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:2px 6px;border-radius:4px;transition:color .15s,background .15s">{{ __("app.task_comment_delete") }}</button></div></div></div>`;
                 div.querySelectorAll('button').forEach(btn=>{ btn.addEventListener('mouseenter',()=>{ const d=btn.classList.contains('btn-delete-comment'); btn.style.color=d?'var(--danger)':'var(--accent)'; btn.style.background=d?'rgba(224,84,84,.1)':'rgba(255,145,77,.1)'; }); btn.addEventListener('mouseleave',()=>{ btn.style.color='var(--muted)'; btn.style.background='none'; }); });
                 div.querySelector('.btn-edit-comment').addEventListener('click',()=>startEdit(div));
                 div.querySelector('.btn-delete-comment').addEventListener('click',()=>handleDelete(div));
@@ -1016,8 +1020,8 @@
                 const counter=document.createElement('div'); counter.style.cssText='font-size:11px;color:var(--muted);text-align:right;margin-top:3px'; counter.textContent=`${textarea.value.length} / 2000`;
                 textarea.addEventListener('input',()=>{ counter.textContent=`${textarea.value.length} / 2000`; counter.style.color=textarea.value.length>1800?'var(--danger)':'var(--muted)'; });
                 const actions=document.createElement('div'); actions.style.cssText='display:flex;gap:6px;justify-content:flex-end;margin-top:6px';
-                const btnCancel=document.createElement('button'); btnCancel.textContent='Cancelar'; btnCancel.className='btn btn-ghost btn-sm';
-                const btnSave=document.createElement('button'); btnSave.textContent='Salvar'; btnSave.className='btn btn-primary btn-sm';
+                const btnCancel=document.createElement('button'); btnCancel.textContent='{{ __("app.task_comment_cancel") }}'; btnCancel.className='btn btn-ghost btn-sm';
+                const btnSave=document.createElement('button'); btnSave.textContent='{{ __("app.task_comment_save") }}'; btnSave.className='btn btn-primary btn-sm';
                 btnCancel.addEventListener('click',()=>{ wrap.remove(); display.style.display=''; });
                 btnSave.addEventListener('click',()=>saveEdit(el,textarea,display,wrap,btnSave));
                 textarea.addEventListener('keydown',e=>{ if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();btnSave.click();} if(e.key==='Escape'){wrap.remove();display.style.display='';} });
@@ -1028,15 +1032,15 @@
                 const body=textarea.value.trim(); if(!body){textarea.focus();return;}
                 btnSave.innerHTML='<span class="spinner"></span>'; btnSave.disabled=true;
                 const res=await apiCall('PATCH',`/api/v1/tasks/${taskId}/comments/${el.dataset.id}`,{body});
-                if(res.ok){ const updated=await res.json(); el.dataset.body=updated.body; display.innerHTML=renderMd(updated.body); const ts=el.querySelector('[style*="monospace"]'); if(ts&&!ts.querySelector('[data-edited]'))ts.insertAdjacentHTML('beforeend','<span style="color:var(--muted);font-size:10px;margin-left:6px" data-edited>(editado)</span>'); wrap.remove(); display.style.display=''; toast('Comentário atualizado.','success'); }
-                else { const d=await res.json().catch(()=>({})); toast(d.errors?Object.values(d.errors).flat().join(' '):(d.message||'Erro.'),'error'); btnSave.innerHTML='Salvar'; btnSave.disabled=false; }
+                if(res.ok){ const updated=await res.json(); el.dataset.body=updated.body; display.innerHTML=renderMd(updated.body); const ts=el.querySelector('[style*="monospace"]'); if(ts&&!ts.querySelector('[data-edited]'))ts.insertAdjacentHTML('beforeend','<span style="color:var(--muted);font-size:10px;margin-left:6px" data-edited>{{ __("app.task_comment_edited") }}</span>'); wrap.remove(); display.style.display=''; toast('{{ __("app.task_comment_updated") }}','success'); }
+                else { const d=await res.json().catch(()=>({})); toast(d.errors?Object.values(d.errors).flat().join(' '):(d.message||'Erro.'),'error'); btnSave.innerHTML='{{ __("app.task_comment_save") }}'; btnSave.disabled=false; }
             }
 
             async function handleDelete(el){
-                confirmDialog('Excluir comentário','Esta ação não pode ser desfeita.',async()=>{
+                confirmDialog('{{ __("app.task_comment_delete_title") }}','{{ __("app.task_comment_delete_msg") }}',async()=>{
                     const res=await apiCall('DELETE',`/api/v1/tasks/${taskId}/comments/${el.dataset.id}`);
-                    if(res.ok){el.remove();deltaCount(-1);if(!commentList.querySelector('.comment-item'))showEmpty();toast('Comentário excluído.','info');}
-                    else toast('Erro ao excluir.','error');
+                    if(res.ok){el.remove();deltaCount(-1);if(!commentList.querySelector('.comment-item'))showEmpty();toast('{{ __("app.task_comment_deleted") }}','info');}
+                    else toast('{{ __("app.task_err_delete") }}','error');
                 });
             }
 
@@ -1048,8 +1052,8 @@
                     data.data.length===0&&page===1?showEmpty():data.data.forEach(c=>commentList.appendChild(buildCommentEl(c)));
                     currentPage=data.current_page; lastPage=data.last_page; setCount(data.total);
                     if(loadMoreWrap) loadMoreWrap.style.display=currentPage<lastPage?'':'none';
-                } catch { toast('Erro ao carregar comentários.','error'); }
-                finally { if(btnLoadMore){btnLoadMore.innerHTML='Carregar mais';btnLoadMore.disabled=false;} }
+                } catch { toast('{{ __("app.task_err_load_comments") }}','error'); }
+                finally { if(btnLoadMore){btnLoadMore.innerHTML='{{ __("app.task_load_more") }}';btnLoadMore.disabled=false;} }
             }
 
             btnLoadMore?.addEventListener('click',()=>loadComments(currentPage+1));
@@ -1059,9 +1063,9 @@
                 this.innerHTML='<span class="spinner"></span>'; this.disabled=true;
                 try {
                     const res=await apiCall('POST',`/api/v1/tasks/${taskId}/comments`,{body});
-                    if(res.ok){ const comment=await res.json(); document.getElementById('comments-empty')?.remove(); commentList.insertBefore(buildCommentEl(comment),commentList.firstChild); commentBody.value=''; commentCharCount.textContent='0 / 2000'; setTab('write'); deltaCount(+1); toast('Comentário adicionado.','success'); }
+                    if(res.ok){ const comment=await res.json(); document.getElementById('comments-empty')?.remove(); commentList.insertBefore(buildCommentEl(comment),commentList.firstChild); commentBody.value=''; commentCharCount.textContent='0 / 2000'; setTab('write'); deltaCount(+1); toast('{{ __("app.task_comment_added") }}','success'); }
                     else { const d=await res.json(); toast(d.errors?Object.values(d.errors).flat().join(' '):(d.message||'Erro.'),'error'); }
-                } catch { toast('Erro de conexão.','error'); }
+                } catch { toast('{{ __("app.task_err_connection") }}','error'); }
                 finally { this.innerHTML='Comentar'; this.disabled=false; }
             });
 

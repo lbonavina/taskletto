@@ -1179,7 +1179,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-delete')?.addEventListener('click', function() {
         const doDelete = async () => {
             const res = await fetch(`/notes/${noteId}`, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': csrf } });
-            if (res.ok) window.location.href = '/notes';
+            if (res.ok) {
+                if (window.Shortcuts) window.Shortcuts.remove(`/notes/${noteId}`);
+                window.location.href = '/notes';
+            }
         };
         window.confirmDialog
             ? window.confirmDialog('Excluir nota', 'Esta ação não pode ser desfeita.', doDelete)
