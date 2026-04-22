@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="dark">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,22 +19,7 @@
             --transition: .2s cubic-bezier(.4,0,.2,1);
             --danger: #ef4444;
             --danger-bg: rgba(239,68,68,.1);
-        }
-
-        [data-theme="dark"] {
-            --bg: #0c0c0e;
-            --surface: #161618;
-            --surface2: #1e1e21;
-            --border: rgba(255,255,255,.08);
-            --text: #f0f0f0;
-            --text-muted: #888;
-            --text-faint: #444;
-            --input-bg: #1e1e21;
-            --input-border: rgba(255,255,255,.1);
-            --input-focus: rgba(255,145,77,.4);
-        }
-
-        [data-theme="light"] {
+            
             --bg: #f0eeeb;
             --surface: #ffffff;
             --surface2: #f5f4f2;
@@ -90,10 +75,8 @@
             width: auto;
         }
 
-        .logo-img-dark  { display: block; }
-        .logo-img-light { display: none; }
-        [data-theme="light"] .logo-img-dark  { display: none; }
-        [data-theme="light"] .logo-img-light { display: block; }
+        .logo-img-dark  { display: none; }
+        .logo-img-light { display: block; }
 
         /* ── CARD ── */
         .auth-card {
@@ -312,26 +295,6 @@
         }
         .password-toggle:hover { color: var(--accent); }
 
-        /* ── THEME TOGGLE ── */
-        .theme-toggle {
-            position: fixed;
-            top: 16px;
-            right: 16px;
-            width: 34px;
-            height: 34px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            background: var(--surface);
-            color: var(--text-muted);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: border-color var(--transition), color var(--transition);
-        }
-
-        .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
-
         @media (max-width: 480px) {
             .auth-card { padding: 28px 20px; border-radius: 14px; }
         }
@@ -339,18 +302,8 @@
     @stack('styles')
 </head>
 <body>
-    <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema">
-        <svg id="themeIcon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </svg>
-    </button>
-
     <a href="{{ url('/') }}" class="auth-logo">
-        <img src="/logo-taskletto-light.png" alt="Taskletto" class="logo-img-dark" />
-        <img src="/logo-taskletto.png"       alt="Taskletto" class="logo-img-light" />
+        <img src="/logo-taskletto.png" alt="Taskletto" class="logo-img-light" />
     </a>
 
     <div class="auth-card">
@@ -360,29 +313,6 @@
     @yield('below-card')
 
     <script>
-        (function () {
-            var saved = localStorage.getItem('taskletto-theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', saved);
-            updateIcon(saved);
-        })();
-
-        function updateIcon(theme) {
-            var icon = document.getElementById('themeIcon');
-            if (!icon) return;
-            if (theme === 'light') {
-                icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
-            } else {
-                icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
-            }
-        }
-
-        document.getElementById('themeToggle').addEventListener('click', function () {
-            var current = document.documentElement.getAttribute('data-theme');
-            var next = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('taskletto-theme', next);
-            updateIcon(next);
-        });
 
         function togglePassword(id) {
             const input = document.getElementById(id);
