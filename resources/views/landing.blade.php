@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-theme="dark">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,38 +19,19 @@
             --radius:       12px;
             --font:         'Montserrat', sans-serif;
             --ease:         cubic-bezier(.4,0,.2,1);
-        }
-
-        [data-theme="dark"] {
-            --bg:         #0a0a0a;
-            --bg2:        #111111;
-            --bg3:        #0f0f0f;
-            --surface:    #181818;
-            --surface2:   #202020;
-            --surface3:   #272727;
-            --border:     rgba(255,255,255,.07);
-            --border2:    rgba(255,255,255,.12);
-            --text:       #efefef;
-            --text-muted: #888;
-            --text-faint: #444;
-            --nav-bg:     rgba(10,10,10,.85);
-            --shadow:     rgba(0,0,0,.6);
-        }
-
-        [data-theme="light"] {
-            --bg:         #f7f6f3;
-            --bg2:        #eeece9;
-            --bg3:        #f2f0ed;
-            --surface:    #ffffff;
-            --surface2:   #f4f3f0;
-            --surface3:   #eceae6;
-            --border:     rgba(0,0,0,.08);
-            --border2:    rgba(0,0,0,.14);
-            --text:       #1a1a1a;
-            --text-muted: #666;
-            --text-faint: #bbb;
-            --nav-bg:     rgba(247,246,243,.88);
-            --shadow:     rgba(0,0,0,.12);
+            --bg:           #f7f6f3;
+            --bg2:          #eeece9;
+            --bg3:          #f2f0ed;
+            --surface:      #ffffff;
+            --surface2:     #f4f3f0;
+            --surface3:     #eceae6;
+            --border:       rgba(0,0,0,.08);
+            --border2:      rgba(0,0,0,.14);
+            --text:         #1a1a1a;
+            --text-muted:   #666;
+            --text-faint:   #bbb;
+            --nav-bg:       rgba(247,246,243,.88);
+            --shadow:       rgba(0,0,0,.12);
         }
 
         html { scroll-behavior: smooth; }
@@ -69,10 +50,8 @@
         }
         .nav-logo { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
         .logo-img  { height: 28px; width: auto; display: block; }
-        [data-theme="dark"]  .logo-dark  { display: block; }
-        [data-theme="dark"]  .logo-light { display: none; }
-        [data-theme="light"] .logo-dark  { display: none; }
-        [data-theme="light"] .logo-light { display: block; }
+        .logo-dark { display: none; }
+        .logo-light { display: block; }
 
         .nav-links { display: flex; align-items: center; gap: 6px; list-style: none; }
         .nav-links a {
@@ -652,8 +631,7 @@
 <!-- NAV -->
 <nav class="nav">
     <a href="#" class="nav-logo">
-        <img src="/logo-taskletto-light.png" alt="Taskletto" class="logo-img logo-dark">
-        <img src="/logo-taskletto.png"       alt="Taskletto" class="logo-img logo-light">
+        <img src="/logo-taskletto.png" alt="Taskletto" class="logo-img logo-light">
     </a>
     <ul class="nav-links">
         <li><a href="#features">Funcionalidades</a></li>
@@ -663,15 +641,6 @@
         <li><a href="#pricing">Preços</a></li>
     </ul>
     <div class="nav-actions">
-        <button class="btn-theme" id="themeToggle" title="Alternar tema" aria-label="Alternar tema">
-            <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="5"/>
-                <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-            </svg>
-        </button>
         <a href="{{ route('login') }}"    class="btn-outline">Entrar</a>
         <a href="{{ route('register') }}" class="btn-primary">Começar grátis →</a>
     </div>
@@ -1119,7 +1088,6 @@
 <!-- FOOTER -->
 <footer>
     <a href="#" class="nav-logo">
-        <img src="/logo-taskletto-light.png" alt="Taskletto" class="logo-img logo-dark" style="height:24px;">
         <img src="/logo-taskletto.png" alt="Taskletto" class="logo-img logo-light" style="height:24px;">
     </a>
     <span class="footer-copy">© {{ date('Y') }} Taskletto · Feito com Laravel &amp; NativePHP.</span>
@@ -1131,35 +1099,7 @@
     </div>
 </footer>
 
-<script>
-    (function () {
-        const saved = localStorage.getItem('taskletto-theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', saved);
-        updateIcon(saved);
-    })();
 
-    function updateIcon(theme) {
-        const icon = document.getElementById('themeIcon');
-        if (!icon) return;
-        if (theme === 'light') {
-            icon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
-        } else {
-            icon.innerHTML = `
-                <circle cx="12" cy="12" r="5"/>
-                <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
-                <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-            `;
-        }
-    }
-
-    document.getElementById('themeToggle').addEventListener('click', function () {
-        const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('taskletto-theme', next);
-        updateIcon(next);
-    });
 
     function setBillingPeriod(period) {
         const isAnnual = period === 'annual';
