@@ -6,6 +6,7 @@ use App\Enums\TaskPriority;
 use App\Enums\TaskStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use Illuminate\Support\Facades\DB;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -103,12 +104,21 @@ class TaskWebController extends Controller
         $startWeek  = $now->copy()->startOfWeek()->toDateTimeString();
         $endWeek    = $now->copy()->endOfWeek()->toDateTimeString();
 
+        $today     = now()->toDateString();
+        $thisMonth = now()->format('Y-m');
+
+        $driver = DB::connection()->getDriverName();
+        $monthCheck = $driver === 'sqlite' ? "strftime('%Y-%m', created_at)" : "DATE_FORMAT(created_at, '%Y-%m')";
+
         $dateCounts = Task::selectRaw("
-            SUM(CASE WHEN DATE(due_date) = DATE('now') AND status NOT IN (?, ?) THEN 1 ELSE 0 END) as due_today,
-            SUM(CASE WHEN DATE(created_at) = DATE('now') THEN 1 ELSE 0 END)                        as created_today,
+            SUM(CASE WHEN DATE(due_date) = ? AND status NOT IN (?, ?) THEN 1 ELSE 0 END) as due_today,
+            SUM(CASE WHEN DATE(created_at) = ? THEN 1 ELSE 0 END)                        as created_today,
             SUM(CASE WHEN created_at BETWEEN ? AND ? THEN 1 ELSE 0 END)                            as created_week,
-            SUM(CASE WHEN strftime('%Y-%m', created_at) = strftime('%Y-%m', 'now') THEN 1 ELSE 0 END) as created_month
-        ", [TaskStatus::Completed->value, TaskStatus::Cancelled->value, $startWeek, $endWeek])->first();
+            SUM(CASE WHEN {$monthCheck} = ? THEN 1 ELSE 0 END) as created_month
+        ", [
+            $today, TaskStatus::Completed->value, TaskStatus::Cancelled->value, 
+            $today, $startWeek, $endWeek, $thisMonth
+        ])->first();
 
         $categories = Category::withCount([
             'tasks',

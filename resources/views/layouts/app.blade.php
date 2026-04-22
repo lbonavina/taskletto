@@ -7,6 +7,13 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Taskletto') — Taskletto</title>
 
+    <script>
+        (function () {
+            const t = localStorage.getItem('taskletto-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -2815,14 +2822,6 @@
             animation: pageEnter .3s cubic-bezier(.25, .46, .45, .94) both;
         }
     </style>
-
-    <script>
-        // Apply theme before paint (no flash) — light is the new default
-        (function () {
-            const t = localStorage.getItem('taskletto-theme') || 'light';
-            document.documentElement.setAttribute('data-theme', t);
-        })();
-    </script>
 </head>
 
 <body>
