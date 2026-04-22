@@ -49,7 +49,7 @@ class DashboardController extends Controller
         // ── Urgent & overdue tasks (max 5) ───────────────────────────────────
         $urgentTasks = Task::with('category')
             ->whereNotIn('status', [TaskStatus::Completed->value, TaskStatus::Cancelled->value])
-            ->orderByRaw("CASE WHEN due_date < datetime('now') THEN 0 ELSE 1 END")
+            ->orderByRaw("CASE WHEN due_date < ? THEN 0 ELSE 1 END", [now()])
             ->orderByRaw("CASE priority WHEN 'urgent' THEN 0 WHEN 'high' THEN 1 WHEN 'medium' THEN 2 ELSE 3 END")
             ->orderBy('due_date')
             ->limit(3)
@@ -84,10 +84,18 @@ class DashboardController extends Controller
         $totalNotes  = (int) $notesStats->total;
         $pinnedNotes = (int) $notesStats->pinned;
 
-        // ── Tracked seconds today (1 query with DB-level calculation) ────────
+        // ── Tracked seconds today (cross-compatible) ────────
         // Uses COALESCE so open (running) timers count up to now().
+        $isSqlite = DB::connection()->getDriverName() === 'sqlite';
+        
+        if ($isSqlite) {
+            $trackedSql = "SUM(CAST(strftime('%s', COALESCE(ended_at, datetime('now'))) AS INTEGER) - CAST(strftime('%s', started_at) AS INTEGER)) as total_seconds";
+        } else {
+            $trackedSql = "SUM(TIMESTAMPDIFF(SECOND, started_at, COALESCE(ended_at, NOW()))) as total_seconds";
+        }
+
         $trackedToday = (int) TaskTimeLog::whereDate('started_at', today())
-            ->selectRaw("SUM(CAST(strftime('%s', COALESCE(ended_at, datetime('now'))) AS INTEGER) - CAST(strftime('%s', started_at) AS INTEGER)) as total_seconds")
+            ->selectRaw($trackedSql)
             ->value('total_seconds');
 
         // ── Productivity streak (1 query instead of up to 366) ───────────────
