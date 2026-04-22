@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Native\Desktop\Facades\Window;
 use Illuminate\Http\Request;
 
-Route::prefix('v1')->name('api.')->group(function () {
+Route::prefix('v1')->name('api.')->middleware('web')->group(function () {
     Route::get('health', fn() => response()->json(['status' => 'ok']))->name('health');
     Route::get('tasks/stats', [TaskController::class, 'stats'])->name('tasks.stats');
     Route::apiResource('tasks', TaskController::class);

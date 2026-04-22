@@ -1,13 +1,6 @@
 @extends('layouts.app')
 @section('page-title', __('app.nav_notes'))
 
-@section('topbar-actions')
-    <button class="btn btn-primary" id="btn-new-note">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v12M2 8h12"/></svg>
-        Nova Nota
-    </button>
-@endsection
-
 @push('styles')
 <style>
 /* ── Filter bar ───────────────────────────────────────────────────────── */
@@ -336,7 +329,6 @@ html[data-theme=light] .note-card-tag { background: #e8eaf2; color: #555570; bor
 
     <div class="filter-divider"></div>
 
-    {{-- Color — agrupado num pill container --}}
     <div class="color-filter-group">
         <span class="color-filter-group-label">Cor</span>
         <div class="color-filter-wrap" id="color-filter-wrap">
@@ -348,6 +340,13 @@ html[data-theme=light] .note-card-tag { background: #e8eaf2; color: #555570; bor
     </div>
 
     <button class="btn btn-ghost btn-sm" id="btn-clear-filters">✕ Limpar</button>
+
+    <div style="flex-grow: 1;"></div>
+    
+    <button class="btn btn-primary" id="btn-new-note">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v12M2 8h12"/></svg>
+        Nova Nota
+    </button>
 </div>
 
 {{-- Results info --}}
@@ -369,11 +368,13 @@ html[data-theme=light] .note-card-tag { background: #e8eaf2; color: #555570; bor
             <div class="notes-section-label">📌 Fixadas</div>
             <div class="notes-grid">
                 @foreach($pinned as $note)
-                <a href="/notes/{{ $note->id }}" class="note-card" style="--note-color:{{ $note->color }};position:relative">
-                    <button class="shortcut-inline-btn note-shortcut-btn" data-url="/notes/{{ $note->id }}" data-label="{{ addslashes($note->title ?: __('app.notes_untitled')) }}" data-type="note" data-emoji="📄" title="Adicionar/remover atalho">☆</button>
+                <a href="/notes/{{ $note->id }}" class="note-card" style="--note-color:{{ $note->color }}">
                     <div class="note-card-header">
                         <div class="note-card-dot-wrap"><div class="note-card-dot"></div></div>
-                        <span class="note-card-pin">📌</span>
+                        <div class="note-card-header-right">
+                            <button class="shortcut-inline-btn note-shortcut-btn" data-url="/notes/{{ $note->id }}" data-label="{{ addslashes($note->title ?: __('app.notes_untitled')) }}" data-type="note" data-emoji="📄" title="Adicionar/remover atalho">☆</button>
+                            <span class="note-card-pin">📌</span>
+                        </div>
                     </div>
                     <div class="note-card-body">
                         <div class="note-card-title">{{ $note->title ?: __('app.notes_untitled') }}</div>
@@ -401,10 +402,12 @@ html[data-theme=light] .note-card-tag { background: #e8eaf2; color: #555570; bor
             @if($pinned->isNotEmpty())<div class="notes-section-label">Todas as notas</div>@endif
             <div class="notes-grid">
                 @foreach($others as $note)
-                <a href="/notes/{{ $note->id }}" class="note-card" style="--note-color:{{ $note->color }};position:relative">
-                    <button class="shortcut-inline-btn note-shortcut-btn" data-url="/notes/{{ $note->id }}" data-label="{{ addslashes($note->title ?: __('app.notes_untitled')) }}" data-type="note" data-emoji="📄" title="Adicionar/remover atalho">☆</button>
+                <a href="/notes/{{ $note->id }}" class="note-card" style="--note-color:{{ $note->color }}">
                     <div class="note-card-header">
                         <div class="note-card-dot-wrap"><div class="note-card-dot"></div></div>
+                        <div class="note-card-header-right">
+                            <button class="shortcut-inline-btn note-shortcut-btn" data-url="/notes/{{ $note->id }}" data-label="{{ addslashes($note->title ?: __('app.notes_untitled')) }}" data-type="note" data-emoji="📄" title="Adicionar/remover atalho">☆</button>
+                        </div>
                     </div>
                     <div class="note-card-body">
                         <div class="note-card-title">{{ $note->title ?: __('app.notes_untitled') }}</div>
@@ -427,6 +430,12 @@ html[data-theme=light] .note-card-tag { background: #e8eaf2; color: #555570; bor
                 </a>
                 @endforeach
             </div>
+
+            @if($others->hasPages())
+                <div class="pagination-wrapper" style="border-top:none; padding-top:20px;">
+                    {{ $others->withQueryString()->links('pagination::bootstrap-5') }}
+                </div>
+            @endif
         @endif
     @endif
 </div>
@@ -436,16 +445,46 @@ html[data-theme=light] .note-card-tag { background: #e8eaf2; color: #555570; bor
 @push('scripts')
 <script>
 // ── Create note ───────────────────────────────────────────────────────────────
+// ── Create note ───────────────────────────────────────────────────────────────
 async function createNote() {
-    const res  = await fetch('/notes', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content }
-    });
-    const data = await res.json();
-    window.location.href = '/notes/' + data.id;
+    try {
+        const res = await fetch('{{ route('notes.store') }}', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json', 
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content 
+            }
+        });
+        
+        if (!res.ok) {
+            const err = await res.json();
+            if (res.status === 402 && typeof window.showUpgradeModal === 'function') {
+                window.showUpgradeModal(err.message);
+                return;
+            }
+            throw new Error(err.message || 'Erro ao criar nota');
+        }
+
+        const data = await res.json();
+        window.location.href = '{{ url('/notes') }}/' + data.id;
+    } catch (e) {
+        console.error('Create note failed:', e);
+        // Use a global toast if available, or fallback to alert
+        if (typeof showToast === 'function') {
+            showToast(e.message, 'error');
+        } else {
+            alert('Erro: ' + e.message);
+        }
+    }
 }
-document.getElementById('btn-new-note')?.addEventListener('click', createNote);
-document.getElementById('btn-new-note-empty')?.addEventListener('click', createNote);
+
+// Event Delegation for creation buttons
+document.addEventListener('click', e => {
+    if (e.target.closest('#btn-new-note') || e.target.closest('#btn-new-note-empty')) {
+        createNote();
+    }
+});
 
 // ── AJAX Search & Filters ─────────────────────────────────────────────────────
 (function () {
@@ -483,7 +522,7 @@ document.getElementById('btn-new-note-empty')?.addEventListener('click', createN
         return `<a href="/notes/${note.id}" class="note-card" style="--note-color:${esc(note.color)}">
             <div class="note-card-header">
                 <div class="note-card-dot-wrap"><div class="note-card-dot"></div></div>
-                ${pin}
+                <div class="note-card-header-right">${pin}</div>
             </div>
             <div class="note-card-body">
                 <div class="note-card-title">${highlight(note.title, term)}</div>

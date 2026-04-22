@@ -392,7 +392,7 @@ return [
 
     // ── Task show & Category new ─────────────────────────────────────────────
     'task_detail_title' => 'Detalle de Tarea',
-    'task_back' => '← Volver',
+    'task_back' => 'Volver',
     'task_complete_btn' => '✓ Completar',
     'task_reopen_btn' => '↩ Reabrir',
     'task_delete_btn' => 'Eliminar',

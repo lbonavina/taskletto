@@ -1,28 +1,12 @@
 @extends('layouts.app')
-@section('page-title', __('app.nav_dashboard'))
-
-@section('topbar-actions')
-    <button class="btn btn-ghost" onclick="createNote()">
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M8 2v12M2 8h12" />
-        </svg>
-        {{ __('app.dash_new_note') }}
-    </button>
-    <button class="btn btn-primary" onclick="document.getElementById('modal-new-task').classList.add('open')">
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M8 2v12M2 8h12" />
-        </svg>
-        {{ __('app.new_task') }}
-    </button>
-@endsection
 
 @push('styles')
-<style>
-/* ─── Page padding override ─────────────────────────────────── */
-.page-content { padding: 14px 18px !important; }
+    <style>
+        /* ─── Page padding override ─────────────────────────────────── */
+        .page-content { padding: 32px !important; }
 
-/* ─── Masonry via JS ────────────────────────────────────────── */
-.dash-grid {
+        /* ─── Masonry via JS ────────────────────────────────────────── */
+        .dash-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-auto-rows: 1px;
@@ -210,7 +194,7 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
 .sbar-head { display:flex; justify-content:space-between; margin-bottom:3px; }
 .sbar-lbl { font-size:12px; color:var(--muted); }
 .sbar-cnt { font-size:12px; color:var(--muted); }
-.sbar-track { height:2px; background:var(--surface2); border-radius:99px; overflow:hidden; }
+.sbar-track { height:4px; background:var(--surface2); border-radius:99px; overflow:hidden; }
 .sbar-fill { height:100%; border-radius:99px; width:0; transition:width 1.1s cubic-bezier(.34,1.2,.64,1); }
 
 /* ─── Mini Calendar ────────────────────────────────────────── */
@@ -258,11 +242,11 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
 .pom-svg { transform:rotate(-90deg); }
 .pom-track { fill:none; stroke:var(--border); stroke-width:6; }
 .pom-fill { fill:none; stroke:var(--accent); stroke-width:6; stroke-linecap:round; stroke-dasharray:352; stroke-dashoffset:0; transition:stroke-dashoffset .5s linear, stroke .3s; }
-.pom-center { position:absolute; display:flex; flex-direction:column; align-items:center; }
+.pom-center { position:absolute; display:flex; flex-direction:column; align-items:center; justify-content:center; top:0; left:0; right:0; bottom:0; }
 .pom-time { font-size:22px; font-weight:800; letter-spacing:-.8px; color:var(--text); line-height:1; }
 .pom-rounds { font-size:9.5px; color:var(--muted); margin-top:2px; }
 /* right side */
-.pom-side { display:flex; flex-direction:column; gap:8px; flex:1; }
+.pom-side { display:flex; flex-direction:column; gap:8px; flex:1; justify-content:center; }
 .pom-progress-bars { display:flex; gap:4px; }
 .pom-dot { flex:1; height:4px; border-radius:99px; background:var(--border); transition:background .3s; }
 .pom-dot.done { background:var(--accent); }
@@ -300,6 +284,23 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
 .stat-mini-val { font-size:20px; font-weight:800; letter-spacing:-.4px; line-height:1; }
 .stat-mini-lbl { font-size:10.5px; color:var(--muted); margin-top:2px; }
 
+/* ─── Summary card: 2 colunas ─────────────────────────────── */
+.dc-progress {
+    grid-column: span 2;
+}
+.dc-progress .progress-kpis {
+    grid-template-columns: repeat(4, 1fr);
+}
+/* Layout interno em 2 colunas quando o card é largo */
+.dc-progress .progress-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-items: start;
+}
+.dc-progress .progress-left { display: flex; flex-direction: column; gap: 0; }
+.dc-progress .progress-right { display: flex; flex-direction: column; justify-content: center; gap: 0; }
+
 /* ─── Responsive ───────────────────────────────────────────── */
 @media (max-width: 900px) {
     .dash-grid { grid-template-columns: repeat(2, 1fr); }
@@ -311,8 +312,8 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
 @endpush
 
 @section('content')
-<div class="dash-grid">
-    {{-- ── Greeting Card ──────────────────────────────────────── --}}
+    <div class="dash-grid">
+        {{-- ── Greeting Card ──────────────────────────────────────── --}}
     <div class="dc dc-greeting">
         <div class="greet-bg" id="greet-bg"></div>
         <div class="greet-content">
@@ -543,24 +544,27 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
                 <div class="kpi-label">Concluídas</div>
             </div>
         </div>
-        {{-- Ring + bars --}}
-        <div style="display:flex;gap:14px;align-items:center;margin-bottom:4px">
-            <div class="ring-row" style="margin-bottom:0;flex-shrink:0">
-                <svg class="ring-svg" width="48" height="48" viewBox="0 0 54 54"><circle class="ring-track" cx="27" cy="27" r="20"/><circle class="ring-fill" id="ring-fill" cx="27" cy="27" r="20"/></svg>
-                <div><div class="ring-big" id="ring-pct">0%</div><div class="ring-sub">{{ $total }} tarefas</div></div>
+        {{-- Conteudo em 2 colunas: ring+streak a esquerda, barras a direita --}}
+        <div class="progress-inner">
+            {{-- Coluna esquerda: ring + streak + notes --}}
+            <div class="progress-left">
+                <div class="ring-row" style="margin-bottom:12px;flex-shrink:0">
+                    <svg class="ring-svg" width="56" height="56" viewBox="0 0 54 54"><circle class="ring-track" cx="27" cy="27" r="20"/><circle class="ring-fill" id="ring-fill" cx="27" cy="27" r="20"/></svg>
+                    <div><div class="ring-big" id="ring-pct">0%</div><div class="ring-sub">{{ $total }} tarefas</div></div>
+                </div>
+                <div class="stat-mini-row" style="margin-top:0">
+                    <div class="stat-mini"><div class="stat-mini-val" style="color:#fb923c">{{ $streak }} 🔥</div><div class="stat-mini-lbl">{{ $streak === 1 ? __('app.dash_streak_day') : __('app.dash_streak_days') }}</div></div>
+                    <div class="stat-mini"><div class="stat-mini-val" style="color:#c084fc">{{ $totalNotes }}</div><div class="stat-mini-lbl">{{ __('app.dash_notes') }}</div></div>
+                </div>
             </div>
-            <div style="flex:1">
+            {{-- Coluna direita: barras de status --}}
+            <div class="progress-right">
                 @php $statusItems=[['label'=>__('app.dash_pending'),'key'=>'pending','color'=>'var(--status-pending)'],['label'=>__('app.dash_in_progress_label'),'key'=>'in_progress','color'=>'var(--status-in_progress)'],['label'=>__('app.dash_completed'),'key'=>'completed','color'=>'var(--status-completed)'],['label'=>__('app.dash_cancelled'),'key'=>'cancelled','color'=>'var(--status-cancelled)']]; @endphp
                 @foreach($statusItems as $s)
                     @php $count=$byStatus->get($s['key'],0); $pct=$total>0?round($count/$total*100):0; @endphp
                     <div class="sbar"><div class="sbar-head"><span class="sbar-lbl">{{ $s['label'] }}</span><span class="sbar-cnt">{{ $count }}</span></div><div class="sbar-track"><div class="sbar-fill" data-w="{{ $pct }}" style="background:{{ $s['color'] }}"></div></div></div>
                 @endforeach
             </div>
-        </div>
-        {{-- Streak + Notes --}}
-        <div class="stat-mini-row">
-            <div class="stat-mini"><div class="stat-mini-val" style="color:#fb923c">{{ $streak }} 🔥</div><div class="stat-mini-lbl">{{ $streak === 1 ? __('app.dash_streak_day') : __('app.dash_streak_days') }}</div></div>
-            <div class="stat-mini"><div class="stat-mini-val" style="color:#c084fc">{{ $totalNotes }}</div><div class="stat-mini-lbl">{{ __('app.dash_notes') }}</div></div>
         </div>
     </div>
 
@@ -608,11 +612,10 @@ html[data-theme=light] .greet-sub   { color: rgba(255,255,255,.70); }
     </div>
 </div>
 
-<div class="chart-tooltip" id="chart-tooltip"></div>
-
 @endsection
 
 @push('modals')
+    <div class="chart-tooltip" id="chart-tooltip"></div>
     @include('tasks._modal_form')
 @endpush
 

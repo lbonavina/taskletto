@@ -1,52 +1,7 @@
 @extends('layouts.app')
 @section('page-title', __('app.nav_notes'))
 
-@section('topbar-actions')
-    <button
-        id="btn-add-shortcut"
-        class="btn btn-ghost btn-sm"
-        data-url="/notes/{{ $note->id }}"
-        data-label="{{ addslashes($note->title ?: 'Nota sem título') }}"
-        data-type="note"
-        data-emoji="📄"
-        title="Adicionar/remover dos atalhos"
-        style="gap:5px">
-        <span class="pin-star" style="font-size:14px;line-height:1">☆</span>
-        <span class="pin-label">Adicionar atalho</span>
-    </button>
-    <div style="display:flex;align-items:center;gap:8px">
-        <span id="save-status" style="font-size:12px;color:var(--muted);font-family:'Montserrat',sans-serif;transition:opacity .3s"></span>
-        <button id="btn-pin" class="btn btn-ghost btn-sm" title="{{ $note->pinned ? __('app.note_unpin_title') : __('app.note_pin_title') }}">
-            {{ $note->pinned ? __('app.note_pinned') : __('app.note_pin') }}
-        </button>
-        <div class="export-dropdown" id="export-wrap" style="position:relative">
-            <button class="btn btn-ghost btn-sm" id="btn-export-trigger" style="display:flex;align-items:center;gap:6px">
-                Exportar como
-                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-            </button>
-            <div id="export-menu" style="
-                display:none; position:fixed; z-index:10001;
-                background:var(--surface); border:1px solid var(--border);
-                border-radius:10px; padding:4px; min-width:160px;
-                box-shadow:0 8px 24px rgba(0,0,0,.4);
-                animation: cselDropIn .15s ease;
-            ">
-                <a href="{{ route('notes.export', $note) }}" id="export-md" download
-                   style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:7px;color:var(--text);text-decoration:none;font-size:13px;transition:background .1s"
-                   onmouseover="this.style.background='rgba(255,145,77,.1)'" onmouseout="this.style.background='none'">
-                    <span style="font-size:14px">⬇</span> Markdown (.md)
-                </a>
-                <a href="{{ route('notes.export.pdf', $note) }}" id="export-pdf" target="_blank"
-                   style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:7px;color:var(--text);text-decoration:none;font-size:13px;transition:background .1s"
-                   onmouseover="this.style.background='rgba(255,145,77,.1)'" onmouseout="this.style.background='none'">
-                    <span style="font-size:14px">🖨</span> PDF
-                </a>
-            </div>
-        </div>
-        <button id="btn-delete" class="btn btn-danger btn-sm">{{ __('app.note_delete') }}</button>
-        <a href="/notes" class="btn btn-ghost btn-sm">{{ __('app.note_back') }}</a>
-    </div>
-@endsection
+
 
 @push('styles')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -64,8 +19,12 @@
 /* ── Note layout ─────────────────────────────────────────────────────── */
 .note-shell {
     display: flex; gap: 0;
-    height: calc(100vh - 48px);
-    margin: -32px; overflow: hidden;
+    min-height: calc(100vh - 120px);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,.15);
+    overflow: visible;
     position: relative;
     /* toggle-btn uses position:absolute within this, dropdowns use position:fixed */
 }
@@ -73,7 +32,7 @@
 /* ── Sidebar ──────────────────────────────────────────────────────────── */
 .note-sidebar {
     width: 220px; flex-shrink: 0;
-    background: var(--surface);
+    background: var(--surface2);
     border-right: 1px solid var(--border);
     display: flex; flex-direction: column; overflow: hidden;
     transition: width .3s cubic-bezier(.4,0,.2,1), border-color .3s;
@@ -166,7 +125,7 @@ html[data-theme=light] .note-color-dot.active { border-color: #555; }
 /* ── Editor area ──────────────────────────────────────────────────────── */
 .note-editor-area {
     flex: 1; display: flex; flex-direction: column;
-    overflow: hidden; background: var(--bg);
+    overflow: visible; background: transparent;
     min-width: 0;
 }
 
@@ -194,19 +153,18 @@ html[data-theme=light] .note-color-dot.active { border-color: #555; }
 /* Toolbar */
 .tiptap-toolbar {
     display: flex; align-items: center; gap: 2px;
-    padding: 0 20px 0 32px;
+    padding: 4px 20px 4px 32px;
     border-bottom: 1px solid var(--border);
     background: var(--surface);
-    flex-wrap: nowrap; flex-shrink: 0;
-    overflow-x: auto; overflow-y: visible;
-    scrollbar-width: none; -webkit-overflow-scrolling: touch;
-    height: 40px;
-    position: static;
-    transition: height .3s cubic-bezier(.4,0,.2,1), opacity .3s, padding .3s;
-    /* overflow-y visible allows dropdowns to escape downward */
+    flex-wrap: wrap; flex-shrink: 0; align-content: center;
+    overflow: visible;
+    min-height: 40px; max-height: 80px;
+    position: sticky;
+    top: -32px;
+    z-index: 100;
+    transition: max-height .3s cubic-bezier(.4,0,.2,1), opacity .3s, padding .3s, top .3s;
     clip-path: none;
 }
-.tiptap-toolbar::-webkit-scrollbar { display: none; }
 .ttb-btn {
     width: 28px; height: 28px;
     display: flex; align-items: center; justify-content: center;
@@ -311,11 +269,11 @@ html[data-theme=light] .note-color-dot.active { border-color: #555; }
 
 /* ── Focus / reading mode feel ──────────────────────────────────────── */
 .tiptap-wrap {
-    background: var(--bg);
+    background: transparent;
 }
 /* Subtle paper texture on the editing surface */
 @media (prefers-color-scheme: dark) {
-    .tiptap-wrap { background: var(--bg); }
+    .tiptap-wrap { background: transparent; }
 }
 
 /* ── Word count bar at bottom of editor ─────────────────────────────── */
@@ -385,18 +343,56 @@ html[data-theme=light] .note-wordcount-bar { background: #fff; }
     font-family: 'Montserrat', sans-serif; font-size: 12.5px;
     color: #60a5fa; padding: 1px 6px;
 }
+/* ── Code block floating language picker ─────────────────────────────── */
+#cb-lang-picker {
+    display: none; position: fixed; z-index: 99999;
+    pointer-events: all;
+}
+#cb-lang-trigger {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 6px; padding: 4px 10px;
+    color: rgba(255,255,255,0.65);
+    font-size: 10.5px; font-weight: 700; font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    cursor: pointer; transition: all .15s; outline: none;
+}
+#cb-lang-trigger:hover, #cb-lang-trigger.open {
+    background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.35); color: #fff;
+}
+#cb-lang-trigger svg { opacity: 0.6; transition: transform 0.2s; }
+#cb-lang-trigger.open svg { transform: rotate(180deg); opacity: 1; }
+
+#cb-lang-menu {
+    display: none; position: fixed; z-index: 99999;
+    flex-direction: column; gap: 2px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 5px; min-width: 150px;
+    max-height: 320px; overflow-y: auto;
+    box-shadow: 0 12px 36px rgba(0,0,0,.5);
+    animation: popoverIn .15s ease-out;
+    pointer-events: all;
+}
+html[data-theme=light] #cb-lang-menu { background: #fff; box-shadow: 0 12px 36px rgba(0,0,0,.15); }
+
+.code-block-lang-item {
+    background: none; border: none; border-radius: 6px;
+    padding: 6px 12px; text-align: left;
+    color: var(--muted); font-size: 12.5px; font-family: inherit;
+    cursor: pointer; transition: background .1s, color .1s; width: 100%;
+    display: flex; align-items: center; justify-content: space-between;
+}
+.code-block-lang-item:hover  { background: var(--surface2); color: var(--text); }
+.code-block-lang-item.active { background: rgba(255,145,77,.1); color: var(--accent); font-weight: 600; }
+.code-block-lang-item.active::after { content: '✓'; font-size: 10px; }
+
 .ProseMirror pre {
     background: #0d0d10;
     border: 1px solid var(--border);
     border-radius: 12px;
     padding: 16px 20px; margin: 12px 0; overflow-x: auto;
     position: relative;
-}
-.ProseMirror pre::before {
-    content: '</>';
-    position: absolute; top: 10px; right: 14px;
-    font-family: 'Montserrat', sans-serif; font-size: 10px;
-    color: var(--muted); opacity: .4;
 }
 .ProseMirror pre code { background: none; border: none; padding: 0; font-size: 13px; color: #e2e8f0; line-height: 1.65; }
 
@@ -441,10 +437,42 @@ html[data-theme=light] .note-wordcount-bar { background: #fff; }
 .ProseMirror table .column-resize-handle { width: 3px; background: var(--accent); position: absolute; right: -1px; top: 0; bottom: 0; cursor: col-resize; pointer-events: all; }
 .tableWrapper { overflow-x: auto; margin: 10px 0; }
 
-/* Image */
-.ProseMirror img { max-width: 100%; border-radius: 8px; margin: 8px 0; display: block; transition: box-shadow .15s; }
-.ProseMirror img:hover { box-shadow: 0 4px 20px rgba(0,0,0,.3); }
-.ProseMirror img.ProseMirror-selectednode { outline: 2px solid var(--accent); box-shadow: 0 0 0 4px rgba(255,145,77,.2); }
+/* ── Resizable image ─────────────────────────────────────────────────── */
+.img-resize-outer { display: block; width: 100%; margin: 8px 0; line-height: 0; user-select: none; }
+.img-resize-wrap  { position: relative; display: inline-block; max-width: 100%; line-height: 0; }
+.img-resize-wrap img { display: block; width: 100%; height: auto; border-radius: 8px; transition: box-shadow .15s; }
+.img-resize-wrap:hover img { box-shadow: 0 4px 20px rgba(0,0,0,.25); }
+.ProseMirror-selectednode .img-resize-wrap img { outline: 2px solid var(--accent); box-shadow: 0 0 0 4px rgba(255,145,77,.2); border-radius: 8px; }
+
+/* Drag handle — bottom-right corner */
+.img-resize-handle {
+    position: absolute; bottom: 4px; right: 4px;
+    width: 13px; height: 13px;
+    background: var(--accent); border: 2px solid #fff;
+    border-radius: 3px; cursor: se-resize;
+    opacity: 0; transition: opacity .15s;
+    z-index: 5;
+}
+.img-resize-wrap:hover .img-resize-handle,
+.ProseMirror-selectednode .img-resize-handle { opacity: 1; }
+
+/* Preset toolbar — appears above image when selected */
+.img-resize-toolbar {
+    position: absolute; top: -34px; left: 50%; transform: translateX(-50%);
+    display: none; align-items: center; gap: 2px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 3px 4px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.25); white-space: nowrap; z-index: 10;
+}
+.ProseMirror-selectednode .img-resize-toolbar { display: flex; }
+.img-resize-preset {
+    background: none; border: none; color: var(--muted);
+    font-size: 10.5px; font-weight: 700; font-family: 'Montserrat', sans-serif;
+    padding: 3px 8px; border-radius: 5px; cursor: pointer; transition: background .1s, color .1s;
+}
+.img-resize-preset:hover { background: var(--surface2); color: var(--text); }
+.img-resize-preset.active { background: rgba(255,145,77,.15); color: var(--accent); }
+.img-resize-divider { width: 1px; height: 14px; background: var(--border); margin: 0 2px; flex-shrink: 0; }
 
 /* ── Callout blocks ──────────────────────────────────────────────────── */
 .callout-block {
@@ -499,11 +527,12 @@ html[data-theme=light] .note-wordcount-bar { background: #fff; }
 }
 
 /* ── Light theme overrides ───────────────────────────────────────────── */
-html[data-theme=light] .note-editor-area    { background: #eef0f5; }
-html[data-theme=light] .note-sidebar        { background: #ffffff; }
-html[data-theme=light] .note-title-input    { background: #eef0f5; color: var(--text); }
-html[data-theme=light] .tiptap-toolbar      { background: #ffffff; }
-html[data-theme=light] .tiptap-wrap         { background: #eef0f5; }
+html[data-theme=light] .note-shell          { background: #ffffff; border-color: #d1d5db; box-shadow: 0 10px 40px rgba(0,0,0,.08); }
+html[data-theme=light] .note-editor-area    { background: transparent; }
+html[data-theme=light] .note-sidebar        { background: #f9fafb; border-right-color: #e5e7eb; }
+html[data-theme=light] .note-title-input    { background: transparent; color: var(--text); }
+html[data-theme=light] .tiptap-toolbar      { background: #ffffff; border-color: #e5e7eb; border-bottom: 1px solid #e5e7eb; }
+html[data-theme=light] .tiptap-wrap         { background: transparent; }
 html[data-theme=light] .ProseMirror         { color: var(--text); }
 html[data-theme=light] .ProseMirror code    { background: rgba(59,130,246,.08); border-color: rgba(59,130,246,.2); color: #2563eb; }
 html[data-theme=light] .ProseMirror pre     { background: #1e1e2e; border-color: #2a2a3a; }
@@ -785,6 +814,7 @@ html[data-theme=light] .tag-chip:hover {
 /* Remove color cycling — one clean consistent style */
 
 @keyframes tagIn { from { opacity:0; transform: scale(.85) translateY(2px); } to { opacity:1; transform: scale(1) translateY(0); } }
+@keyframes shareModalIn { from { opacity:0; transform:translateY(-12px) scale(.97); } to { opacity:1; transform:translateY(0) scale(1); } }
 
 .tag-chip-remove {
     background: none; border: none; color: inherit; cursor: pointer;
@@ -857,7 +887,7 @@ html[data-theme=light] .ttb-color-swatch.active { border-color: #555; }
 html[data-theme=light] .ttb-color-palette { background: #fff; border-color: #dddde8; box-shadow: 0 8px 24px rgba(0,0,0,.12); }
 
 .note-shell.focus-mode .tiptap-toolbar {
-    height: 0; opacity: 0; pointer-events: none;
+    max-height: 0; min-height: 0; opacity: 0; pointer-events: none;
     padding: 0; overflow: hidden; border-bottom: none;
 }
 .note-shell.focus-mode .note-wordcount-bar {
@@ -869,7 +899,7 @@ html[data-theme=light] .ttb-color-palette { background: #fff; border-color: #ddd
 }
 .note-shell.focus-mode .tiptap-wrap { padding: 40px 64px 80px; }
 .note-shell.focus-mode .ProseMirror { max-width: 660px; margin: 0 auto; }
-.tiptap-toolbar     { transition: height .3s cubic-bezier(.4,0,.2,1), opacity .25s ease, padding .3s; }
+.tiptap-toolbar     { transition: max-height .3s cubic-bezier(.4,0,.2,1), min-height .3s, opacity .25s ease, padding .3s; }
 .note-wordcount-bar { transition: height .3s cubic-bezier(.4,0,.2,1), opacity .25s ease, padding .3s; }
 .note-sidebar       { transition: width .3s cubic-bezier(.4,0,.2,1); }
 
@@ -910,34 +940,142 @@ html[data-theme=light] .ttb-color-palette { background: #fff; border-color: #ddd
     font-family: 'Montserrat', sans-serif;
 }
 
-/* ── More menu (···) ──────────────────────────────────────────────────── */
-.ttb-more-wrap { position: relative; flex-shrink: 0; }
-.ttb-more-btn {
-    width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
-    border-radius: 6px; border: none; background: none;
-    color: var(--muted); cursor: pointer; font-size: 14px; font-weight: 700;
-    transition: background .1s, color .1s; letter-spacing: 1px; line-height: 1;
+
+/* ── Share Modal ─────────────────────────────────────────────────────── */
+#share-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 20px;
 }
-.ttb-more-btn:hover, .ttb-more-btn.open { background: var(--surface2); color: var(--text); }
-.ttb-more-menu {
-    display: none; position: fixed;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; padding: 4px; min-width: 170px;
-    box-shadow: 0 8px 28px rgba(0,0,0,.4); z-index: 9999;
-    animation: cselDropIn .15s ease;
+.share-modal-content {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 440px;
+    padding: 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    animation: shareModalIn .2s cubic-bezier(.34,1.4,.64,1) both;
+    font-family: 'Montserrat', sans-serif;
 }
-.ttb-more-menu.open { display: block; }
-.ttb-more-section {
-    font-size: 9.5px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;
-    color: var(--muted); padding: 8px 10px 4px;
+.share-modal-title {
+    font-size: 18px; font-weight: 700; color: var(--text);
+    margin-bottom: 4px; display: flex; align-items: center; gap: 10px;
 }
-.ttb-more-row { display: flex; gap: 2px; padding: 4px 6px; flex-wrap: wrap; }
-.ttb-more-menu .ttb-btn { width: 28px; height: 28px; }
-html[data-theme=light] .ttb-more-menu { background: #fff; border-color: #dddde8; box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+.share-modal-subtitle { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+
+.share-tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+.share-tab {
+    flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border);
+    background: transparent; color: var(--muted); cursor: pointer; text-align: center;
+    transition: all .2s; font-family: inherit;
+}
+.share-tab b { display: block; font-size: 13px; margin-bottom: 2px; }
+.share-tab span { font-size: 11px; opacity: .7; }
+
+.share-field-label { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin: 16px 0 8px; letter-spacing: .5px; }
+.share-input-group { position: relative; display: flex; gap: 8px; }
+.share-input-group input {
+    flex: 1; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); padding: 8px 12px; font-size: 13px; outline: none;
+}
+.share-input-group input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,145,77,.1); }
+
+.expiry-options { display: flex; gap: 6px; flex-wrap: wrap; }
+.expiry-btn {
+    padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border);
+    background: transparent; color: var(--muted); font-size: 11px; cursor: pointer;
+    transition: all .15s; font-family: 'Montserrat', sans-serif;
+}
+
+#share-msg { margin-top: 12px; font-size: 12px; font-weight: 600; text-align: center; display: none; }
+
+.btn-success {
+    background: var(--success) !important;
+    border-color: var(--success) !important;
+    color: #0c0c0e !important;
+}
+
+/* Light theme overrides for share modal */
+html[data-theme=light] .share-modal-content { background: #fff; box-shadow: 0 20px 60px rgba(0,0,0,.15); }
+html[data-theme=light] .share-tab { background: #f9f9fb; }
+html[data-theme=light] .share-input-group input { background: #f0f2f7; }
+
+/* Font inheritance fix */
+.share-modal-content button, 
+.share-modal-content input, 
+.share-modal-content textarea {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
 </style>
+
 @endpush
 
 @section('content')
+<div style="margin-bottom: 20px; display: flex; gap: 8px; justify-content: space-between; align-items: center;">
+    <div style="display:flex; gap:8px;">
+        <a href="/notes" class="btn btn-ghost btn-sm" style="color:var(--muted)">
+            {{ __('app.note_back') }}
+        </a>
+        <button
+            id="btn-add-shortcut"
+            class="btn btn-ghost btn-sm"
+            data-url="/notes/{{ $note->id }}"
+            data-label="{{ addslashes($note->title ?: 'Nota sem título') }}"
+            data-type="note"
+            data-emoji="📄"
+            title="Adicionar/remover dos atalhos"
+            style="color:var(--muted)">
+            <span class="pin-star" style="font-size:14px;line-height:1">☆</span>
+            <span class="pin-label">Adicionar atalho</span>
+        </button>
+    </div>
+    
+    <div style="display:flex;align-items:center;gap:8px">
+        <span id="save-status" style="font-size:12px;color:var(--muted);font-family:'Montserrat',sans-serif;transition:opacity .3s"></span>
+        <button id="btn-pin" class="btn btn-ghost btn-sm" title="{{ $note->pinned ? __('app.note_unpin_title') : __('app.note_pin_title') }}">
+            {{ $note->pinned ? __('app.note_pinned') : __('app.note_pin') }}
+        </button>
+        <div class="export-dropdown" id="export-wrap" style="position:relative">
+            <button class="btn btn-ghost btn-sm" id="btn-export-trigger" style="display:flex;align-items:center;gap:6px">
+                Exportar como
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
+            <div id="export-menu" style="
+                display:none; position:absolute; top:calc(100% + 4px); right:0; z-index:10001;
+                background:var(--surface); border:1px solid var(--border);
+                border-radius:10px; padding:4px; min-width:160px;
+                box-shadow:0 8px 24px rgba(0,0,0,.4);
+                animation: cselDropIn .15s ease;
+            ">
+                <a href="{{ route('notes.export', $note) }}" id="export-md" download
+                   style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:7px;color:var(--text);text-decoration:none;font-size:13px;transition:background .1s"
+                   onmouseover="this.style.background='rgba(255,145,77,.1)'" onmouseout="this.style.background='none'">
+                    <span style="font-size:14px">⬇</span> Markdown (.md)
+                </a>
+                <a href="{{ route('notes.export.pdf', $note) }}" id="export-pdf" target="_blank"
+                   style="display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:7px;color:var(--text);text-decoration:none;font-size:13px;transition:background .1s"
+                   onmouseover="this.style.background='rgba(255,145,77,.1)'" onmouseout="this.style.background='none'">
+                    <span style="font-size:14px">🖨</span> PDF
+                </a>
+            </div>
+        </div>
+        <button id="btn-share" class="btn btn-ghost btn-sm" onclick="openShareModal()" style="display:flex;align-items:center;gap:6px">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="3" r="1.5"/><circle cx="12" cy="13" r="1.5"/><circle cx="3" cy="8" r="1.5"/><path d="M10.5 4L4.5 7.5M10.5 12L4.5 8.5"/></svg>
+            Compartilhar
+        </button>
+        <button id="btn-delete" class="btn btn-danger btn-sm">{{ __('app.note_delete') }}</button>
+    </div>
+</div>
+
 <div class="note-shell">
 
     {{-- Sidebar toggle — fixed to shell, NOT inside sidebar --}}
@@ -1032,13 +1170,40 @@ html[data-theme=light] .ttb-more-menu { background: #fff; border-color: #dddde8;
                     <button type="button" data-heading="3" class="ttb-dropdown-item" style="font-size:13px;font-weight:600">Título 3</button>
                 </div>
             </div>
+            {{-- Font picker --}}
+            <div class="ttb-dropdown" id="ttb-font-wrap" style="flex-shrink:0">
+                <button class="ttb-dropdown-trigger" id="ttb-font-trigger" type="button" title="Fonte do editor">
+                    <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 13L6 3l4 10M4 9.5h4M11 5v8M10 5h3"/></svg>
+                    <span id="ttb-font-label" style="font-size:11px;min-width:52px;text-align:left">Sans</span>
+                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </button>
+                <div class="ttb-dropdown-menu" id="ttb-font-menu" style="min-width:160px">
+                    {{-- populated by editor.js --}}
+                </div>
+            </div>
             <div class="ttb-sep"></div>
             {{-- Core formatting — always visible --}}
             <button class="ttb-btn" data-cmd="bold"      title="Negrito (Ctrl+B)"><i class="fa fa-bold"></i></button>
             <button class="ttb-btn" data-cmd="italic"    title="Itálico (Ctrl+I)"><i class="fa fa-italic"></i></button>
             <button class="ttb-btn" data-cmd="underline" title="Sublinhado (Ctrl+U)"><i class="fa fa-underline"></i></button>
             <button class="ttb-btn" data-cmd="strike"    title="Tachado"><i class="fa fa-strikethrough"></i></button>
-            <button class="ttb-btn" data-cmd="highlight" title="Realçar"><i class="fa fa-highlighter"></i></button>
+            {{-- Highlight color --}}
+            <div class="ttb-color-wrap">
+                <button class="ttb-btn" id="ttb-hl-trigger" title="Realçar" style="position:relative">
+                    <i class="fa fa-highlighter"></i>
+                    <span id="ttb-hl-bar" style="position:absolute;bottom:4px;left:5px;right:5px;height:2px;border-radius:1px;background:#fef08a"></span>
+                </button>
+                <div class="ttb-color-palette" id="ttb-hl-palette">
+                    <div class="ttb-color-grid" id="ttb-hl-grid">
+                        @foreach(['#fef08a','#fed7aa','#fecaca','#fecdd3','#e9d5ff','#bfdbfe','#a5f3fc','#bbf7d0','#d1fae5','#e2e8f0'] as $hc)
+                            <div class="ttb-color-swatch" style="background:{{ $hc }}" data-color="{{ $hc }}" title="{{ $hc }}"></div>
+                        @endforeach
+                    </div>
+                    <button class="ttb-color-remove" id="ttb-hl-remove">✕ Remover realce</button>
+                </div>
+            </div>
+            <button class="ttb-btn" data-cmd="subscript"   title="Subscrito"><i class="fa fa-subscript"></i></button>
+            <button class="ttb-btn" data-cmd="superscript" title="Sobrescrito"><i class="fa fa-superscript"></i></button>
             {{-- Text color --}}
             <div class="ttb-color-wrap">
                 <button class="ttb-btn" id="ttb-color-trigger" title="Cor do texto" style="position:relative">
@@ -1055,78 +1220,47 @@ html[data-theme=light] .ttb-more-menu { background: #fff; border-color: #dddde8;
                 </div>
             </div>
             <div class="ttb-sep"></div>
+            {{-- Alignment --}}
+            <button class="ttb-btn" data-cmd="alignLeft"    title="Esquerda"><i class="fa fa-align-left"></i></button>
+            <button class="ttb-btn" data-cmd="alignCenter"  title="Centro"><i class="fa fa-align-center"></i></button>
+            <button class="ttb-btn" data-cmd="alignRight"   title="Direita"><i class="fa fa-align-right"></i></button>
+            <button class="ttb-btn" data-cmd="alignJustify" title="Justificar"><i class="fa fa-align-justify"></i></button>
+            <div class="ttb-sep"></div>
             {{-- Lists —— always visible --}}
             <button class="ttb-btn" data-cmd="bulletList"  title="Lista com marcadores"><i class="fa fa-list-ul"></i></button>
             <button class="ttb-btn" data-cmd="orderedList" title="Lista numerada"><i class="fa fa-list-ol"></i></button>
             <button class="ttb-btn" data-cmd="taskList"    title="Lista de tarefas"><i class="fa fa-check-square"></i></button>
             <div class="ttb-sep"></div>
             {{-- Common blocks --}}
-            <button class="ttb-btn" data-cmd="blockquote" title="Citação"><i class="fa fa-quote-left"></i></button>
-            <button class="ttb-btn" data-cmd="codeBlock"  title="Bloco de código"><i class="fa fa-code"></i></button>
+            <button class="ttb-btn" data-cmd="blockquote"     title="Citação"><i class="fa fa-quote-left"></i></button>
+            <button class="ttb-btn" data-cmd="codeBlock"      title="Bloco de código"><i class="fa fa-code"></i></button>
+            <button class="ttb-btn" data-cmd="horizontalRule" title="Linha horizontal"><i class="fa fa-minus"></i></button>
             <div class="ttb-sep"></div>
             {{-- Inline inserts --}}
             <button class="ttb-btn" data-cmd="link"  title="Link (Ctrl+K)"><i class="fa fa-link"></i></button>
             <button class="ttb-btn" data-cmd="image" title="Imagem"><i class="fa fa-image"></i></button>
+            {{-- Callout --}}
+            <div class="ttb-dropdown" id="ttb-callout-wrap" style="flex-shrink:0">
+                <button class="ttb-dropdown-trigger ttb-callout-trigger-btn" id="ttb-callout-trigger" type="button" title="Inserir callout">
+                    <span id="ttb-callout-icon" style="font-size:14px;line-height:1">💬</span>
+                    <span style="font-size:11px;flex:1;text-align:left">Callout</span>
+                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </button>
+                <div class="ttb-dropdown-menu" id="ttb-callout-menu" style="min-width:148px">
+                    <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="info"><span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#3b82f6"/><rect x="8.2" y="8" width="1.6" height="5.5" rx=".8" fill="white"/><circle cx="9" cy="5.5" r="1.1" fill="white"/></svg></span> Info</button>
+                    <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="success"><span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#22c55e"/><path d="M5.5 9.5l2.5 2.5 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Sucesso</button>
+                    <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="warning"><span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M9 2L16.5 15H1.5L9 2Z" fill="#f59e0b"/><rect x="8.2" y="7" width="1.6" height="4" rx=".8" fill="white"/><circle cx="9" cy="13" r=".9" fill="white"/></svg></span> Aviso</button>
+                    <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="danger"><span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#ef4444"/><path d="M6 6l6 6M12 6l-6 6" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg></span> Perigo</button>
+                    <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="tip"><span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#a855f7"/><path d="M9 5a3.5 3.5 0 011.2 6.8V13H7.8v-1.2A3.5 3.5 0 019 5z" fill="white"/><rect x="8.2" y="13.5" width="1.6" height="1.5" rx=".6" fill="white"/></svg></span> Dica</button>
+                    <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="note"><span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3.5" fill="#64748b"/><path d="M5 6.5h8M5 9h8M5 11.5h5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></span> Nota</button>
+                </div>
+            </div>
+            <button class="ttb-btn" data-cmd="insertTable" title="Tabela"><i class="fa fa-table"></i></button>
+            <button class="ttb-btn" data-cmd="emoji"       title="Emoji" style="font-size:14px">😀</button>
             <div class="ttb-sep"></div>
             {{-- Undo/Redo --}}
             <button class="ttb-btn" data-cmd="undo" title="Desfazer (Ctrl+Z)"><i class="fa fa-undo"></i></button>
             <button class="ttb-btn" data-cmd="redo" title="Refazer (Ctrl+Y)"><i class="fa fa-redo"></i></button>
-            <div class="ttb-sep"></div>
-            {{-- ··· More menu — less used tools --}}
-            <div class="ttb-more-wrap">
-                <button class="ttb-more-btn" id="ttb-more-btn" title="Mais opções">···</button>
-                <div class="ttb-more-menu" id="ttb-more-menu">
-                    <div class="ttb-more-section">Fonte</div>
-                    <div style="padding:2px 6px 6px">
-                        <div class="ttb-dropdown" id="ttb-font-wrap" style="display:block">
-                            <button class="ttb-dropdown-trigger" id="ttb-font-trigger" type="button" title="Fonte do editor" style="width:100%">
-                                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 13L6 3l4 10M4 9.5h4M11 5v8M10 5h3"/></svg>
-                                <span id="ttb-font-label" style="font-size:11px;min-width:52px;text-align:left">Sans</span>
-                                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                            </button>
-                            <div class="ttb-dropdown-menu" id="ttb-font-menu" style="min-width:160px">
-                                {{-- populated by editor.js --}}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="ttb-more-section">Formatação</div>
-                    <div class="ttb-more-row">
-                        <button class="ttb-btn" data-cmd="subscript"    title="Subscrito"><i class="fa fa-subscript"></i></button>
-                        <button class="ttb-btn" data-cmd="superscript"  title="Sobrescrito"><i class="fa fa-superscript"></i></button>
-                        <button class="ttb-btn" data-cmd="horizontalRule" title="Linha horizontal"><i class="fa fa-minus"></i></button>
-                        <button class="ttb-btn" data-cmd="emoji"        title="Emoji" style="font-size:14px">😀</button>
-                    </div>
-                    <div class="ttb-more-section">Alinhamento</div>
-                    <div class="ttb-more-row">
-                        <button class="ttb-btn" data-cmd="alignLeft"    title="Esquerda"><i class="fa fa-align-left"></i></button>
-                        <button class="ttb-btn" data-cmd="alignCenter"  title="Centro"><i class="fa fa-align-center"></i></button>
-                        <button class="ttb-btn" data-cmd="alignRight"   title="Direita"><i class="fa fa-align-right"></i></button>
-                        <button class="ttb-btn" data-cmd="alignJustify" title="Justificar"><i class="fa fa-align-justify"></i></button>
-                    </div>
-                    <div class="ttb-more-section">Inserir</div>
-                    <div class="ttb-more-row">
-                        <button class="ttb-btn" data-cmd="insertTable"  title="Tabela"><i class="fa fa-table"></i></button>
-                    </div>
-                    <div class="ttb-more-section">Callout</div>
-                    <div style="padding:2px 6px 6px">
-                        <div class="ttb-dropdown" id="ttb-callout-wrap">
-                            <button class="ttb-dropdown-trigger ttb-callout-trigger-btn" id="ttb-callout-trigger" type="button" title="Inserir callout" style="width:100%">
-                                <span id="ttb-callout-icon" style="font-size:14px;line-height:1">💬</span>
-                                <span style="font-size:11px;flex:1;text-align:left">Callout</span>
-                                <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-                            </button>
-                            <div class="ttb-dropdown-menu" id="ttb-callout-menu" style="min-width:148px">
-                                <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="info"><span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#3b82f6"/><rect x="8.2" y="8" width="1.6" height="5.5" rx=".8" fill="white"/><circle cx="9" cy="5.5" r="1.1" fill="white"/></svg></span> Info</button>
-                                <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="success"><span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#22c55e"/><path d="M5.5 9.5l2.5 2.5 5-5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Sucesso</button>
-                                <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="warning"><span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M9 2L16.5 15H1.5L9 2Z" fill="#f59e0b"/><rect x="8.2" y="7" width="1.6" height="4" rx=".8" fill="white"/><circle cx="9" cy="13" r=".9" fill="white"/></svg></span> Aviso</button>
-                                <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="danger"><span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#ef4444"/><path d="M6 6l6 6M12 6l-6 6" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg></span> Perigo</button>
-                                <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="tip"><span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="8" fill="#a855f7"/><path d="M9 5a3.5 3.5 0 011.2 6.8V13H7.8v-1.2A3.5 3.5 0 019 5z" fill="white"/><rect x="8.2" y="13.5" width="1.6" height="1.5" rx=".6" fill="white"/></svg></span> Dica</button>
-                                <button type="button" class="ttb-dropdown-item ttb-callout-item" data-callout="note"><span><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3.5" fill="#64748b"/><path d="M5 6.5h8M5 9h8M5 11.5h5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></span> Nota</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             {{-- Words counter in toolbar --}}
             <span id="toolbar-wordcount">0 palavras</span>
         </div>
@@ -1162,6 +1296,17 @@ html[data-theme=light] .ttb-more-menu { background: #fff; border-color: #dddde8;
 @endsection
 
 @push('modals')
+{{-- Code block language picker (aparece quando cursor está em bloco de código) --}}
+<div id="cb-lang-picker">
+    <button type="button" id="cb-lang-trigger">
+        <span>Auto</span>
+        <svg width="10" height="6" viewBox="0 0 10 6" fill="none">
+            <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
+</div>
+<div id="cb-lang-menu"></div>
+
 {{-- Bubble menu (aparece ao selecionar texto) --}}
 <div id="bubble-menu" style="
     display:none; position:fixed; z-index:9997;
@@ -1220,6 +1365,60 @@ html[data-theme=light] .ttb-more-menu { background: #fff; border-color: #dddde8;
         <button class="btn btn-primary btn-sm" id="link-insert-btn">Inserir link</button>
     </div>
 </div>
+
+{{-- Share modal --}}
+<div id="share-modal">
+    <div class="share-modal-content">
+        <div class="share-modal-title">
+            <svg width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="3" r="1.5"/><circle cx="12" cy="13" r="1.5"/><circle cx="3" cy="8" r="1.5"/><path d="M10.5 4L4.5 7.5M10.5 12L4.5 8.5"/></svg>
+            Compartilhar nota
+        </div>
+        <p class="share-modal-subtitle">Configure como outras pessoas podem acessar esta nota.</p>
+
+        <div class="share-tabs">
+            <button class="share-tab" id="tab-public" type="button" onclick="setVisibility('public')">
+                <b>Pública</b>
+                <span>Qualquer um com o link</span>
+            </button>
+            <button class="share-tab" id="tab-private" type="button" onclick="setVisibility('private')">
+                <b>Privada</b>
+                <span>Apenas e-mails autorizados</span>
+            </button>
+        </div>
+
+        <div id="share-emails-wrap" style="display:none">
+            <div class="share-field-label">E-mails autorizados (separados por vírgula)</div>
+            <div class="share-input-group">
+                <input type="text" id="share-emails" placeholder="exemplo@email.com, outro@email.com">
+            </div>
+        </div>
+
+        <div class="share-field-label">Expiração do link</div>
+        <div class="expiry-options">
+            <button type="button" class="expiry-btn" data-days="" onclick="setExpiry('')">Nunca</button>
+            <button type="button" class="expiry-btn" data-days="1" onclick="setExpiry('1')">1 dia</button>
+            <button type="button" class="expiry-btn" data-days="7" onclick="setExpiry('7')">7 dias</button>
+            <button type="button" class="expiry-btn" data-days="30" onclick="setExpiry('30')">30 dias</button>
+        </div>
+
+        <div id="share-link-wrap" style="display:none; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border);">
+            <div class="share-field-label">Link de compartilhamento</div>
+            <div class="share-input-group">
+                <input type="text" id="share-link-input" readonly>
+                <button class="btn btn-primary btn-sm" type="button" id="btn-copy-link" onclick="copyLink()">Copiar</button>
+            </div>
+        </div>
+
+        <div id="share-msg"></div>
+
+        <div style="display:flex; gap:10px; margin-top:24px;">
+            <button class="btn btn-ghost btn-sm" type="button" onclick="closeShareModal()" style="flex:1">Fechar</button>
+            <button class="btn btn-danger btn-sm" type="button" id="btn-revoke" onclick="revokeShare()" style="display:none">Revogar link</button>
+            <button class="btn btn-primary btn-sm" type="button" id="btn-share-save" onclick="saveShare()" style="flex:1">Gerar link</button>
+        </div>
+    </div>
+</div>
+
 @endpush
 
 @push('scripts')
@@ -1361,86 +1560,13 @@ html[data-theme=light] .ttb-more-menu { background: #fff; border-color: #dddde8;
     });
 })();
 
-// ── Dropdown positioning (fixed, escapes overflow:auto toolbar) ───────────────
-(function() {
-    function positionDropdown(trigger, menu) {
-        const rect = trigger.getBoundingClientRect();
-        menu.style.top  = (rect.bottom + 4) + 'px';
-        menu.style.left = rect.left + 'px';
-        menu.style.right = 'auto';
-        // Prevent right-overflow
-        const menuW = menu.offsetWidth || 160;
-        if (rect.left + menuW > window.innerWidth - 8) {
-            menu.style.left = 'auto';
-            menu.style.right = (window.innerWidth - rect.right) + 'px';
-        }
+// ── Close toolbar dropdowns on outside click ──────────────────────────────────
+document.addEventListener('mousedown', e => {
+    if (!e.target.closest('.ttb-dropdown') && !e.target.closest('.ttb-dropdown-menu')) {
+        document.querySelectorAll('.ttb-dropdown-menu.open').forEach(m => m.classList.remove('open'));
+        document.querySelectorAll('.ttb-dropdown-trigger.open').forEach(b => b.classList.remove('open'));
     }
-
-    function openDropdown(trigger, menu) {
-        const wasOpen = menu.classList.contains('open');
-        closeAllDropdowns();
-        if (!wasOpen) {
-            menu.classList.add('open');
-            trigger.classList.add('open');
-            positionDropdown(trigger, menu);
-        }
-    }
-
-    function closeAllDropdowns() {
-        document.querySelectorAll('.ttb-dropdown-menu.open, .ttb-more-menu.open').forEach(m => m.classList.remove('open'));
-        document.querySelectorAll('.ttb-dropdown-trigger.open, .ttb-more-btn.open').forEach(b => b.classList.remove('open'));
-    }
-
-    // Use mousedown so we capture before blur/click events from editor
-    function bindDropdown(triggerId, menuId) {
-        const trigger = document.getElementById(triggerId);
-        const menu    = document.getElementById(menuId);
-        if (!trigger || !menu) return;
-        trigger.addEventListener('mousedown', (e) => {
-            e.preventDefault(); // prevent editor losing focus
-            e.stopPropagation();
-            openDropdown(trigger, menu);
-        });
-        // also stop click from bubbling to document's closeAllDropdowns
-        trigger.addEventListener('click', e => e.stopPropagation());
-    }
-
-    // ttb-heading and ttb-callout are handled by editor.js (needs editor instance)
-    // ttb-font is also handled by editor.js
-    // Only bind dropdowns that are NOT managed by editor.js:
-    // (none currently — more menu has its own handler below)
-
-    // More menu
-    const moreBtn  = document.getElementById('ttb-more-btn');
-    const moreMenu = document.getElementById('ttb-more-menu');
-    if (moreBtn && moreMenu) {
-        moreBtn.addEventListener('mousedown', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const wasOpen = moreMenu.classList.contains('open');
-            closeAllDropdowns();
-            if (!wasOpen) {
-                moreMenu.classList.add('open');
-                moreBtn.classList.add('open');
-                const rect = moreBtn.getBoundingClientRect();
-                moreMenu.style.top   = (rect.bottom + 4) + 'px';
-                moreMenu.style.right = (window.innerWidth - rect.right) + 'px';
-                moreMenu.style.left  = 'auto';
-            }
-        });
-        moreBtn.addEventListener('click', e => e.stopPropagation());
-        moreMenu.addEventListener('mousedown', e => e.stopPropagation());
-        moreMenu.addEventListener('click',     e => e.stopPropagation());
-    }
-
-    document.addEventListener('mousedown', e => {
-        // Only close if click is outside ALL toolbar dropdown triggers and menus
-        if (!e.target.closest('.ttb-dropdown, .ttb-more-wrap')) {
-            document.querySelectorAll('.ttb-dropdown-menu.open, .ttb-more-menu.open').forEach(m => m.classList.remove('open'));
-            document.querySelectorAll('.ttb-dropdown-trigger.open, .ttb-more-btn.open').forEach(b => b.classList.remove('open'));
-        }
-    });
-})();
+});
 
 // ── Toolbar wordcount sync ────────────────────────────────────────────────────
 (function() {
@@ -1493,23 +1619,174 @@ window.__NOTE__ = {
     if (!trigger || !menu) return;
 
     trigger.addEventListener('click', function (e) {
+        e.preventDefault();
         e.stopPropagation();
         const isOpen = menu.style.display === 'block';
         menu.style.display = isOpen ? 'none' : 'block';
-        if (!isOpen) {
-            const r = trigger.getBoundingClientRect();
-            menu.style.top  = (r.bottom + 4) + 'px';
-            menu.style.left = r.left + 'px';
-        }
     });
 
-    document.addEventListener('click', function () {
-        menu.style.display = 'none';
+    document.addEventListener('click', function (e) {
+        if (!menu.contains(e.target) && !trigger.contains(e.target)) {
+            menu.style.display = 'none';
+        }
     });
 
     menu.addEventListener('click', function (e) {
         e.stopPropagation();
         setTimeout(() => { menu.style.display = 'none'; }, 80);
+    });
+})();
+</script>
+<script>
+// ── Share modal ───────────────────────────────────────────────────────────────
+(function () {
+    const NOTE_ID = {{ $note->id }};
+    const CSRF    = document.querySelector('meta[name=csrf-token]').content;
+
+    let _visibility = 'public';
+    let _expiry     = '';
+
+    @if($note->share?->active)
+    window.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('share-link-input').value            = '{{ $note->share->url() }}';
+        document.getElementById('share-link-wrap').style.display     = 'block';
+        document.getElementById('btn-revoke').style.display          = 'block';
+        document.getElementById('btn-share-save').textContent        = 'Atualizar link';
+        _applyVisibility('{{ $note->share->visibility }}');
+        @if($note->share->allowed_emails)
+        document.getElementById('share-emails').value = '{{ implode(', ', $note->share->allowed_emails) }}';
+        @endif
+    });
+    @endif
+
+    function _applyVisibility(v) {
+        _visibility = v;
+        const pubTab  = document.getElementById('tab-public');
+        const privTab = document.getElementById('tab-private');
+        const emails  = document.getElementById('share-emails-wrap');
+        pubTab.style.borderColor  = v === 'public'  ? 'var(--accent)' : 'var(--border)';
+        pubTab.style.background   = v === 'public'  ? 'rgba(255,145,77,.06)' : 'transparent';
+        privTab.style.borderColor = v === 'private' ? 'var(--accent)' : 'var(--border)';
+        privTab.style.background  = v === 'private' ? 'rgba(255,145,77,.06)' : 'transparent';
+        emails.style.display      = v === 'private' ? 'block' : 'none';
+    }
+
+    function _showMsg(msg, color) {
+        const el = document.getElementById('share-msg');
+        el.textContent = msg; el.style.color = color; el.style.display = 'block';
+        setTimeout(() => { el.style.display = 'none'; }, 3000);
+    }
+
+    window.openShareModal = function () {
+        document.getElementById('share-modal').style.display = 'flex';
+    };
+
+    window.closeShareModal = function () {
+        document.getElementById('share-modal').style.display = 'none';
+    };
+
+    window.setVisibility = function (v) { _applyVisibility(v); };
+
+    window.setExpiry = function (days) {
+        _expiry = days;
+        document.querySelectorAll('.expiry-btn').forEach(btn => {
+            const active = btn.dataset.days === days;
+            btn.style.background  = active ? 'rgba(255,145,77,.12)' : 'transparent';
+            btn.style.borderColor = active ? 'var(--accent)' : 'var(--border)';
+            btn.style.color       = active ? 'var(--accent)' : 'var(--muted)';
+        });
+    };
+
+    window.saveShare = async function () {
+        const btn = document.getElementById('btn-share-save');
+        btn.disabled = true; btn.textContent = 'Gerando…';
+
+        const body = { visibility: _visibility };
+        if (_visibility === 'private') body.allowed_emails = document.getElementById('share-emails').value;
+        if (_expiry) {
+            const d = new Date(); d.setDate(d.getDate() + parseInt(_expiry));
+            body.expires_at = d.toISOString();
+        }
+
+        try {
+            const res  = await fetch(`/notes/${NOTE_ID}/share`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
+                body: JSON.stringify(body),
+            });
+            const data = await res.json();
+            if (res.ok) {
+                document.getElementById('share-link-input').value        = data.url;
+                document.getElementById('share-link-wrap').style.display = 'block';
+                document.getElementById('btn-revoke').style.display      = 'block';
+                btn.textContent = 'Atualizar link';
+                _showMsg('Link gerado com sucesso!', 'var(--success)');
+            } else {
+                _showMsg(data.message || 'Erro ao gerar link.', 'var(--danger)');
+            }
+        } catch { _showMsg('Erro de conexão.', 'var(--danger)'); }
+        finally  { btn.disabled = false; }
+    };
+
+    window.revokeShare = async function () {
+        if (!confirm('Revogar o link? Quem o tiver não poderá mais acessar a nota.')) return;
+        const res = await fetch(`/notes/${NOTE_ID}/share`, {
+            method: 'DELETE',
+            headers: { 'X-CSRF-TOKEN': CSRF },
+        });
+        if (res.ok) {
+            document.getElementById('share-link-wrap').style.display = 'none';
+            document.getElementById('btn-revoke').style.display      = 'none';
+            document.getElementById('btn-share-save').textContent    = 'Gerar link';
+            _showMsg('Link revogado.', 'var(--muted)');
+        }
+    };
+
+    window.copyLink = function () {
+        const input = document.getElementById('share-link-input');
+        if (!input) return;
+        
+        const val = input.value;
+        if (!val) return;
+
+        // Try modern API
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(val).then(() => {
+                _updateCopyBtnState();
+            }).catch(err => {
+                console.error('Falha ao copiar:', err);
+                _fallbackCopyText(input);
+            });
+        } else {
+            _fallbackCopyText(input);
+        }
+    };
+
+    function _updateCopyBtnState() {
+        const btn = document.getElementById('btn-copy-link');
+        if (!btn) return;
+        const oldText = btn.innerHTML;
+        btn.innerHTML = '<span>Copiado!</span>';
+        btn.classList.add('btn-success');
+        setTimeout(() => {
+            btn.innerHTML = oldText;
+            btn.classList.remove('btn-success');
+        }, 2000);
+    }
+
+    function _fallbackCopyText(input) {
+        try {
+            input.select();
+            input.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand('copy');
+            _updateCopyBtnState();
+        } catch (err) {
+            console.error('Falha no fallback de cópia:', err);
+        }
+    }
+
+    document.getElementById('share-modal')?.addEventListener('click', function (e) {
+        if (e.target === this) window.closeShareModal();
     });
 })();
 </script>

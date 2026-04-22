@@ -1,5 +1,48 @@
 import { Editor, Extension, Node } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
+import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
+import { createLowlight } from 'lowlight';
+import javascript from 'highlight.js/lib/languages/javascript';
+import typescript from 'highlight.js/lib/languages/typescript';
+import python from 'highlight.js/lib/languages/python';
+import php from 'highlight.js/lib/languages/php';
+import html from 'highlight.js/lib/languages/xml';
+import css from 'highlight.js/lib/languages/css';
+import json from 'highlight.js/lib/languages/json';
+import bash from 'highlight.js/lib/languages/bash';
+import sql from 'highlight.js/lib/languages/sql';
+import rust from 'highlight.js/lib/languages/rust';
+import go from 'highlight.js/lib/languages/go';
+import java from 'highlight.js/lib/languages/java';
+import cpp from 'highlight.js/lib/languages/cpp';
+import markdown from 'highlight.js/lib/languages/markdown';
+import csharp from 'highlight.js/lib/languages/csharp';
+import kotlin from 'highlight.js/lib/languages/kotlin';
+import ruby from 'highlight.js/lib/languages/ruby';
+import swift from 'highlight.js/lib/languages/swift';
+import yaml from 'highlight.js/lib/languages/yaml';
+
+const lowlight = createLowlight();
+lowlight.register('javascript', javascript);
+lowlight.register('typescript', typescript);
+lowlight.register('python', python);
+lowlight.register('php', php);
+lowlight.register('html', html);
+lowlight.register('xml', html);
+lowlight.register('css', css);
+lowlight.register('json', json);
+lowlight.register('bash', bash);
+lowlight.register('sql', sql);
+lowlight.register('rust', rust);
+lowlight.register('go', go);
+lowlight.register('java', java);
+lowlight.register('cpp', cpp);
+lowlight.register('markdown', markdown);
+lowlight.register('csharp', csharp);
+lowlight.register('kotlin', kotlin);
+lowlight.register('ruby', ruby);
+lowlight.register('swift', swift);
+lowlight.register('yaml', yaml);
 import Underline from '@tiptap/extension-underline';
 import Highlight from '@tiptap/extension-highlight';
 import TaskList from '@tiptap/extension-task-list';
@@ -18,6 +61,138 @@ import { Color } from '@tiptap/extension-color';
 import { TextAlign } from '@tiptap/extension-text-align';
 import { Subscript } from '@tiptap/extension-subscript';
 import { Superscript } from '@tiptap/extension-superscript';
+
+// ── ResizableImage extension ──────────────────────────────────────────────────
+const ResizableImage = Image.extend({
+    addAttributes() {
+        return {
+            ...this.parent?.(),
+            width: {
+                default: null,
+                parseHTML: el => el.getAttribute('data-width') || null,
+                renderHTML: attrs => attrs.width ? { 'data-width': attrs.width } : {},
+            },
+        };
+    },
+
+    addNodeView() {
+        return ({ node, editor, getPos }) => {
+            const outer = document.createElement('div');
+            outer.className = 'img-resize-outer';
+
+            const wrap = document.createElement('div');
+            wrap.className = 'img-resize-wrap';
+            if (node.attrs.width) wrap.style.width = node.attrs.width;
+
+            const img = document.createElement('img');
+            img.src = node.attrs.src || '';
+            if (node.attrs.alt)   img.alt   = node.attrs.alt;
+            if (node.attrs.title) img.title = node.attrs.title;
+
+            // ── Preset toolbar ────────────────────────────────────────────────
+            const toolbar = document.createElement('div');
+            toolbar.className = 'img-resize-toolbar';
+
+            const PRESETS = [
+                { label: '25%', pct: 0.25 },
+                { label: '50%', pct: 0.50 },
+                { label: '75%', pct: 0.75 },
+                { label: '100%', pct: 1.00 },
+            ];
+
+            function getEditorWidth() {
+                return editor.view.dom.offsetWidth || 600;
+            }
+
+            function setWidth(w) {
+                if (typeof getPos !== 'function') return;
+                wrap.style.width = w;
+                editor.view.dispatch(
+                    editor.state.tr.setNodeMarkup(getPos(), undefined, { ...node.attrs, width: w })
+                );
+                updateActivePreset(w);
+            }
+
+            function updateActivePreset(w) {
+                const px = parseFloat(w);
+                const ew = getEditorWidth();
+                toolbar.querySelectorAll('.img-resize-preset').forEach(btn => {
+                    const pct = parseFloat(btn.dataset.pct);
+                    btn.classList.toggle('active', Math.abs(px - ew * pct) < 2);
+                });
+            }
+
+            PRESETS.forEach((p, i) => {
+                if (i > 0) {
+                    const div = document.createElement('div');
+                    div.className = 'img-resize-divider';
+                    toolbar.appendChild(div);
+                }
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'img-resize-preset';
+                btn.textContent = p.label;
+                btn.dataset.pct = p.pct;
+                btn.addEventListener('mousedown', e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const px = Math.round(getEditorWidth() * p.pct);
+                    setWidth(px + 'px');
+                });
+                toolbar.appendChild(btn);
+            });
+
+            // ── Drag handle ───────────────────────────────────────────────────
+            const handle = document.createElement('div');
+            handle.className = 'img-resize-handle';
+
+            let startX, startW;
+            handle.addEventListener('mousedown', e => {
+                e.preventDefault();
+                e.stopPropagation();
+                startX = e.clientX;
+                startW = wrap.offsetWidth || img.naturalWidth || 400;
+
+                const onMove = ev => {
+                    const newW = Math.max(60, startW + (ev.clientX - startX));
+                    wrap.style.width = newW + 'px';
+                };
+                const onUp = ev => {
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('mouseup', onUp);
+                    const newW = Math.max(60, startW + (ev.clientX - startX));
+                    setWidth(newW + 'px');
+                };
+                document.addEventListener('mousemove', onMove);
+                document.addEventListener('mouseup', onUp);
+            });
+
+            wrap.appendChild(toolbar);
+            wrap.appendChild(img);
+            wrap.appendChild(handle);
+            outer.appendChild(wrap);
+
+            if (node.attrs.width) updateActivePreset(node.attrs.width);
+
+            return {
+                dom: outer,
+                update(updatedNode) {
+                    if (updatedNode.type.name !== 'image') return false;
+                    img.src = updatedNode.attrs.src || '';
+                    if (updatedNode.attrs.alt)   img.alt   = updatedNode.attrs.alt;
+                    if (updatedNode.attrs.title) img.title = updatedNode.attrs.title;
+                    if (updatedNode.attrs.width) {
+                        wrap.style.width = updatedNode.attrs.width;
+                        updateActivePreset(updatedNode.attrs.width);
+                    } else {
+                        wrap.style.width = '';
+                    }
+                    return true;
+                },
+            };
+        };
+    },
+});
 
 // ── TextStyle extended with fontFamily ────────────────────────────────────────
 const TextStyleWithFont = TextStyle.extend({
@@ -192,6 +367,31 @@ function hexToRgba(hex, alpha) {
     const b = parseInt(hex.slice(5,7), 16);
     return `rgba(${r},${g},${b},${alpha})`;
 }
+
+// ── Language list (used by the floating picker below) ────────────────────────
+const CODE_LANGUAGES = [
+    { value: '',           label: 'Auto'       },
+    { value: 'bash',       label: 'Bash'       },
+    { value: 'cpp',        label: 'C++'        },
+    { value: 'csharp',     label: 'C#'         },
+    { value: 'css',        label: 'CSS'        },
+    { value: 'go',         label: 'Go'         },
+    { value: 'html',       label: 'HTML'       },
+    { value: 'java',       label: 'Java'       },
+    { value: 'javascript', label: 'JavaScript' },
+    { value: 'json',       label: 'JSON'       },
+    { value: 'kotlin',     label: 'Kotlin'     },
+    { value: 'markdown',   label: 'Markdown'   },
+    { value: 'php',        label: 'PHP'        },
+    { value: 'python',     label: 'Python'     },
+    { value: 'ruby',       label: 'Ruby'       },
+    { value: 'rust',       label: 'Rust'       },
+    { value: 'sql',        label: 'SQL'        },
+    { value: 'swift',      label: 'Swift'      },
+    { value: 'typescript', label: 'TypeScript' },
+    { value: 'xml',        label: 'XML'        },
+    { value: 'yaml',       label: 'YAML'       },
+];
 
 // ── Editor font options ───────────────────────────────────────────────────────
 const FONT_OPTIONS = [
@@ -447,28 +647,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const editor = new Editor({
         element: document.getElementById('tiptap-editor'),
         extensions: [
-            StarterKit.configure({ codeBlock: { languageClassPrefix: 'language-' } }),
+            StarterKit.configure({ codeBlock: false }),
+            CodeBlockLowlight.configure({ lowlight, defaultLanguage: null }),
             Underline,
             TextStyleWithFont,
             Color,
             TextAlign.configure({ types: ['heading', 'paragraph'] }),
             Subscript,
             Superscript,
-            Highlight.configure({ multicolor: false }),
+            Highlight.configure({ multicolor: true }),
             TaskList,
             TaskItem.configure({ nested: true }),
             Table.configure({ resizable: true }),
             TableRow, TableCell, TableHeader,
             Link.configure({ openOnClick: false, HTMLAttributes: { rel: 'noopener noreferrer' } }),
-            Image.configure({ inline: false }),
+            ResizableImage.configure({ inline: false }),
             Callout,
             Placeholder.configure({ placeholder: 'Escreva algo ou digite  /  para inserir blocos…' }),
             CharacterCount,
             SlashCommands,
         ],
         content: content || '',
-        onUpdate({ editor })          { updateStats(editor); scheduleSave(); },
-        onSelectionUpdate({ editor }) { updateToolbar(editor); buildBubbleMenu(editor); buildTableMenu(editor); },
+        onUpdate({ editor })          { updateStats(editor); scheduleSave(); updateCodeLangPicker(editor); },
+        onSelectionUpdate({ editor }) { updateToolbar(editor); buildBubbleMenu(editor); buildTableMenu(editor); updateCodeLangPicker(editor); },
     });
 
     // ── Text selection bubble menu ────────────────────────────────────────────
@@ -476,7 +677,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const sel    = ed.state.selection;
         const bubble = document.getElementById('bubble-menu');
         if (!bubble) return;
-        if (sel.empty) { bubble.style.display = 'none'; return; }
+        // Hide for empty selections or node selections (e.g. images)
+        if (sel.empty || sel.node) { bubble.style.display = 'none'; return; }
         const view  = ed.view;
         const start = view.coordsAtPos(sel.from);
         const end   = view.coordsAtPos(sel.to);
@@ -493,6 +695,84 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('mousedown', e => {
         const b = document.getElementById('bubble-menu');
         if (b && !b.contains(e.target)) b.style.display = 'none';
+    });
+
+    // ── Code block language picker ────────────────────────────────────────────
+    const cbPicker  = document.getElementById('cb-lang-picker');
+    const cbTrigger = document.getElementById('cb-lang-trigger');
+    const cbMenu    = document.getElementById('cb-lang-menu');
+
+    function updateCodeLangPicker(ed) {
+        if (!cbPicker) return;
+        if (!ed.isActive('codeBlock')) {
+            cbPicker.style.display = 'none';
+            closeCbMenu();
+            return;
+        }
+        // Find the <pre> element in the DOM for the current code block
+        const { from } = ed.state.selection;
+        const domInfo  = ed.view.domAtPos(from);
+        let el = domInfo.node instanceof Text ? domInfo.node.parentElement : domInfo.node;
+        while (el && el.tagName !== 'PRE') el = el.parentElement;
+        if (!el) { cbPicker.style.display = 'none'; return; }
+
+        const rect = el.getBoundingClientRect();
+        const lang  = ed.getAttributes('codeBlock').language || '';
+        const found = CODE_LANGUAGES.find(l => l.value === lang) || CODE_LANGUAGES[0];
+        if (cbTrigger) cbTrigger.querySelector('span').textContent = found.label;
+        cbPicker.style.top   = (rect.top  + 8) + 'px';
+        cbPicker.style.right = (window.innerWidth - rect.right + 10) + 'px';
+        cbPicker.style.display = 'flex';
+    }
+
+    function closeCbMenu() {
+        if (cbMenu)    cbMenu.style.display = 'none';
+        if (cbTrigger) cbTrigger.classList.remove('open');
+    }
+
+    // Build menu items once
+    if (cbMenu && cbMenu.childElementCount === 0) {
+        CODE_LANGUAGES.forEach(lang => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'code-block-lang-item';
+            btn.dataset.value = lang.value;
+            btn.textContent   = lang.label;
+            btn.addEventListener('mousedown', e => {
+                e.preventDefault();
+                editor.chain().focus()
+                    .updateAttributes('codeBlock', { language: lang.value || null })
+                    .run();
+                closeCbMenu();
+            });
+            cbMenu.appendChild(btn);
+        });
+    }
+
+    // Toggle dropdown on trigger click
+    cbTrigger?.addEventListener('mousedown', e => {
+        e.preventDefault();
+        if (cbMenu.style.display === 'flex') {
+            closeCbMenu();
+            return;
+        }
+        // Update active state
+        const lang = editor.getAttributes('codeBlock').language || '';
+        cbMenu.querySelectorAll('.code-block-lang-item').forEach(b => {
+            b.classList.toggle('active', b.dataset.value === lang);
+        });
+        // Position below trigger
+        const rect = cbTrigger.getBoundingClientRect();
+        cbMenu.style.top   = (rect.bottom + 4) + 'px';
+        cbMenu.style.right = (window.innerWidth - rect.right) + 'px';
+        cbMenu.style.display = 'flex';
+        cbTrigger.classList.add('open');
+    });
+
+    // Close on outside click
+    document.addEventListener('mousedown', e => {
+        if (!cbMenu || cbMenu.style.display === 'none') return;
+        if (!cbMenu.contains(e.target) && !cbTrigger?.contains(e.target)) closeCbMenu();
     });
 
     document.querySelectorAll('#bubble-menu [data-mark]').forEach(btn => {
@@ -637,6 +917,14 @@ document.addEventListener('DOMContentLoaded', () => {
             colorBar.style.background = attrs?.color || 'var(--accent)';
         }
 
+        const hlBar = document.getElementById('ttb-hl-bar');
+        if (hlBar) {
+            const hlAttrs = ed.getAttributes('highlight');
+            hlBar.style.background = hlAttrs?.color || '#fef08a';
+        }
+        const hlTriggerEl = document.getElementById('ttb-hl-trigger');
+        if (hlTriggerEl) hlTriggerEl.classList.toggle('active', ed.isActive('highlight'));
+
         const hdLabel = document.getElementById('ttb-heading-label');
         const labels  = { 0:'Parágrafo', 1:'Título 1', 2:'Título 2', 3:'Título 3' };
         let activeH = 0;
@@ -658,7 +946,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 italic:         () => editor.chain().focus().toggleItalic().run(),
                 underline:      () => editor.chain().focus().toggleUnderline().run(),
                 strike:         () => editor.chain().focus().toggleStrike().run(),
-                highlight:      () => editor.chain().focus().toggleHighlight().run(),
                 subscript:      () => editor.chain().focus().toggleSubscript().run(),
                 superscript:    () => editor.chain().focus().toggleSuperscript().run(),
                 alignLeft:      () => editor.chain().focus().setTextAlign('left').run(),
@@ -683,6 +970,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateToolbar(editor);
         });
     });
+
 
     // ── Text color palette ────────────────────────────────────────────────────
     const colorTrigger = document.getElementById('ttb-color-trigger');
@@ -718,19 +1006,60 @@ document.addEventListener('DOMContentLoaded', () => {
         updateToolbar(editor);
     });
 
+    // ── Highlight color palette ───────────────────────────────────────────────
+    const hlTrigger  = document.getElementById('ttb-hl-trigger');
+    const hlPalette  = document.getElementById('ttb-hl-palette');
+    hlTrigger?.addEventListener('mousedown', e => {
+        e.preventDefault();
+        colorPalette?.classList.remove('open');
+        hlPalette?.classList.toggle('open');
+    });
+    document.addEventListener('mousedown', e => {
+        if (!hlTrigger?.contains(e.target) && !hlPalette?.contains(e.target)) {
+            hlPalette?.classList.remove('open');
+        }
+    });
+    document.getElementById('ttb-hl-grid')?.addEventListener('mousedown', e => {
+        e.preventDefault();
+        const swatch = e.target.closest('.ttb-color-swatch');
+        if (!swatch) return;
+        const color = swatch.dataset.color;
+        editor.chain().focus().setHighlight({ color }).run();
+        document.querySelectorAll('#ttb-hl-grid .ttb-color-swatch').forEach(s => s.classList.toggle('active', s.dataset.color === color));
+        const bar = document.getElementById('ttb-hl-bar');
+        if (bar) bar.style.background = color;
+        hlPalette?.classList.remove('open');
+        updateToolbar(editor);
+    });
+    document.getElementById('ttb-hl-remove')?.addEventListener('mousedown', e => {
+        e.preventDefault();
+        editor.chain().focus().unsetHighlight().run();
+        document.querySelectorAll('#ttb-hl-grid .ttb-color-swatch').forEach(s => s.classList.remove('active'));
+        const bar = document.getElementById('ttb-hl-bar');
+        if (bar) bar.style.background = '#fef08a';
+        hlPalette?.classList.remove('open');
+        updateToolbar(editor);
+    });
+
     // ── Shared dropdown positioning ──────────────────────────────────────────
     function positionMenu(trigger, menu) {
-        const r = trigger.getBoundingClientRect();
+        // Mover para o body para garantir que position:fixed use coordenadas da viewport reais
+        if (menu.parentElement !== document.body) {
+            document.body.appendChild(menu);
+        }
+
+        const r  = trigger.getBoundingClientRect();
+        const mw = parseFloat(getComputedStyle(menu).minWidth) || 160;
+        
+        menu.style.position = 'fixed';
         menu.style.top   = (r.bottom + 4) + 'px';
-        menu.style.left  = r.left + 'px';
         menu.style.right = 'auto';
-        requestAnimationFrame(() => {
-            const mw = menu.offsetWidth;
-            if (r.left + mw > window.innerWidth - 8) {
-                menu.style.left  = 'auto';
-                menu.style.right = (window.innerWidth - r.right) + 'px';
-            }
-        });
+
+        if (r.left + mw > window.innerWidth - 8) {
+            menu.style.left = Math.max(8, r.right - mw) + 'px';
+        } else {
+            menu.style.left = r.left + 'px';
+        }
     }
 
     // ── Font picker ───────────────────────────────────────────────────────────
@@ -1033,7 +1362,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const item = [...e.clipboardData.items].find(i => i.type.startsWith('image/'));
         if (!item) return;
         const reader = new FileReader();
-        reader.onload = ev => editor.chain().focus().setImage({ src: ev.target.result }).run();
+        reader.onload = ev => { editor.chain().focus().setImage({ src: ev.target.result }).run(); scheduleSave(); };
         reader.readAsDataURL(item.getAsFile());
     });
 
@@ -1047,6 +1376,7 @@ document.addEventListener('DOMContentLoaded', () => {
             editor.chain().focus().setImage({ src: pendingBase64 }).run();
         }
         closeImagePopover();
+        scheduleSave();
     });
     document.getElementById('img-cancel-btn')?.addEventListener('click', closeImagePopover);
     document.addEventListener('mousedown', e => {
@@ -1109,7 +1439,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function scheduleSave() { clearTimeout(saveTimer); setStatus('Editando…'); saveTimer = setTimeout(saveNote, 1200); }
     async function saveNote() {
-        if (isSaving) return;
+        if (isSaving) { scheduleSave(); return; } // reschedule instead of silently dropping
         isSaving = true; setStatus('Salvando…');
         try {
             const title = document.getElementById('note-title')?.value.trim() || '';
@@ -1133,7 +1463,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     const pinBtn = document.getElementById('btn-add-shortcut');
                     if (pinBtn) pinBtn.dataset.label = newTitle;
                 }
-            } else { setStatus('Erro ao salvar', 'var(--danger)'); }
+            } else if (res.status === 402) {
+                if (typeof window.showUpgradeModal === 'function') {
+                    window.showUpgradeModal(data.message);
+                } else {
+                    setStatus(data.message || 'Erro de limite', 'var(--danger)');
+                }
+            } else { 
+                setStatus('Erro ao salvar', 'var(--danger)'); 
+            }
         } catch { setStatus('Erro de conexão', 'var(--danger)'); }
         finally  { isSaving = false; }
     }

@@ -6,14 +6,14 @@ return [
      * It is used to determine if the app needs to be updated.
      * Increment this value every time you release a new version of your app.
      */
-    'version' => env('NATIVEPHP_APP_VERSION', '2.0.0'),
+    'version' => env('NATIVEPHP_APP_VERSION', '1.0.0'),
 
     /**
      * The ID of your application. This should be a unique identifier
      * usually in the form of a reverse domain name.
      * For example: com.nativephp.app
      */
-    'app_id' => env('NATIVEPHP_APP_ID', 'com.lbonavina.taskletto'),
+    'app_id' => env('NATIVEPHP_APP_ID', 'com.nativephp.app'),
 
     /**
      * If your application allows deep linking, you can specify the scheme
@@ -29,29 +29,29 @@ return [
     /**
      * The author of your application.
      */
-    'author' => env('NATIVEPHP_APP_AUTHOR', 'Lucas Bonavina'),
+    'author' => env('NATIVEPHP_APP_AUTHOR'),
 
     /**
      * The copyright notice for your application.
      */
-    'copyright' => env('NATIVEPHP_APP_COPYRIGHT', 'Lucas Bonavina'),
+    'copyright' => env('NATIVEPHP_APP_COPYRIGHT'),
 
     /**
      * The description of your application.
      */
-    'description' => env('NATIVEPHP_APP_DESCRIPTION', 'Gerenciador de tarefas e notas'),
+    'description' => env('NATIVEPHP_APP_DESCRIPTION', 'An awesome app built with NativePHP'),
 
     /**
      * The Website of your application.
      */
-    'website' => env('NATIVEPHP_APP_WEBSITE', 'https://github.com/lbonavina/taskletto'),
+    'website' => env('NATIVEPHP_APP_WEBSITE', 'https://nativephp.com'),
 
     /**
      * The default service provider for your application. This provider
      * takes care of bootstrapping your application and configuring
      * any global hotkeys, menus, windows, etc.
      */
-    'provider' => \App\Providers\NativeAppServiceProvider::class ,
+    'provider' => \App\Providers\NativeAppServiceProvider::class,
 
     /**
      * A list of environment keys that should be removed from the
@@ -64,7 +64,7 @@ return [
         'GITHUB_*',
         'DO_SPACES_*',
         '*_SECRET',
-        'ZEPHPYR_*',
+        'BIFROST_*',
         'NATIVEPHP_UPDATER_PATH',
         'NATIVEPHP_APPLE_ID',
         'NATIVEPHP_APPLE_ID_PASS',
@@ -97,11 +97,12 @@ return [
          * updater will only work when your application is bundled
          * for production.
          */
-        'enabled' => env('NATIVEPHP_UPDATER_ENABLED', false),
+        'enabled' => env('NATIVEPHP_UPDATER_ENABLED', true),
 
         /**
          * The updater provider to use.
          * Supported: "github", "s3", "spaces"
+         * Note: The "s3" provider is compatible with S3-compatible services like Cloudflare R2.
          */
         'default' => env('NATIVEPHP_UPDATER_PROVIDER', 'spaces'),
 
@@ -113,6 +114,7 @@ return [
                 'token' => env('GITHUB_TOKEN'),
                 'vPrefixedTagName' => env('GITHUB_V_PREFIXED_TAG_NAME', true),
                 'private' => env('GITHUB_PRIVATE', false),
+                'autoupdate_token' => env('GITHUB_AUTOUPDATE_TOKEN'), // Read-only token used by the updater for private repos
                 'channel' => env('GITHUB_CHANNEL', 'latest'),
                 'releaseType' => env('GITHUB_RELEASE_TYPE', 'draft'),
             ],
@@ -125,6 +127,13 @@ return [
                 'bucket' => env('AWS_BUCKET'),
                 'endpoint' => env('AWS_ENDPOINT'),
                 'path' => env('NATIVEPHP_UPDATER_PATH', null),
+                /**
+                 * Optional public URL for serving updates (e.g., CDN or custom domain).
+                 * When set, updates will be downloaded from this URL instead of the S3 endpoint.
+                 * Useful for S3 with CloudFront or Cloudflare R2 with public access
+                 * Example: 'https://updates.yourdomain.com'
+                 */
+                'public_url' => env('AWS_PUBLIC_URL'),
             ],
 
             'spaces' => [
@@ -140,24 +149,21 @@ return [
 
     /**
      * The queue workers that get auto-started on your application start.
-     * Desabilitado — o Taskletto não usa jobs assíncronos.
      */
-    'queue_workers' => [],
+    'queue_workers' => [
+        'default' => [
+            'queues' => ['default'],
+            'memory_limit' => 128,
+            'timeout' => 60,
+            'sleep' => 3,
+        ],
+    ],
 
     /**
      * Define your own scripts to run before and after the build process.
      */
     'prebuild' => [
-        'npm run build',
-        'php artisan config:cache',
-        'php artisan route:cache',
-        'php artisan view:cache',
-        // Copia ícone e assets do instalador para nativephp/electron/build/
-        // O electron-builder.mjs (raiz do projeto) referencia esses arquivos por build/<nome>
-        // LICENSE.rtf também precisa ser copiado — necessário para exibir a licença no installer
-        PHP_OS_FAMILY === 'Windows'
-            ? 'cmd /c copy /Y public\\icon.ico nativephp\\electron\\build\\icon.ico && copy /Y public\\installer-header.bmp nativephp\\electron\\build\\installerHeader.bmp && copy /Y public\\installer-sidebar.bmp nativephp\\electron\\build\\installerSidebar.bmp && copy /Y installer\\installer.nsh nativephp\\electron\\build\\installer.nsh && copy /Y installer\\LICENSE.rtf nativephp\\electron\\build\\LICENSE.rtf'
-            : 'cp public/icon.ico nativephp/electron/build/icon.ico && cp public/installer-header.bmp nativephp/electron/build/installerHeader.bmp && cp public/installer-sidebar.bmp nativephp/electron/build/installerSidebar.bmp && cp installer/installer.nsh nativephp/electron/build/installer.nsh && cp installer/LICENSE.rtf nativephp/electron/build/LICENSE.rtf',
+        // 'npm run build',
     ],
 
     'postbuild' => [

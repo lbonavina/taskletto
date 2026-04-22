@@ -1,16 +1,6 @@
 @extends('layouts.app')
 @section('page-title', __('app.nav_tasks'))
 
-@section('topbar-actions')
-    <button class="btn btn-ghost" id="kb-help-btn" title="Atalhos de teclado (?)">
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="14" height="10" rx="2"/><path d="M4 7h1M7 7h1M10 7h1M4 10h8"/></svg>
-    </button>
-    <button class="btn btn-primary" id="btn-new-task-top" title="{{ __('app.new_task') }} (N)">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v12M2 8h12"/></svg>
-        {{ __('app.new_task') }}
-    </button>
-@endsection
-
 @section('content')
 
 {{-- Quick filters --}}
@@ -40,6 +30,13 @@
         {{ __('app.filter_recurring') }}
     </a>
     <div style="flex:1"></div>
+    <button class="btn btn-ghost" id="kb-help-btn" title="Atalhos de teclado (?)">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="14" height="10" rx="2"/><path d="M4 7h1M7 7h1M10 7h1M4 10h8"/></svg>
+    </button>
+    <button class="btn btn-primary" id="btn-new-task-top" title="{{ __('app.new_task') }} (N)">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v12M2 8h12"/></svg>
+        {{ __('app.new_task') }}
+    </button>
 </div>
 
 {{-- Advanced filters (collapsible) --}}
@@ -203,11 +200,10 @@
                                     <span style="color:var(--muted)">—</span>
                                 @endif
                             </td>
-                            <td style="text-align:right;white-space:nowrap" onclick="event.stopPropagation()">
+                            <td class="action-cell" onclick="event.stopPropagation()">
                                 @if(!$task->isCompleted())
                                     <button class="btn btn-ghost btn-sm quick-complete" data-id="{{ $task->id }}" title="{{ __('app.tasks_quick_complete') }}"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 8l5 5L14 4"/></svg></button>
                                 @endif
-                                <a href="/tasks/{{ $task->id }}" class="btn btn-ghost btn-sm">{{ __('app.tasks_view') }}</a>
                                 <button class="btn btn-ghost btn-sm shortcut-inline-btn" data-url="/tasks/{{ $task->id }}" data-label="{{ addslashes($task->title) }}" data-type="task" data-emoji="📋" title="Adicionar/remover atalho" style="font-size:14px;padding:4px 8px">☆</button>
                             </td>
                         </tr>
@@ -242,7 +238,7 @@
             </table>
         </div>
         @if($tasks->hasPages())
-            <div style="padding:16px 20px;border-top:1px solid var(--border)">
+            <div class="pagination-wrapper">
                 {{ $tasks->withQueryString()->links('pagination::bootstrap-5') }}
             </div>
         @endif
@@ -450,6 +446,20 @@ kbd {
     background: rgba(74,222,128,.10) !important;
     border-color: rgba(74,222,128,.3) !important;
     transform: scale(1.08);
+}
+.td-title {
+    cursor: pointer;
+}
+.td-title:hover .task-title-text {
+    color: var(--accent);
+}
+.action-cell {
+    text-align: right;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.action-cell .btn {
+    vertical-align: middle;
 }
 </style>
 
@@ -840,10 +850,9 @@ document.getElementById('btn-empty-new')?.addEventListener('click', () => {
                         </td>
                         <td style="color:var(--muted);font-size:13px">—</td>
                         <td><span style="color:var(--muted)">—</span></td>
-                        <td style="text-align:right;white-space:nowrap" onclick="event.stopPropagation()">
+                        <td class="action-cell" onclick="event.stopPropagation()">
                             <button class="btn btn-ghost btn-sm quick-complete" data-id="${task.id}" title="{{ __('app.tasks_quick_complete') }}"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 8l5 5L14 4"/></svg></button>
-                            <a href="/tasks/${task.id}" class="btn btn-ghost btn-sm">{{ __('app.tasks_view') }}</a>
-                            <button class="btn btn-ghost btn-sm shortcut-inline-btn" data-url="/tasks/${task.id}" data-label="${task.title.replace(/"/g, '&quot;')}" data-type="task" data-emoji="📋" title="Adicionar/remover atalho" style="font-size:14px;padding:4px 8px">${window.Shortcuts && window.Shortcuts.has('/tasks/${task.id}') ? '★' : '☆'}</button>
+                            <button class="btn btn-ghost btn-sm shortcut-inline-btn" data-url="/tasks/${task.id}" data-label="${task.title.replace(/"/g, '&quot;')}" data-type="task" data-emoji="📋" title="Adicionar/remover atalho" style="font-size:14px;padding:4px 8px">${window.Shortcuts && window.Shortcuts.has(`/tasks/${task.id}`) ? '★' : '☆'}</button>
                         </td>
                     `;
                     // Insert before the quick-add-row
@@ -886,6 +895,14 @@ document.getElementById('btn-empty-new')?.addEventListener('click', () => {
                 submit.disabled  = false;
                 submit.classList.remove('visible');
                 input.focus();
+            } else if (res.status === 402) {
+                if (typeof window.showUpgradeModal === 'function') {
+                    window.showUpgradeModal(json.message);
+                } else {
+                    toast(json.message || '{{ __("app.task_err_create") }}', 'error');
+                }
+                submit.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 8l4 4 8-8"/></svg>';
+                submit.disabled  = false;
             } else {
                 toast('{{ __("app.task_err_create") }}', 'error');
                 submit.innerHTML = '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 8l4 4 8-8"/></svg>';
@@ -930,6 +947,14 @@ document.addEventListener('keydown', e => {
 });
 
 // Show advanced filters if any active — always visible now
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (new URLSearchParams(window.location.search).has('new')) {
+        document.getElementById('modal-new-task')?.classList.add('open');
+        // Clean up URL without reloading
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+});
 
 </script>
 @endpush

@@ -106,6 +106,17 @@
                     if (res.ok) {
                         toast('Tarefa criada!', 'success');
                         setTimeout(() => window.location.href = '/tasks/' + data.data.id, 400);
+                    } else if (res.status === 402) {
+                        if (typeof window.showUpgradeModal === 'function') {
+                            document.getElementById('modal-new-task').classList.remove('open');
+                            window.showUpgradeModal(data.message);
+                        } else {
+                            alertEl.className = 'alert alert-error';
+                            alertEl.textContent = data.message;
+                            alertEl.style.display = 'block';
+                        }
+                        btn.innerHTML = 'Criar Tarefa';
+                        btn.disabled = false;
                     } else {
                         const msgs = data.errors
                             ? Object.values(data.errors).flat().join(' ')

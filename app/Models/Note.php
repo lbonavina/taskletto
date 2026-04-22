@@ -2,18 +2,25 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BelongsToUser;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Note extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, BelongsToUser;
 
     protected $fillable = ['title', 'content', 'color', 'pinned', 'category', 'tags'];
 
     protected $casts = [
         'pinned' => 'boolean',
     ];
+
+    public function share(): HasOne
+    {
+        return $this->hasOne(NoteShare::class);
+    }
 
     public function scopePinned($query)
     {

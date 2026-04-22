@@ -52,7 +52,7 @@ class DashboardController extends Controller
             ->orderByRaw("CASE WHEN due_date < datetime('now') THEN 0 ELSE 1 END")
             ->orderByRaw("CASE priority WHEN 'urgent' THEN 0 WHEN 'high' THEN 1 WHEN 'medium' THEN 2 ELSE 3 END")
             ->orderBy('due_date')
-            ->limit(5)
+            ->limit(3)
             ->get();
 
         // ── Tasks due today ──────────────────────────────────────────────────
@@ -60,16 +60,16 @@ class DashboardController extends Controller
             ->whereNotIn('status', [TaskStatus::Completed->value, TaskStatus::Cancelled->value])
             ->whereDate('due_date', today())
             ->orderByRaw("CASE priority WHEN 'urgent' THEN 0 WHEN 'high' THEN 1 WHEN 'medium' THEN 2 ELSE 3 END")
-            ->limit(8)
+            ->limit(3)
             ->get();
 
         // ── Recent notes (max 5) ─────────────────────────────────────────────
-        $recentNotes = Note::orderByDesc('updated_at')->limit(5)->get();
+        $recentNotes = Note::orderByDesc('updated_at')->limit(3)->get();
 
         // ── In-progress tasks (max 5) ────────────────────────────────────────
         $inProgressTasks = Task::where('status', TaskStatus::InProgress->value)
             ->orderBy('due_date')
-            ->limit(5)
+            ->limit(3)
             ->get();
 
         // ── Category breakdown ───────────────────────────────────────────────

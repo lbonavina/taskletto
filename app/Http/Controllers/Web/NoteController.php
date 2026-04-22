@@ -7,8 +7,10 @@ use App\Models\Note;
 use App\Models\Category;
 use App\Models\Task;
 use App\Services\NoteMarkdownExporter;
+use App\Services\PlanService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class NoteController extends Controller
@@ -61,7 +63,7 @@ class NoteController extends Controller
         };
 
         $pinned       = (clone $query)->where('pinned', true)->get();
-        $others       = (clone $query)->where('pinned', false)->get();
+        $others       = (clone $query)->where('pinned', false)->paginate(12);
         $categories   = Category::orderBy('name')->get();
         $allTags      = Note::allTags();
         $overdueCount = Task::overdue()->count();
@@ -90,6 +92,16 @@ class NoteController extends Controller
 
     public function store(Request $request): JsonResponse
     {
+        $user = Auth::user();
+
+        if (! $user->canCreate('notes')) {
+            return response()->json([
+                'message' => app(PlanService::class)->limitMessage('notes'),
+                'upgrade' => true,
+                'limit'   => $user->plan()->limit('notes'),
+            ], 402);
+        }
+
         $note = Note::create([
             'title' => '', 'content' => '', 'color' => '#ff914d',
             'pinned' => false, 'category' => null, 'tags' => null,
@@ -115,6 +127,33 @@ class NoteController extends Controller
             'category' => 'sometimes|nullable|string|max:100',
             'tags'     => 'sometimes|nullable|string|max:500',
         ]);
+
+        if (isset($data['content'])) {
+            $user = Auth::user();
+            $planService = app(PlanService::class);
+            $limitMb = $user->plan()->limit('storage_mb');
+
+            if ($limitMb !== null) {
+                // Approximate bytes from text length. This is an over-simplification
+                // but good enough to enforce a Base64 limit logic.
+                $oldLen = strlen($note->content ?? '');
+                $newLen = strlen($data['content'] ?? '');
+
+                if ($newLen > $oldLen) { // Only block if size is INCREASING
+                    $deltaMb = ($newLen - $oldLen) / (1024 * 1024);
+                    $currentMb = $planService->getStorageMbInUse($user);
+
+                    if (($currentMb + $deltaMb) > $limitMb) {
+                        return response()->json([
+                            'message' => $planService->limitMessage('storage_mb'),
+                            'upgrade' => true,
+                            'limit'   => $limitMb,
+                        ], 402);
+                    }
+                }
+            }
+        }
+
         $note->update($data);
         return response()->json([
             'ok'         => true,

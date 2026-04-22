@@ -8,9 +8,11 @@ use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
+use App\Services\PlanService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -54,6 +56,16 @@ class TaskController extends Controller
 
     public function store(StoreTaskRequest $request): JsonResponse
     {
+        $user = Auth::user();
+
+        if (! $user->canCreate('tasks')) {
+            return response()->json([
+                'message'  => app(PlanService::class)->limitMessage('tasks'),
+                'upgrade'  => true,
+                'limit'    => $user->plan()->limit('tasks'),
+            ], 402);
+        }
+
         $task = Task::create($request->validated());
 
         return (new TaskResource($task))

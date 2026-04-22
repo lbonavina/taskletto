@@ -2,15 +2,6 @@
 
 @section('page-title', __('app.nav_categories'))
 
-@section('topbar-actions')
-    <button class="btn btn-primary" onclick="openModal()">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M8 2v12M2 8h12" />
-        </svg>
-        {{ __('app.cat_new_btn') }}
-    </button>
-@endsection
-
 @push('styles')
 <style>
 /* ── Category grid ───────────────────────────────────────────────────── */
@@ -301,6 +292,18 @@
 
 @section('content')
 
+    {{-- Action row --}}
+    <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-bottom:16px">
+        <button class="btn btn-ghost" id="btn-cat-help" title="Como funcionam as categorias?" style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="8" cy="8" r="6.5"/>
+                <path d="M8 11v-.5"/>
+                <path d="M6.5 6.2a1.5 1.5 0 112.8.8C8.9 7.6 8 8.2 8 9"/>
+            </svg>
+            Como funciona?
+        </button>
+    </div>
+
     <div class="cat-grid">
 
         @if($categories->isEmpty())
@@ -385,7 +388,84 @@
 
 @endsection
 
+@push('modals')
+    <div id="cat-help-backdrop" style="display:none;position:fixed;inset:0;z-index:900;background:rgba(0,0,0,.45)" onclick="closeCatHelp()"></div>
+    <div id="cat-help-modal" style="display:none;position:fixed;top:50vh;left:50vw;transform:translate(-50%,-54%) scale(.96);z-index:901;width:min(460px,calc(100vw - 32px));background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:28px 28px 24px;box-shadow:0 24px 64px rgba(0,0,0,.45);opacity:0;transition:transform .2s cubic-bezier(.34,1.2,.64,1),opacity .18s ease">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px">
+            <div style="display:flex;align-items:center;gap:12px">
+                <div style="width:40px;height:40px;border-radius:11px;background:rgba(255,145,77,.12);border:1px solid rgba(255,145,77,.2);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🗂</div>
+                <div>
+                    <div style="font-family:'Montserrat',sans-serif;font-weight:700;font-size:15px;color:var(--text)">Categorias</div>
+                    <div style="font-size:11.5px;color:var(--muted);margin-top:2px">Como organizar suas tarefas</div>
+                </div>
+            </div>
+            <button onclick="closeCatHelp()" style="width:28px;height:28px;border-radius:7px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .12s,color .12s" onmouseenter="this.style.background='var(--surface)';this.style.color='var(--text)'" onmouseleave="this.style.background='var(--surface2)';this.style.color='var(--muted)'">
+                <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M1 1l10 10M11 1L1 11"/></svg>
+            </button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;gap:12px;align-items:flex-start">
+                <div style="width:30px;height:30px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">🏷️</div>
+                <div>
+                    <div style="font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:2px">Organização por tema</div>
+                    <div style="font-size:11.5px;color:var(--muted);line-height:1.6">Agrupe suas tarefas por projeto, área ou qualquer critério que faça sentido pra você — Trabalho, Pessoal, Estudos…</div>
+                </div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start">
+                <div style="width:30px;height:30px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">🎨</div>
+                <div>
+                    <div style="font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:2px">Cor + emoji personalizados</div>
+                    <div style="font-size:11.5px;color:var(--muted);line-height:1.6">Cada categoria tem uma cor e um ícone próprios, facilitando a identificação visual nas listas de tarefas.</div>
+                </div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start">
+                <div style="width:30px;height:30px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">📊</div>
+                <div>
+                    <div style="font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:2px">Barra de volume</div>
+                    <div style="font-size:11.5px;color:var(--muted);line-height:1.6">A barrinha no cartão mostra quantas tarefas essa categoria tem em relação à mais cheia — uma comparação visual rápida.</div>
+                </div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start">
+                <div style="width:30px;height:30px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px">🔍</div>
+                <div>
+                    <div style="font-size:12.5px;font-weight:600;color:var(--text);margin-bottom:2px">Filtro rápido</div>
+                    <div style="font-size:11.5px;color:var(--muted);line-height:1.6">Clique em <strong style="color:var(--text)">Ver tarefas →</strong> em qualquer cartão para ir direto às tarefas daquela categoria.</div>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end">
+            <button onclick="closeCatHelp()" class="btn btn-primary" style="font-size:12px;padding:7px 18px">Entendido</button>
+        </div>
+    </div>
+@endpush
+
 @push('scripts')
+    <script>
+        function openCatHelp() {
+            const backdrop = document.getElementById('cat-help-backdrop');
+            const modal    = document.getElementById('cat-help-modal');
+            backdrop.style.display = 'block';
+            modal.style.display    = 'block';
+            requestAnimationFrame(() => {
+                modal.style.transform = 'translate(-50%,-50%) scale(1)';
+                modal.style.opacity   = '1';
+            });
+        }
+        function closeCatHelp() {
+            const modal    = document.getElementById('cat-help-modal');
+            const backdrop = document.getElementById('cat-help-backdrop');
+            modal.style.transform = 'translate(-50%,-54%) scale(.96)';
+            modal.style.opacity   = '0';
+            setTimeout(() => {
+                modal.style.display    = 'none';
+                backdrop.style.display = 'none';
+                modal.style.opacity    = '';
+            }, 180);
+        }
+        document.getElementById('btn-cat-help').addEventListener('click', openCatHelp);
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCatHelp(); });
+    </script>
+
     <style>
 
         #modal-cat-portal .modal {

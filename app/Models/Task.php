@@ -5,17 +5,17 @@ namespace App\Models;
 use App\Enums\TaskPriority;
 use App\Enums\TaskRecurrence;
 use App\Enums\TaskStatus;
+use App\Models\Concerns\BelongsToUser;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-// TaskSubtask is resolved via HasMany, no explicit use needed
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Task extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, BelongsToUser;
 
     /**
      * Executa um callback desabilitando os observers do model.
@@ -37,6 +37,7 @@ class Task extends Model
         'sort_order',
         'recurrence',
         'recurrence_ends_at',
+        'reminder_at',
         'estimated_minutes',
         'tracked_seconds',
     ];
@@ -47,6 +48,7 @@ class Task extends Model
         'recurrence'         => TaskRecurrence::class,
         'due_date'           => 'date',
         'recurrence_ends_at' => 'date',
+        'reminder_at'        => 'datetime',
         'completed_at'       => 'datetime',
         'estimated_minutes'  => 'integer',
         'tracked_seconds'    => 'integer',

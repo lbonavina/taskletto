@@ -392,7 +392,7 @@ Create your first note!',
 
     // ── Task show & Category new ─────────────────────────────────────────────
     'task_detail_title' => 'Task Detail',
-    'task_back' => '← Back',
+    'task_back' => 'Back',
     'task_complete_btn' => '✓ Complete',
     'task_reopen_btn' => '↩ Reopen',
     'task_delete_btn' => 'Delete',

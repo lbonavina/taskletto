@@ -78,6 +78,7 @@
     "dependencies": {
         "@tiptap/core": "^3.0.0",
         "@tiptap/extension-character-count": "^3.0.0",
+        "@tiptap/extension-code-block-lowlight": "^3.22.0",
         "@tiptap/extension-color": "^3.0.0",
         "@tiptap/extension-highlight": "^3.0.0",
         "@tiptap/extension-image": "^3.0.0",
@@ -98,6 +99,8 @@
         "@tiptap/pm": "^3.0.0",
         "@tiptap/starter-kit": "^3.0.0",
         "@tiptap/suggestion": "^3.0.0",
+        "flatpickr": "^4.6.13",
+        "lowlight": "^3.3.0",
         "marked": "^17.0.4"
     }
 }

@@ -83,7 +83,7 @@ class TaskWebController extends Controller
             ->orderByRaw("CASE priority WHEN 'urgent' THEN 1 WHEN 'high' THEN 2 WHEN 'medium' THEN 3 ELSE 4 END")
             ->orderBy('due_date')
             ->orderBy('created_at', 'desc')
-            ->paginate(20);
+            ->paginate(10);
 
         // ── Stats (5 queries instead of 8) ───────────────────────────────────
 

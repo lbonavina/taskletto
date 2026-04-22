@@ -2,23 +2,9 @@
 @section('title', $task->title)
 @section('page-title', __('app.task_detail_title'))
 
-@section('topbar-actions')
-    <button
-        id="btn-add-shortcut"
-        class="btn btn-ghost btn-sm"
-        data-url="/tasks/{{ $task->id }}"
-        data-label="{{ addslashes($task->title) }}"
-        data-type="task"
-        data-emoji="📋"
-        title="Adicionar/remover dos atalhos"
-        style="gap:5px">
-        <span class="pin-star" style="font-size:14px;line-height:1">☆</span>
-        <span class="pin-label">Adicionar atalho</span>
-    </button>
-    <a href="/tasks" class="btn btn-ghost btn-sm">{{ __('app.task_back') }}</a>
-@endsection
 
 @push('styles')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <style>
         /* ── Task detail grid ──────────────────────────────────────────── */
         #task-detail-grid {
@@ -196,8 +182,71 @@
             outline: none;
             transition: border-color .15s;
             box-sizing: border-box;
+            color-scheme: dark;
         }
         .prop-date-input:focus { border-color: var(--accent); }
+        .prop-date-input::-webkit-calendar-picker-indicator {
+            opacity: .4;
+            cursor: pointer;
+            filter: invert(1);
+        }
+        .prop-date-input::-webkit-calendar-picker-indicator:hover { opacity: .8; }
+        html[data-theme=light] .prop-date-input { color-scheme: light; }
+        html[data-theme=light] .prop-date-input::-webkit-calendar-picker-indicator { filter: none; }
+
+        /* ── Reminder Flatpickr input hover ───────────────────────────── */
+        #reminder-fp:hover { border-color: rgba(255,145,77,.4); }
+        #reminder-fp:focus, #reminder-fp.active { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255,145,77,.1); }
+
+        /* ── Flatpickr custom theme ────────────────────────────────────── */
+        /* Não sobrescrevemos width/max-width — flatpickr calcula em JS   */
+        .flatpickr-calendar {
+            background: var(--surface) !important;
+            border: 1px solid var(--border) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 8px 32px rgba(0,0,0,.4) !important;
+            font-family: 'Montserrat', sans-serif !important;
+        }
+        .flatpickr-months { padding: 6px 4px 2px; }
+        .flatpickr-month { background: transparent !important; color: var(--text) !important; }
+        .flatpickr-current-month { font-size: 13px !important; font-weight: 700 !important; color: var(--text) !important; }
+        .flatpickr-current-month .cur-month { font-weight: 700 !important; color: var(--text) !important; }
+        .flatpickr-current-month input.cur-year { color: var(--text) !important; font-weight: 700 !important; }
+        .flatpickr-prev-month, .flatpickr-next-month { fill: var(--muted) !important; padding: 6px 8px !important; top: 8px !important; }
+        .flatpickr-prev-month:hover svg, .flatpickr-next-month:hover svg { fill: var(--accent) !important; }
+        .flatpickr-weekdays { background: transparent !important; }
+        .flatpickr-weekday { background: transparent !important; color: var(--muted) !important; font-size: 10px !important; font-weight: 700 !important; text-transform: uppercase; letter-spacing: .4px; }
+        .flatpickr-days { border: none !important; }
+        .flatpickr-day {
+            background: transparent !important;
+            border: none !important;
+            border-radius: 8px !important;
+            color: var(--text) !important;
+            font-size: 12px !important;
+            font-weight: 500 !important;
+            transition: background .15s, color .15s;
+        }
+        .flatpickr-day:hover { background: var(--surface2) !important; color: var(--text) !important; }
+        .flatpickr-day.today { border: 1px solid rgba(255,145,77,.4) !important; color: var(--accent) !important; font-weight: 700 !important; }
+        .flatpickr-day.today:hover { background: rgba(255,145,77,.1) !important; }
+        .flatpickr-day.selected, .flatpickr-day.selected:hover {
+            background: var(--accent) !important;
+            border-color: var(--accent) !important;
+            color: #fff !important;
+            font-weight: 700 !important;
+            box-shadow: 0 2px 8px rgba(255,145,77,.3) !important;
+        }
+        .flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay { color: var(--muted) !important; opacity: .35; }
+        .flatpickr-day.flatpickr-disabled { opacity: .2 !important; }
+        .flatpickr-time { border-top: 1px solid var(--border) !important; background: transparent !important; }
+        .flatpickr-time input { background: transparent !important; color: var(--text) !important; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; font-size: 15px !important; border: none !important; }
+        .flatpickr-time input:hover, .flatpickr-time input:focus { background: var(--surface2) !important; border-radius: 6px; }
+        .flatpickr-time .flatpickr-time-separator { color: var(--muted) !important; font-weight: 700; }
+        .flatpickr-time .numInputWrapper span { border: none !important; }
+        .flatpickr-time .numInputWrapper span:hover { background: rgba(255,145,77,.1) !important; }
+        .numInputWrapper span.arrowUp:after { border-bottom-color: var(--muted) !important; }
+        .numInputWrapper span.arrowDown:after { border-top-color: var(--muted) !important; }
+        html[data-theme=light] .flatpickr-calendar { box-shadow: 0 4px 20px rgba(0,0,0,.1) !important; }
 
         /* ── Inline title ─────────────────────────────────────────────── */
         #inline-title:hover { background: var(--surface2); }
@@ -212,25 +261,32 @@
         }
 
         /* ── Estimate fields ──────────────────────────────────────────── */
-        .est-field-wrap {
+        .est-input-box {
+            flex: 1; display: flex; align-items: center; gap: 10px;
             background: var(--surface2); border: 1px solid var(--border);
-            border-radius: 8px; padding: 8px 10px;
-            display: flex; flex-direction: column; gap: 3px;
-            cursor: text;
+            border-radius: 12px; padding: 13px 16px;
+            transition: border-color .2s, box-shadow .2s; cursor: text;
         }
-        .est-field-label {
-            font-size: 9px; color: var(--muted); font-weight: 700;
-            text-transform: uppercase; letter-spacing: .6px;
+        .est-input-box:hover { border-color: rgba(255,145,77,.35); }
+        .est-input-box:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(255,145,77,.08);
         }
         .est-field-input {
             background: transparent; border: none; outline: none;
-            font-size: 20px; font-family: 'Montserrat', sans-serif;
-            font-weight: 700; color: var(--text);
-            width: 100%; padding: 0; line-height: 1;
-            -moz-appearance: textfield;
+            font-size: 26px; font-family: 'Montserrat', sans-serif;
+            font-weight: 800; color: var(--text);
+            flex: 1; padding: 0; line-height: 1; min-width: 0;
+            text-align: center;
+            -moz-appearance: textfield; appearance: textfield;
         }
         .est-field-input::-webkit-outer-spin-button,
         .est-field-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .est-field-input::placeholder { color: var(--muted); opacity: .4; }
+        .est-unit {
+            font-size: 13px; font-weight: 700; color: var(--muted);
+            font-family: 'Montserrat', sans-serif; user-select: none; flex-shrink: 0;
+        }
 
         /* ── Subtasks ─────────────────────────────────────────────────── */
         .subtasks-header {
@@ -347,7 +403,24 @@
 @endpush
 
 @section('content')
-
+    <div style="margin-bottom: 20px; display: flex; gap: 8px;">
+        <a href="/tasks" class="btn btn-ghost btn-sm" style="color:var(--muted)">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 12L6 8l4-4"/></svg>
+            {{ __('app.task_back') }}
+        </a>
+        <button
+            id="btn-add-shortcut"
+            class="btn btn-ghost btn-sm"
+            data-url="/tasks/{{ $task->id }}"
+            data-label="{{ addslashes($task->title) }}"
+            data-type="task"
+            data-emoji="📋"
+            title="Adicionar/remover dos atalhos"
+            style="color:var(--muted)">
+            <span class="pin-star" style="font-size:14px;line-height:1">☆</span>
+            <span class="pin-label">Adicionar atalho</span>
+        </button>
+    </div>
     {{-- ── Main grid: left column + sidebar ─────────────────────────── --}}
     <div id="task-detail-grid">
 
@@ -551,7 +624,14 @@
 
                     <div>
                         <div style="font-size:11px;color:var(--muted);margin-bottom:4px">{{ __('app.task_label_due') }}</div>
-                        <input type="date" id="sidebar-due-date" value="{{ $task->due_date?->format('Y-m-d') }}" class="prop-date-input">
+                        <div style="position:relative">
+                            <input type="text" id="sidebar-due-date" readonly
+                                   value="{{ $task->due_date?->format('d/m/Y') }}"
+                                   data-date="{{ $task->due_date?->format('Y-m-d') }}"
+                                   placeholder="Selecionar data…"
+                                   class="prop-date-input" style="cursor:pointer;padding-right:30px">
+                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="1.6" style="position:absolute;right:9px;top:50%;transform:translateY(-50%);pointer-events:none"><rect x="2" y="3" width="12" height="11" rx="2"/><path d="M5 1v3M11 1v3M2 7h12"/></svg>
+                        </div>
                     </div>
 
                     <div>
@@ -580,7 +660,14 @@
 
                     <div id="sidebar-recurrence-ends-wrap" style="{{ $task->recurrence->value === 'none' ? 'display:none' : '' }}">
                         <div style="font-size:11px;color:var(--muted);margin-bottom:4px">{{ __('app.task_recurrence_ends') }}</div>
-                        <input type="date" id="sidebar-recurrence-ends" value="{{ $task->recurrence_ends_at?->format('Y-m-d') }}" class="prop-date-input">
+                        <div style="position:relative">
+                            <input type="text" id="sidebar-recurrence-ends" readonly
+                                   value="{{ $task->recurrence_ends_at?->format('d/m/Y') }}"
+                                   data-date="{{ $task->recurrence_ends_at?->format('Y-m-d') }}"
+                                   placeholder="Selecionar data…"
+                                   class="prop-date-input" style="cursor:pointer;padding-right:30px">
+                            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="1.6" style="position:absolute;right:9px;top:50%;transform:translateY(-50%);pointer-events:none"><rect x="2" y="3" width="12" height="11" rx="2"/><path d="M5 1v3M11 1v3M2 7h12"/></svg>
+                        </div>
                     </div>
 
                     <div id="props-saved" style="display:none;font-size:11px;color:var(--success);text-align:right">{{ __('app.task_saved_inline') }}</div>
@@ -588,14 +675,40 @@
                 </div>
             </div>{{-- /properties card --}}
 
-            {{-- Time tracking card --}}
-            {{-- Estimativa card --}}
-            <div class="card" id="estimate-card">
-                <div class="section-title" style="margin-bottom:12px">
-                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 2"/></svg>
-                    Estimativa
+            {{-- Custom Reminder card --}}
+            <div class="card" id="reminder-card">
+                <div class="section-title" style="margin-bottom:16px">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 1.5v2M3.5 13.5h9M8 13.5v-1.5M4.5 5.5a3.5 3.5 0 017 0v3.5l1.5 1.5v1h-10v-1l1.5-1.5V5.5z"/></svg>
+                    Lembrete
                 </div>
 
+                {{-- Chip: lembrete ativo --}}
+                <div id="reminder-chip" style="display:{{ $task->reminder_at ? 'flex' : 'none' }};align-items:center;justify-content:space-between;background:rgba(255,145,77,.08);border:1px solid rgba(255,145,77,.2);border-radius:10px;padding:9px 11px;margin-bottom:12px">
+                    <div style="display:flex;align-items:center;gap:7px">
+                        <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="1.8" style="flex-shrink:0"><path d="M8 1.5v2M3.5 13.5h9M8 13.5v-1.5M4.5 5.5a3.5 3.5 0 017 0v3.5l1.5 1.5v1h-10v-1l1.5-1.5V5.5z"/></svg>
+                        <span id="reminder-chip-text" style="font-size:12px;font-weight:600;color:var(--accent)">
+                            @if($task->reminder_at){{ $task->reminder_at->format('d/m/Y \à\s H:i') }}@endif
+                        </span>
+                    </div>
+                    <button id="btn-clear-reminder" style="background:none;border:none;cursor:pointer;color:var(--muted);padding:3px 5px;border-radius:5px;line-height:1;transition:color .15s,background .15s" title="Remover lembrete" onmouseover="this.style.color='var(--danger)';this.style.background='rgba(224,84,84,.1)'" onmouseout="this.style.color='var(--muted)';this.style.background='none'">
+                        <svg width="10" height="10" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 3l10 10M13 3L3 13"/></svg>
+                    </button>
+                </div>
+
+                {{-- Input Flatpickr --}}
+                <div style="position:relative;margin-bottom:0">
+                    <input id="reminder-fp"
+                           type="text"
+                           placeholder="{{ $task->reminder_at ? '' : 'Selecionar data e hora…' }}"
+                           value="{{ $task->reminder_at?->format('Y-m-d H:i') }}"
+                           readonly
+                           style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 36px 10px 12px;font-size:13px;font-family:inherit;color:var(--text);outline:none;cursor:pointer;box-sizing:border-box;transition:border-color .2s">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--muted)" stroke-width="1.6" style="position:absolute;right:11px;top:50%;transform:translateY(-50%);pointer-events:none"><path d="M8 1.5v2M3.5 13.5h9M8 13.5v-1.5M4.5 5.5a3.5 3.5 0 017 0v3.5l1.5 1.5v1h-10v-1l1.5-1.5V5.5z"/></svg>
+                </div>
+            </div>
+
+            {{-- Estimativa card --}}
+            <div class="card" id="estimate-card">
                 @php
                     $pct      = $task->estimated_minutes ? min(100, round(($task->tracked_seconds / ($task->estimated_minutes * 60)) * 100)) : 0;
                     $barColor = $pct >= 100 ? 'var(--danger)' : 'var(--accent)';
@@ -603,39 +716,49 @@
                     $estM     = $task->estimated_minutes ? $task->estimated_minutes % 60 : 0;
                 @endphp
 
-                {{-- Tempo registrado + barra --}}
-                <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px">
-                    <div>
-                        <div class="action-row-desc" style="margin-bottom:2px">Registrado</div>
-                        <div id="tracked-display" style="font-size:22px;font-family:'Montserrat',sans-serif;font-weight:700;color:var(--text);letter-spacing:-.5px;line-height:1">{{ $task->formattedTrackedTime() }}</div>
-                    </div>
-                    @if($task->estimated_minutes)
-                    <div id="est-summary" style="font-size:11px;color:var(--muted);text-align:right">
-                        {{ $estH > 0 ? $estH.'h ' : '' }}{{ $estM > 0 ? $estM.'min' : '' }} est.
-                        @if($pct > 0) <br><span style="color:{{ $pct >= 100 ? 'var(--danger)' : 'var(--accent)' }}">{{ $pct }}%</span> @endif
-                    </div>
-                    @else
-                    <div id="est-summary"></div>
-                    @endif
+                <div class="section-title" style="margin-bottom:16px">
+                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 2"/></svg>
+                    Estimativa
                 </div>
 
-                <div style="background:var(--surface2);border-radius:99px;height:3px;overflow:hidden;margin-bottom:16px">
-                    <div id="time-progress-bar" style="height:100%;width:{{ $pct }}%;background:{{ $barColor }};border-radius:99px;transition:width .4s"></div>
+                {{-- Stats surface --}}
+                <div style="background:var(--surface2);border-radius:12px;padding:14px 16px;margin-bottom:16px;border:1px solid var(--border)">
+                    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:14px">
+                        <div>
+                            <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:700;margin-bottom:6px">Registrado</div>
+                            <div id="tracked-display" style="font-size:28px;font-family:'Montserrat',sans-serif;font-weight:800;color:var(--text);letter-spacing:-1.5px;line-height:1">{{ $task->formattedTrackedTime() }}</div>
+                        </div>
+                        @if($task->estimated_minutes)
+                        <div id="est-summary" style="text-align:right">
+                            <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:700;margin-bottom:6px">Meta</div>
+                            <div style="font-size:16px;font-weight:800;color:var(--text);line-height:1;font-family:'Montserrat',sans-serif;letter-spacing:-.5px">{{ $estH > 0 ? $estH.'h' : '' }}{{ $estM > 0 ? ' '.$estM.'m' : '' }}</div>
+                        </div>
+                        @else
+                        <div id="est-summary" style="font-size:11px;color:var(--muted);padding-bottom:2px">Sem meta</div>
+                        @endif
+                    </div>
+
+                    {{-- Progress bar + percentual --}}
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <div style="flex:1;background:var(--border);border-radius:99px;height:5px;overflow:hidden">
+                            <div id="time-progress-bar" style="height:100%;width:{{ $pct }}%;background:{{ $barColor }};border-radius:99px;transition:width .6s cubic-bezier(.34,1.5,.64,1)"></div>
+                        </div>
+                        <span style="font-size:10px;font-weight:700;font-family:'Montserrat',sans-serif;color:{{ $pct >= 100 ? 'var(--danger)' : ($pct > 0 ? 'var(--accent)' : 'var(--muted)') }};min-width:28px;text-align:right">{{ $pct > 0 ? $pct.'%' : '—' }}</span>
+                    </div>
                 </div>
 
-                {{-- Horas / Minutos --}}
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
-                    <div class="est-field-wrap" onclick="document.getElementById('est-h').focus()">
-                        <div class="est-field-label">Horas</div>
-                        <input id="est-h" type="number" min="0" max="99" step="1"
-                            value="{{ $estH ?: '' }}" placeholder="0"
-                            class="est-field-input">
+                {{-- Label definir meta --}}
+                <div style="font-size:9px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:700;margin-bottom:8px">Definir meta</div>
+
+                {{-- Inputs h/m --}}
+                <div style="display:flex;gap:8px;margin-bottom:12px">
+                    <div id="est-h-wrap" class="est-input-box" onclick="document.getElementById('est-h').focus()">
+                        <input id="est-h" type="number" min="0" max="99" step="1" value="{{ $estH ?: '' }}" placeholder="0" class="est-field-input">
+                        <span class="est-unit">h</span>
                     </div>
-                    <div class="est-field-wrap" onclick="document.getElementById('est-m').focus()">
-                        <div class="est-field-label">Minutos</div>
-                        <input id="est-m" type="number" min="0" max="59" step="5"
-                            value="{{ $estM ?: '' }}" placeholder="0"
-                            class="est-field-input">
+                    <div id="est-m-wrap" class="est-input-box" onclick="document.getElementById('est-m').focus()">
+                        <input id="est-m" type="number" min="0" max="59" step="5" value="{{ $estM ?: '' }}" placeholder="0" class="est-field-input">
+                        <span class="est-unit">m</span>
                     </div>
                 </div>
 
@@ -669,9 +792,9 @@
 
     {{-- History modal --}}
     @if($task->histories && $task->histories->count())
-    <div id="history-modal" style="display:none;position:fixed;inset:0;z-index:1000;align-items:center;justify-content:center">
-        <div id="history-backdrop" style="position:absolute;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(2px)"></div>
-        <div style="position:relative;z-index:1;background:var(--surface);border:1px solid var(--border);border-radius:14px;width:100%;max-width:480px;max-height:70vh;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.4);margin:0 16px">
+    <div id="history-modal" style="display:none;position:fixed;inset:0;z-index:10000;align-items:center;justify-content:center">
+        <div id="history-backdrop" style="position:absolute;inset:0;background:rgba(0,0,0,.3);backdrop-filter:blur(8px)"></div>
+        <div style="position:relative;z-index:1;background:var(--surface);border:1px solid var(--border);border-radius:16px;width:100%;max-width:480px;max-height:70vh;display:flex;flex-direction:column;box-shadow:0 32px 80px rgba(0,0,0,.35);margin:0 16px;overflow:hidden">
             <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 20px 14px;border-bottom:1px solid var(--border);flex-shrink:0">
                 <div style="display:flex;align-items:center;gap:8px">
                     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--accent)" stroke-width="1.8"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 2"/></svg>
@@ -751,6 +874,8 @@
             import Underline from 'https://esm.sh/@tiptap/extension-underline@3';
             import Placeholder from 'https://esm.sh/@tiptap/extension-placeholder@3';
             import { marked } from 'https://esm.sh/marked@12';
+            import flatpickr from 'https://esm.sh/flatpickr@4';
+            import { Portuguese } from 'https://esm.sh/flatpickr@4/dist/l10n/pt.js';
 
             marked.setOptions({ breaks: true, gfm: true });
 
@@ -812,14 +937,91 @@
             document.getElementById('sidebar-status')?.addEventListener('change', function () { saveProp('status', this.value); });
             document.getElementById('sidebar-priority')?.addEventListener('change', function () { saveProp('priority', this.value); });
             document.getElementById('sidebar-category')?.addEventListener('change', function () { saveProp('category_id', this.value ? parseInt(this.value) : null); });
-            document.getElementById('sidebar-due-date')?.addEventListener('change', function () { saveProp('due_date', this.value || null); });
+
+            // ── Flatpickr config base ─────────────────────────────────────────────────────
+            const fpBase = {
+                locale: Portuguese,
+                disableMobile: true,
+                time_24hr: true,
+                onOpen()  { document.body.style.overflow = 'hidden'; },
+                onClose() { document.body.style.overflow = ''; },
+            };
+
+            // ── Due date picker ───────────────────────────────────────────────────────────
+            const dueDateEl = document.getElementById('sidebar-due-date');
+            if (dueDateEl) {
+                const dueFp = flatpickr(dueDateEl, {
+                    ...fpBase,
+                    dateFormat: 'Y-m-d',
+                    defaultDate: dueDateEl.dataset.date || null,
+                    onChange(selectedDates, dateStr) {
+                        const pad = n => String(n).padStart(2, '0');
+                        if (dateStr) {
+                            const d = selectedDates[0];
+                            dueDateEl.value = `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
+                        } else {
+                            dueDateEl.value = '';
+                        }
+                        saveProp('due_date', dateStr || null);
+                    },
+                });
+            }
+
+            // ── Reminder picker ───────────────────────────────────────────────────────────
+            const reminderEl = document.getElementById('reminder-fp');
+            if (reminderEl) {
+                const reminderFp = flatpickr(reminderEl, {
+                    ...fpBase,
+                    enableTime: true,
+                    dateFormat: 'Y-m-d H:i',
+                    defaultDate: reminderEl.value || null,
+                    onChange(selectedDates, dateStr) {
+                        if (!dateStr) return;
+                        const d = selectedDates[0];
+                        const pad = n => String(n).padStart(2, '0');
+                        const label = `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} às ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+                        reminderEl.value = label;
+                        saveProp('reminder_at', dateStr.replace(' ', 'T'));
+                        const chip = document.getElementById('reminder-chip');
+                        const chipText = document.getElementById('reminder-chip-text');
+                        if (chip) chip.style.display = 'flex';
+                        if (chipText) chipText.textContent = label;
+                    },
+                });
+                document.getElementById('btn-clear-reminder')?.addEventListener('click', () => {
+                    reminderFp.clear();
+                    reminderEl.value = '';
+                    const chip = document.getElementById('reminder-chip');
+                    if (chip) chip.style.display = 'none';
+                    saveProp('reminder_at', null);
+                });
+            }
             document.getElementById('sidebar-recurrence')?.addEventListener('change', function () {
                 const wrap = document.getElementById('sidebar-recurrence-ends-wrap');
                 wrap.style.display = this.value === 'none' ? 'none' : '';
-                if (this.value === 'none') document.getElementById('sidebar-recurrence-ends').value = '';
+                if (this.value === 'none') { const el = document.getElementById('sidebar-recurrence-ends'); if (el) el.value = ''; }
                 saveProp('recurrence', this.value);
             });
-            document.getElementById('sidebar-recurrence-ends')?.addEventListener('change', function () { saveProp('recurrence_ends_at', this.value || null); });
+
+            // ── Recurrence ends picker ────────────────────────────────────────────────────
+            const recEndsEl = document.getElementById('sidebar-recurrence-ends');
+            if (recEndsEl) {
+                flatpickr(recEndsEl, {
+                    ...fpBase,
+                    dateFormat: 'Y-m-d',
+                    defaultDate: recEndsEl.dataset.date || null,
+                    onChange(selectedDates, dateStr) {
+                        const pad = n => String(n).padStart(2, '0');
+                        if (dateStr) {
+                            const d = selectedDates[0];
+                            recEndsEl.value = `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
+                        } else {
+                            recEndsEl.value = '';
+                        }
+                        saveProp('recurrence_ends_at', dateStr || null);
+                    },
+                });
+            }
 
             // ── Actions ──────────────────────────────────────────────────────────────────
             function launchConfetti() {
@@ -960,17 +1162,12 @@
                 try {
                     const res=await apiCall('PATCH',`/api/v1/tasks/${taskId}/estimate`,{estimated_minutes:totalMinutes});
                     if (res.ok) {
-                        ['est-h-wrap','est-m-wrap'].forEach(id=>{ const el=document.getElementById(id); if(el){el.style.borderColor='var(--success)';setTimeout(()=>{el.style.borderColor='var(--border)';},1000);} });
+                        ['est-h-wrap','est-m-wrap'].forEach(id=>{ const el=document.getElementById(id); if(el){el.style.borderColor='var(--success)';el.style.boxShadow='0 0 0 3px rgba(74,222,128,.1)';setTimeout(()=>{el.style.borderColor='';el.style.boxShadow='';},1000);} });
                     } else { toast('{{ __("app.task_err_save_estimate") }}','error'); }
                 } catch { toast('Erro ao salvar estimativa.','error'); }
             }
 
             const estH=document.getElementById('est-h'), estM=document.getElementById('est-m');
-            const estHWrap=document.getElementById('est-h-wrap'), estMWrap=document.getElementById('est-m-wrap');
-            estH?.addEventListener('focus',()=>{if(estHWrap)estHWrap.style.borderColor='var(--accent)';});
-            estH?.addEventListener('blur', ()=>{if(estHWrap)estHWrap.style.borderColor='var(--border)';});
-            estM?.addEventListener('focus',()=>{if(estMWrap)estMWrap.style.borderColor='var(--accent)';});
-            estM?.addEventListener('blur', ()=>{if(estMWrap)estMWrap.style.borderColor='var(--border)';});
             estH?.addEventListener('keydown',e=>{if(e.key==='Tab'){e.preventDefault();estM?.focus();}if(e.key==='Enter'){e.preventDefault();saveEstimate();}});
             estM?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();saveEstimate();}});
             document.getElementById('btn-save-estimate')?.addEventListener('click', saveEstimate);

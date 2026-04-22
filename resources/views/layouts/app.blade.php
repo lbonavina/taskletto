@@ -54,73 +54,89 @@
 
         /* ── Light theme ── */
         html[data-theme=light] {
-            /* Page background: warm off-white with very slight blue tint */
-            --bg:       #eef0f5;
-            /* Cards / sidebar: crisp white — pops against bg */
+            /* Page background: warm off-white with very subtle warmth */
+            --bg:       #f4f5f9;
+            /* Cards / surfaces: crisp white */
             --surface:  #ffffff;
             /* Inputs, hover states, secondary surfaces */
-            --surface2: #f0f2f7;
-            /* Borders: slightly more visible than before */
-            --border:   #dddde8;
-            /* Primary text: near-black, slightly warm */
-            --text:     #111118;
-            /* Secondary text: mid-tone slate, more readable than purple-gray */
-            --muted:    #6b6b8a;
-            --status-pending:     #3b82f6;
-            --status-in_progress: #ea7c2b;
-            --status-completed:   #22c55e;
+            --surface2: #eef0f6;
+            /* Borders: clean, light */
+            --border:   #e2e4ee;
+            --border-hover: #c8cadb;
+            /* Primary text: deep navy-black for warmth */
+            --text:     #0e0f1a;
+            /* Secondary text: balanced slate */
+            --muted:    #636580;
+            --status-pending:     #2563eb;
+            --status-in_progress: #d97706;
+            --status-completed:   #16a34a;
             --status-cancelled:   #94a3b8;
+            --danger: #dc2626;
+            --success: #16a34a;
+            --info: #2563eb;
         }
 
         html[data-theme=light] select option {
             background: #ffffff;
         }
 
-        /* Sidebar: white, separated by a border — not darker than content */
+        /* Sidebar: pure white, clean right border */
         html[data-theme=light] .sidebar {
             background: #ffffff;
-            border-right: 1px solid #dddde8;
+            border-right: 1px solid #e2e4ee;
         }
 
-        html[data-theme=light] .sidebar-nav .nav-item.active {
-            background: rgba(255, 145, 77, .10);
-            box-shadow: inset 3px 0 0 var(--accent);
-        }
+        /* Removed legacy active state background to unify with modern aesthetic */
 
         html[data-theme=light] .sidebar-nav .nav-item:hover {
-            background: #f0f2f7;
+            background: #eef0f6;
+            color: #0e0f1a;
         }
 
         html[data-theme=light] .sidebar-footer-btn:hover {
-            background: #f0f2f7;
+            background: #eef0f6;
         }
 
         html[data-theme=light] .sidebar-footer-btn .sfb-icon {
-            background: #f0f2f7;
+            background: #eef0f6;
         }
 
-        /* Topbar: white with subtle shadow instead of flat border */
+        /* Topbar: white with very subtle shadow */
         html[data-theme=light] .topbar {
             background: #ffffff;
-            border-bottom: 1px solid #dddde8;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, .04);
+            border-bottom: 1px solid #e2e4ee;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
         }
 
-        html[data-theme=light] input[type=date] {
+        html[data-theme=light] input[type=date],
+        html[data-theme=light] input[type=time],
+        html[data-theme=light] input[type=datetime-local] {
             color-scheme: light;
         }
 
-        /* Cards: white on colored bg needs a gentle shadow for depth */
+        /* Cards: white with refined shadow system */
         html[data-theme=light] .card {
-            box-shadow: 0 1px 3px rgba(0, 0, 0, .06), 0 1px 2px rgba(0, 0, 0, .04);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 2px 6px rgba(0, 0, 0, .03);
+            border-color: #e2e4ee;
+        }
+
+        /* Stat cards in light mode */
+        html[data-theme=light] .stat-card {
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .04), 0 2px 6px rgba(0, 0, 0, .03);
+        }
+
+        html[data-theme=light] .stat-card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .07), 0 0 0 1px rgba(255, 145, 77, .15);
+            border-color: rgba(255, 145, 77, .3);
+            background: #ffffff;
         }
 
         html[data-theme=light] tr:hover td {
-            background: #eaecf4;
+            background: #f0f2f9;
         }
 
         html[data-theme=light] .overdue-row td {
-            background: rgba(224, 84, 84, .05);
+            background: rgba(220, 38, 38, .04);
         }
 
         html[data-theme=light] #page-loader {
@@ -129,35 +145,215 @@
 
         html[data-theme=light] .pagination .page-item .page-link:hover {
             background: var(--surface2);
-            border-color: #c8c8da;
+            border-color: #c8cadb;
         }
 
         html[data-theme=light] .qf:hover {
-            background: #eaecf4;
+            background: #eef0f6;
         }
 
-        /* ── Scrollbar global ── */
+        /* Buttons in light mode */
+        html[data-theme=light] .btn-primary {
+            color: #ffffff;
+            background: var(--accent);
+            box-shadow: 0 1px 3px rgba(255, 145, 77, .35);
+        }
+
+        html[data-theme=light] .btn-primary:hover {
+            background: #ff7a30;
+            box-shadow: 0 4px 12px rgba(255, 145, 77, .45);
+        }
+
+        html[data-theme=light] .btn-ghost {
+            background: #ffffff;
+            color: var(--muted);
+            border-color: #e2e4ee;
+        }
+
+        html[data-theme=light] .btn-ghost:hover {
+            background: #eef0f6;
+            border-color: #c8cadb;
+            color: var(--text);
+        }
+
+        /* Form inputs in light mode */
+        html[data-theme=light] input[type=text],
+        html[data-theme=light] input[type=date],
+        html[data-theme=light] input[type=email],
+        html[data-theme=light] input[type=password],
+        html[data-theme=light] input[type=number],
+        html[data-theme=light] textarea {
+            background: #ffffff;
+            border-color: #e2e4ee;
+        }
+
+        html[data-theme=light] input[type=text]:focus,
+        html[data-theme=light] input[type=date]:focus,
+        html[data-theme=light] input[type=email]:focus,
+        html[data-theme=light] input[type=password]:focus,
+        html[data-theme=light] input[type=number]:focus,
+        html[data-theme=light] textarea:focus {
+            background: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(255, 145, 77, .12);
+        }
+
+        html[data-theme=light] input[type=text]:hover,
+        html[data-theme=light] input[type=date]:hover,
+        html[data-theme=light] textarea:hover {
+            border-color: #c8cadb;
+        }
+
+        /* Toasts in light mode */
+        html[data-theme=light] .toast {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, .1), 0 1px 4px rgba(0, 0, 0, .06);
+        }
+
+        html[data-theme=light] .toast-success {
+            background: #f0fdf4;
+            color: #15803d;
+            border-color: rgba(22, 163, 74, .25);
+        }
+
+        html[data-theme=light] .toast-error {
+            background: #fef2f2;
+            color: #dc2626;
+            border-color: rgba(220, 38, 38, .25);
+        }
+
+        html[data-theme=light] .toast-info {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border-color: rgba(37, 99, 235, .25);
+        }
+
+        /* Modals in light mode */
+        html[data-theme=light] .modal {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .12), 0 4px 16px rgba(0, 0, 0, .07);
+        }
+
+        html[data-theme=light] #kbd-modal {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .12), 0 4px 16px rgba(0, 0, 0, .07);
+        }
+
+        html[data-theme=light] .sidebar-version-badge {
+            background: rgba(255, 145, 77, .10);
+            border-color: rgba(255, 145, 77, .25);
+        }
+
+        /* Quick filters in light mode */
+        html[data-theme=light] .qf {
+            background: #ffffff;
+            border-color: #e2e4ee;
+            color: var(--muted);
+        }
+
+        html[data-theme=light] .qf.active {
+            background: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 2px 8px rgba(255, 145, 77, .3);
+        }
+
+        /* Badge improvements in light mode */
+        html[data-theme=light] .status-pending {
+            background: rgba(37, 99, 235, .08);
+            color: #1d4ed8;
+        }
+
+        html[data-theme=light] .status-in_progress {
+            background: rgba(217, 119, 6, .08);
+            color: #b45309;
+        }
+
+        html[data-theme=light] .status-completed {
+            background: rgba(22, 163, 74, .08);
+            color: #15803d;
+        }
+
+        html[data-theme=light] .status-cancelled {
+            background: rgba(148, 163, 184, .12);
+            color: #64748b;
+        }
+
+        html[data-theme=light] .priority-urgent {
+            background: rgba(220, 38, 38, .08);
+            color: #b91c1c;
+        }
+
+        html[data-theme=light] .priority-high {
+            background: rgba(217, 119, 6, .08);
+            color: #b45309;
+        }
+
+        html[data-theme=light] .priority-medium {
+            background: rgba(37, 99, 235, .08);
+            color: #1d4ed8;
+        }
+
+        html[data-theme=light] .priority-low {
+            background: rgba(22, 163, 74, .08);
+            color: #15803d;
+        }
+
+        /* Shortcut items in light mode */
+        html[data-theme=light] .shortcut-item:hover {
+            background: #eef0f6;
+            color: #0e0f1a;
+        }
+
+        html[data-theme=light] .shortcut-item.active {
+            background: rgba(255, 145, 77, .09);
+        }
+
+        /* Custom select in light mode */
+        html[data-theme=light] .csel-dropdown {
+            background: #ffffff;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, .10), 0 1px 4px rgba(0, 0, 0, .06);
+            border-color: #e2e4ee;
+        }
+
+        html[data-theme=light] .csel-trigger {
+            background: #ffffff;
+            border-color: #e2e4ee;
+        }
+
+        html[data-theme=light] .csel-trigger:hover {
+            border-color: #c8cadb;
+        }
+
+        html[data-theme=light] .csel-trigger:focus,
+        html[data-theme=light] .csel-trigger.open {
+            background: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(255, 145, 77, .12);
+        }
+
+        /* Kbd in light mode */
+        html[data-theme=light] kbd {
+            background: #f4f5f9;
+            border-color: #c8cadb;
+            border-bottom-color: #b4b6c8;
+            color: #0e0f1a;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .06);
+        }
+
+        /* Confirm box in light mode */
+        html[data-theme=light] #confirm-box {
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .12);
+        }
+
+        /* Nav badge */
+        html[data-theme=light] .nav-badge {
+            background: #dc2626;
+        }
+        /* ── Scrollbar oculto globalmente ── */
         ::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 99px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--muted);
+            display: none;
         }
 
         * {
-            scrollbar-width: thin;
-            scrollbar-color: var(--border) transparent;
+            scrollbar-width: none;
         }
 
         /* Smooth theme transition */
@@ -218,22 +414,36 @@
             flex-direction: column;
             overflow-y: auto;
             overflow-x: hidden;
+            border-right: 1px solid var(--border);
         }
 
         html[data-theme=dark] .sidebar {
-            background: #0f0f12;
+            background: #0a0a0c; /* Deeper background for contrast */
+        }
+        
+        html[data-theme=light] .sidebar {
+            background: #fbfbfc; /* Soft off-white for depth */
+            border-right: 1px solid #e2e4ee;
         }
 
-        .sidebar-logo {
-            padding: 14px 16px 13px;
-            border-bottom: 1px solid var(--border);
+        /* ── Sidebar Workspace Header ── */
+        .sidebar-header {
+            display: flex;
+            flex-direction: column;
+            padding: 16px 16px 8px;
         }
 
-        .sidebar-logo a {
+        .sidebar-logo-wrap {
+            margin-bottom: 16px;
+        }
+
+        .sidebar-logo-link {
             text-decoration: none;
             display: flex;
             align-items: center;
         }
+
+
 
         .logo-img {
             height: 30px;
@@ -261,58 +471,214 @@
         }
 
         .sidebar-nav {
-            padding: 8px 0;
+            padding: 8px 8px;
             flex: 1;
+        }
+        
+        .nav-action-create {
+            margin-bottom: 12px !important;
+            color: var(--text) !important;
+        }
+        
+        .nav-action-create:hover {
+            color: var(--accent) !important;
+        }
+        
+        .create-icon-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            background: var(--accent);
+            color: #fff;
+            margin-right: 2px;
         }
 
         .nav-label {
             font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 1.2px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
             color: var(--muted);
-            padding: 8px 16px 4px;
+            padding: 12px 14px 4px;
+            opacity: 0.5;
+            transition: opacity .2s, color .2s;
+        }
+
+        .nav-label-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px 0 0;
+            cursor: pointer;
+            transition: background .2s;
+            gap: 6px;
+        }
+
+        .nav-label-header .nav-label {
+            flex: 1;
+            padding-top: 10px;
+            padding-bottom: 6px;
+        }
+
+        .nav-label-header:hover .nav-label {
+            opacity: 1;
+            color: var(--text);
+        }
+
+        .collapse-arrow {
+            width: 12px;
+            height: 12px;
+            opacity: 0.4;
+            color: var(--muted);
+            flex-shrink: 0;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity .2s;
+        }
+
+        .nav-label-header:hover .collapse-arrow {
+            opacity: 1;
+        }
+
+        .collapse-arrow.rotated {
+            transform: rotate(-90deg);
+        }
+
+        .collapsible-content {
+            overflow: hidden;
+            max-height: 1000px;
+            opacity: 1;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1), opacity 0.3s;
+        }
+
+        .collapsible-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+            pointer-events: none;
+            transition: max-height 0.4s cubic-bezier(1, 0, 1, 0), opacity 0.2s;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
-            gap: 9px;
-            padding: 8px 16px;
+            gap: 10px;
+            margin: 2px 4px;
+            padding: 6px 10px;
             color: var(--muted);
             text-decoration: none;
-            font-size: 13.5px;
-            font-weight: 400;
-            transition: color .2s ease, background .2s ease, padding-left .2s cubic-bezier(.25, .46, .45, .94);
-            border-left: 2px solid transparent;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: background 0.1s ease, color 0.1s ease;
             position: relative;
         }
 
         .nav-item:hover {
             color: var(--text);
             background: var(--surface2);
-            padding-left: 20px;
-            font-weight: 500;
         }
 
         .nav-item.active {
-            color: var(--accent);
-            border-left-color: var(--accent);
-            background: rgba(255, 145, 77, .07);
+            color: var(--text);
+            background: var(--surface2);
             font-weight: 600;
+            box-shadow: none;
+            border: none;
+            outline: none;
+        }
+        
+        .nav-item.active .nav-icon {
+            color: var(--accent);
+            opacity: 1;
         }
 
         .nav-icon {
-            width: 17px;
-            height: 17px;
+            width: 18px;
+            height: 18px;
             flex-shrink: 0;
-            opacity: .8;
-            transition: opacity .15s;
+            opacity: .7;
+            transition: opacity .2s, transform .2s cubic-bezier(.25, .8, .25, 1);
         }
 
-        .nav-item:hover .nav-icon,
+        .nav-item:hover .nav-icon {
+            opacity: 1;
+        }
+
         .nav-item.active .nav-icon {
             opacity: 1;
+        }
+
+        /* ── Sidebar Shortcut Items ── */
+        .shortcut-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin: 1px 12px;
+            padding: 6px 12px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 400;
+            border-radius: 8px;
+            transition: all .2s ease;
+            position: relative;
+        }
+
+        .shortcut-item:hover {
+            color: var(--text);
+            background: var(--surface2);
+        }
+
+        .shortcut-item.active {
+            color: var(--text);
+            background: var(--surface2);
+            font-weight: 600;
+        }
+
+        .shortcut-item-label {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+        }
+
+        .shortcut-sublabel {
+            font-size: 9.5px;
+            font-weight: 700;
+            letter-spacing: .9px;
+            text-transform: uppercase;
+            color: var(--muted);
+            opacity: .5;
+            padding: 8px 24px 3px;
+        }
+
+        .shortcut-remove {
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 4px;
+            opacity: 0;
+            transition: all .15s;
+            margin-left: 4px;
+        }
+
+        .shortcut-item:hover .shortcut-remove {
+            opacity: 0.6;
+        }
+
+        .shortcut-remove:hover {
+            opacity: 1 !important;
+            background: rgba(224, 84, 84, .12);
+            color: var(--danger);
         }
 
         .nav-badge {
@@ -338,6 +704,85 @@
             50% {
                 box-shadow: 0 0 0 4px rgba(224, 84, 84, 0);
             }
+        }
+
+        /* ── Sidebar user block ── */
+        .sidebar-user-block {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 8px;
+            border-radius: 8px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            transition: border-color 0.15s;
+        }
+        .sidebar-user-block:hover {
+            border-color: var(--border-hover);
+        }
+
+        .sidebar-user-avatar {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #1a1a1a;
+            font-size: .7rem;
+            font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-user-img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+
+        .sidebar-user-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sidebar-user-name {
+            font-size: .75rem;
+            font-weight: 700;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-user-email {
+            font-size: .65rem;
+            color: var(--muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-user-link {
+            display: flex; align-items: center; gap: 8px;
+            flex: 1; min-width: 0; text-decoration: none;
+            border-radius: 6px; padding: 2px 4px;
+        }
+        .sidebar-user.active .sidebar-user-link { background: rgba(255,145,77,.08); }
+
+        .sidebar-logout-btn {
+            width: 26px; height: 26px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: color .15s, border-color .15s, background .15s;
+            padding: 0;
+        }
+
+        .sidebar-logout-btn:hover {
+            color: #ef4444;
+            border-color: rgba(239,68,68,.3);
+            background: rgba(239,68,68,.08);
         }
 
         .sidebar-footer {
@@ -392,12 +837,14 @@
             font-family: inherit;
             text-align: left;
             text-decoration: none;
-            transition: background .12s, color .12s;
+            transition: all .25s cubic-bezier(.25, .8, .25, 1);
+            transform: translateX(0);
         }
 
         .sidebar-footer-btn:hover {
             background: var(--surface2);
             color: var(--text);
+            transform: translateX(4px);
         }
 
         .sidebar-footer-btn .sfb-icon {
@@ -778,19 +1225,7 @@
             background: var(--bg);
         }
 
-        .topbar-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 16px;
-            font-weight: 700;
-            letter-spacing: -0.2px;
-            flex: 1;
-        }
 
-        .topbar-actions {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
 
         /* ── Botão fechar para bandeja ── */
         .btn-tray-close {
@@ -828,8 +1263,9 @@
         /* ── Page enter animation ── */
         .page-enter {
             animation: pageEnter .25s ease both;
-            max-width: 100%;
-            min-width: 0;
+            max-width: 1440px;
+            margin: 0 auto;
+            width: 100%;
         }
 
         @keyframes pageEnter {
@@ -840,7 +1276,7 @@
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: none;
             }
         }
 
@@ -1304,7 +1740,9 @@
             box-shadow: 0 0 0 3px rgba(255, 145, 77, .1);
         }
 
-        input[type=date] {
+        input[type=date],
+        input[type=time],
+        input[type=datetime-local] {
             color-scheme: dark;
         }
 
@@ -1396,6 +1834,104 @@
             display: none;
             max-height: 260px;
             overflow-y: auto;
+        }
+
+        /* ── Pagination ───────────────────────────────────────────────────────── */
+        /* ── Pagination ───────────────────────────────────────────────────────── */
+        .pagination-wrapper {
+            padding: 10px 18px;
+            border-top: 1px solid var(--border);
+            background: rgba(0, 0, 0, 0.05); /* very subtle highlight */
+        }
+        html[data-theme=light] .pagination-wrapper { background: rgba(0,0,0,0.02); }
+
+        .pagination-wrapper nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        /* Laravel default pagination structure adjustments */
+        .pagination-wrapper nav > div:first-child { display: none !important; } 
+        .pagination-wrapper nav > div:last-child {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+        .pagination-wrapper .small.text-muted {
+            font-size: 11px !important;
+            opacity: 0.6;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            gap: 4px;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        .pagination .page-item {
+            display: inline-block;
+        }
+        .pagination .page-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 28px;
+            height: 28px;
+            padding: 0 8px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all .2s cubic-bezier(0.4, 0, 0.2, 1);
+            line-height: 1;
+        }
+        .pagination .page-item.active .page-link {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #0c0c0e;
+            box-shadow: 0 2px 6px rgba(255,145,77,.2);
+        }
+        .pagination .page-item.disabled .page-link {
+            opacity: 0.25;
+            cursor: not-allowed;
+            pointer-events: none;
+            border-color: transparent;
+        }
+        .pagination .page-item:not(.active):not(.disabled) .page-link:hover {
+            border-color: var(--muted);
+            color: var(--text);
+            background: var(--surface2);
+            transform: translateY(-1px);
+        }
+        
+        /* Oculta textos "Next"/"Previous" longos se o template os incluir */
+        .pagination .page-item .page-link span { display: inline-block; }
+        
+        @media (max-width: 640px) {
+            .pagination-wrapper nav > div:last-child {
+                flex-direction: column !important;
+                gap: 12px;
+                text-align: center;
+            }
+            .pagination { justify-content: center; }
+        }
+
+        html[data-theme=light] .page-link {
+            border-color: #e2e4ee;
+        }
+        html[data-theme=light] .page-item:not(.active):not(.disabled) .page-link:hover {
+            background: #f4f5f9;
         }
 
         .csel-dropdown.open {
@@ -1795,10 +2331,65 @@
             font-family: 'Montserrat', sans-serif;
         }
 
-        .pagination .page-item .page-link:hover {
-            color: var(--text);
-            border-color: var(--border-hover);
-            background: var(--surface2);
+        /* ── Upgrade Modal (Premium Refined) ── */
+        #upgrade-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0, 0, 0, .5); backdrop-filter: blur(4px);
+            z-index: 11000; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity .2s ease;
+        }
+        #upgrade-overlay.open { display: flex; opacity: 1; }
+        
+        #upgrade-modal {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 16px; width: 100%; max-width: 380px;
+            padding: 32px 28px; text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            transform: translateY(15px) scale(0.97); transition: all .25s cubic-bezier(.34, 1.56, .64, 1);
+        }
+        html[data-theme=light] #upgrade-modal { box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        #upgrade-overlay.open #upgrade-modal { transform: translateY(0) scale(1); }
+        
+        .upgrade-icon-wrap {
+            width: 54px; height: 54px; margin: 0 auto 20px;
+            background: rgba(255,145,77,.1); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(255,145,77,.2);
+            box-shadow: 0 0 20px rgba(255,145,77,.15);
+        }
+        
+        .upgrade-title {
+            font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 700;
+            color: var(--text); margin-bottom: 8px; letter-spacing: -0.3px;
+        }
+        
+        .upgrade-text {
+            font-size: 13.5px; color: var(--muted); line-height: 1.5;
+            margin-bottom: 24px;
+        }
+        
+        .upgrade-features {
+            text-align: left; background: var(--surface2);
+            border: 1px solid var(--border); border-radius: 10px;
+            padding: 14px 16px; margin-bottom: 24px;
+            display: flex; flex-direction: column; gap: 8px;
+        }
+        
+        .up-feat {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 12.5px; color: var(--text);
+        }
+        
+        .up-feat svg { color: var(--accent); flex-shrink: 0; }
+        
+        .upgrade-actions {
+            display: flex; gap: 10px; justify-content: stretch;
+        }
+        
+        .upgrade-actions .btn { 
+            flex: 1; 
+            justify-content: center; 
+            height: 38px;
         }
 
         .pagination .page-item.active .page-link,
@@ -1945,67 +2536,6 @@
     <style>
 
 
-        /* ── Sidebar Shortcuts ── */
-        .shortcut-item {
-            display: flex;
-            align-items: center;
-            gap: 0;
-            padding: 0 8px 0 16px;
-            height: 32px;
-            color: var(--muted);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 400;
-            transition: color .15s, background .15s;
-            border-left: 2px solid transparent;
-            position: relative;
-        }
-        .shortcut-item:hover {
-            color: var(--text);
-            background: var(--surface2);
-        }
-        .shortcut-item.active {
-            color: var(--accent);
-            border-left-color: var(--accent);
-            background: rgba(255,145,77,.07);
-            font-weight: 600;
-        }
-        .shortcut-item-icon { font-size: 13px; flex-shrink: 0; margin-right: 8px; line-height: 1; }
-        .shortcut-item-label {
-            flex: 1;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            font-size: 12.5px;
-        }
-        .shortcut-item-type {
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: .6px;
-            text-transform: uppercase;
-            opacity: .45;
-            margin-right: 4px;
-            flex-shrink: 0;
-        }
-        .shortcut-remove {
-            opacity: 0;
-            width: 16px;
-            height: 16px;
-            border-radius: 4px;
-            border: none;
-            background: none;
-            color: var(--muted);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            flex-shrink: 0;
-            transition: opacity .12s, background .12s, color .12s;
-            padding: 0;
-        }
-        .shortcut-item:hover .shortcut-remove { opacity: 1; }
-        .shortcut-remove:hover { background: rgba(224,84,84,.18); color: var(--danger); }
         #shortcuts-label { transition: opacity .2s; }
 
 
@@ -2027,12 +2557,19 @@
         .shortcut-inline-btn.pinned { opacity: 1 !important; color: var(--accent); }
         .shortcut-inline-btn:hover { color: var(--accent); transform: scale(1.2); }
 
-        /* Botão flutuante sobre o card de nota */
+        /* Wrapper direito do header de nota (atalho + pin lado a lado) */
+        .note-card-header-right {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Botão de atalho no card de nota */
         .note-shortcut-btn {
-            position: absolute;
-            top: 7px;
-            right: 7px;
-            z-index: 2;
+            position: relative;
+            z-index: 1;
             font-size: 15px;
             background: var(--surface);
             border: 1px solid var(--border) !important;
@@ -2045,10 +2582,244 @@
 
     </style>
     @stack('styles')
+
+    {{-- ── Phase 1: UI/UX Refinements — Light Mode Polish ── --}}
+    <style>
+        /* ── Light mode: main content area has subtle depth ── */
+        html[data-theme=light] .page-content {
+            background: #f4f5f9;
+        }
+
+        html[data-theme=light] .main {
+            background: #f4f5f9;
+        }
+
+        /* ── Light mode: topbar title bolder ── */
+        html[data-theme=light] .topbar-title {
+            color: #0e0f1a;
+            font-weight: 800;
+        }
+
+        /* ── Light mode: sidebar logo area ── */
+        html[data-theme=light] .sidebar-logo {
+            border-bottom: 1px solid #e2e4ee;
+        }
+
+        /* ── Light mode: nav labels ── */
+        html[data-theme=light] .nav-label {
+            color: #9496b0;
+        }
+
+        /* ── Light mode: sidebar footer ── */
+        html[data-theme=light] .sidebar-footer {
+            border-top: 1px solid #e2e4ee;
+            background: #fafbfd;
+        }
+
+        /* ── Light mode: sidebar version name ── */
+        html[data-theme=light] .sidebar-version-name {
+            color: #0e0f1a;
+            font-weight: 700;
+        }
+
+        /* ── Light mode: sidebar creator buttons ── */
+        html[data-theme=light] .sidebar-creator-btn {
+            color: #9496b0;
+        }
+
+        /* ── Light mode: section title text ── */
+        html[data-theme=light] .section-title {
+            color: #9496b0;
+        }
+
+        /* ── Light mode: table headers ── */
+        html[data-theme=light] th {
+            color: #9496b0;
+            background: #f7f8fb;
+        }
+
+        /* ── Light mode: table borders ── */
+        html[data-theme=light] td {
+            border-bottom-color: #eef0f6;
+        }
+
+        /* ── Light mode: check-label toggle ── */
+        html[data-theme=light] .check-label {
+            background: #ffffff;
+            border-color: #e2e4ee;
+            color: var(--muted);
+        }
+
+        html[data-theme=light] .check-label:hover {
+            border-color: #c8cadb;
+            color: var(--text);
+        }
+
+        html[data-theme=light] .check-label:has(input:checked) {
+            border-color: var(--accent);
+            background: rgba(255, 145, 77, .05);
+        }
+
+        html[data-theme=light] .check-label .toggle-track {
+            background: #d1d5e0;
+        }
+
+        html[data-theme=light] .check-label input:checked ~ .toggle-track {
+            background: var(--accent);
+        }
+
+        html[data-theme=light] .check-label input:checked ~ .toggle-track::after {
+            background: #ffffff;
+        }
+
+        /* ── Light mode: empty state ── */
+        html[data-theme=light] .empty-state {
+            color: #9496b0;
+        }
+
+        /* ── Light mode: code inline ── */
+        html[data-theme=light] code {
+            background: #eef0f6;
+            border-color: #e2e4ee;
+            color: #d6570a;
+        }
+
+        /* ── Light mode: alert boxes ── */
+        html[data-theme=light] .alert-success {
+            background: rgba(22, 163, 74, .07);
+            color: #15803d;
+            border-color: rgba(22, 163, 74, .2);
+        }
+
+        html[data-theme=light] .alert-error {
+            background: rgba(220, 38, 38, .07);
+            color: #b91c1c;
+            border-color: rgba(220, 38, 38, .2);
+        }
+
+        /* ── Light mode: modal overlay ── */
+        html[data-theme=light] .modal-overlay.open {
+            background: rgba(14, 15, 26, .45);
+        }
+
+        /* ── Light mode: badge recurrence ── */
+        html[data-theme=light] .badge-recurrence {
+            background: rgba(124, 77, 255, .08);
+            border-color: rgba(124, 77, 255, .2);
+            color: #6d28d9;
+        }
+
+        /* ── Light mode: alert-inline ── */
+        html[data-theme=light] .alert-inline.success {
+            background: rgba(22, 163, 74, .07);
+            border-color: rgba(22, 163, 74, .2);
+            color: #15803d;
+        }
+
+        html[data-theme=light] .alert-inline.danger {
+            background: rgba(220, 38, 38, .07);
+            border-color: rgba(220, 38, 38, .2);
+            color: #b91c1c;
+        }
+
+        html[data-theme=light] .alert-inline.warning {
+            background: rgba(217, 119, 6, .07);
+            border-color: rgba(217, 119, 6, .2);
+            color: #b45309;
+        }
+
+        html[data-theme=light] .alert-inline.info {
+            background: rgba(37, 99, 235, .07);
+            border-color: rgba(37, 99, 235, .2);
+            color: #1d4ed8;
+        }
+
+        /* ── Light mode: dc (dashboard cards) ── */
+        html[data-theme=light] .dc {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, .05), 0 2px 8px rgba(0, 0, 0, .03);
+            border-color: #e2e4ee;
+        }
+
+        html[data-theme=light] .dc:hover {
+            border-color: rgba(255, 145, 77, .28);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .07), inset 0 0 0 1px rgba(255, 145, 77, .1);
+        }
+
+        /* ── Light mode: KPI cards ── */
+        html[data-theme=light] .kpi-card {
+            background: #ffffff;
+            border-color: #e2e4ee;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+        }
+
+        /* ── Light mode: improved page load bar ── */
+        html[data-theme=light] #page-loader {
+            box-shadow: 0 0 10px rgba(255, 145, 77, .5);
+        }
+
+        /* ── Light mode: overdue chip ── */
+        html[data-theme=light] .overdue-chip {
+            color: #b91c1c;
+        }
+
+        /* ── Smooth elevation on interactive elements ── */
+        html[data-theme=light] .btn-primary:active {
+            transform: translateY(0);
+            box-shadow: 0 1px 2px rgba(255, 145, 77, .2);
+        }
+
+
+        /* ── Light mode: kbd modal search input ── */
+        html[data-theme=light] .kbd-search-wrap input {
+            background: #f4f5f9;
+            border-color: #e2e4ee;
+        }
+
+        html[data-theme=light] .kbd-search-wrap input:focus {
+            background: #ffffff;
+        }
+
+        html[data-theme=light] .kbd-tab.active {
+            background: rgba(255, 145, 77, .1);
+            border-color: rgba(255, 145, 77, .25);
+            color: var(--accent);
+        }
+
+        html[data-theme=light] .kbd-row:hover {
+            background: #f4f5f9;
+        }
+
+        /* ── Filter bar inputs in light mode ── */
+        html[data-theme=light] .filter-bar input[type=text] {
+            background: #ffffff;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 16 16' fill='none' stroke='%239496b0' stroke-width='1.5'%3E%3Ccircle cx='6.5' cy='6.5' r='4'/%3E%3Cpath d='M11 11l2.5 2.5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: 11px center;
+        }
+
+        /* ── Sidebar shortcut remove button in light ── */
+        html[data-theme=light] .shortcut-remove:hover {
+            background: rgba(220, 38, 38, .1);
+            color: #b91c1c;
+        }
+
+        /* ── Bulk bar in light mode ── */
+        html[data-theme=light] .bulk-bar {
+            background: #ffffff;
+            border-color: #e2e4ee;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
+        }
+
+        /* ── Page transition slightly smoother ── */
+        .page-enter {
+            animation: pageEnter .3s cubic-bezier(.25, .46, .45, .94) both;
+        }
+    </style>
+
     <script>
-        // Apply theme before paint (no flash)
+        // Apply theme before paint (no flash) — light is the new default
         (function () {
-            const t = localStorage.getItem('taskletto-theme') || 'dark';
+            const t = localStorage.getItem('taskletto-theme') || 'light';
             document.documentElement.setAttribute('data-theme', t);
         })();
     </script>
@@ -2073,30 +2844,99 @@
             </div>
         </div>
     </div>
+    
+    {{-- Upgrade Modal --}}
+    <div id="upgrade-overlay">
+        <div id="upgrade-modal">
+            <div class="upgrade-modal-body">
+                <div class="upgrade-icon-wrap">
+                    <svg width="24" height="24" viewBox="0 0 16 16" fill="var(--accent)"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z"/></svg>
+                </div>
+                <h3 class="upgrade-title" id="upgrade-title">Limite atingido</h3>
+                <p class="upgrade-text" id="upgrade-message">Você atingiu o limite do seu plano atual.</p>
+                
+                <div class="upgrade-features">
+                    <div class="up-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Notas e tarefas ilimitadas</div>
+                    <div class="up-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Projetos avançados</div>
+                    <div class="up-feat"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Suporte prioritário</div>
+                </div>
+
+                <div class="upgrade-actions">
+                    <button class="btn btn-ghost" onclick="closeUpgradeModal()">Mais tarde</button>
+                    <a href="{{ route('pricing') }}" class="btn btn-primary upgrade-btn-pro" style="flex:1; justify-content:center; text-decoration:none;">Fazer Upgrade PRO</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="app-shell">
         {{-- Sidebar --}}
         <aside class="sidebar">
-            <div class="sidebar-logo">
-                <a href="/dashboard">
-                    <img src="/logo-taskletto-light.png" alt="Taskletto" class="logo-img logo-dark">
-                    <img src="/logo-taskletto.png" alt="Taskletto" class="logo-img logo-light">
-                </a>
+            <div class="sidebar-header">
+                {{-- Logo and User combined as Workspace context --}}
+                <div class="sidebar-logo-wrap">
+                    <a href="/dashboard" class="sidebar-logo-link">
+                        <img src="/logo-taskletto-light.png" alt="Taskletto" class="logo-img logo-dark">
+                        <img src="/logo-taskletto.png" alt="Taskletto" class="logo-img logo-light">
+                    </a>
+                </div>
+                
+                @auth
+                <div class="sidebar-user-block">
+                    <a href="{{ route('profile') }}" class="sidebar-user-link">
+                        <div class="sidebar-user-avatar">
+                            @if(Auth::user()->avatar)
+                                <img src="{{ Auth::user()->avatar }}" alt="{{ Auth::user()->name }}" class="sidebar-user-img">
+                            @else
+                                {{ Auth::user()->initials() }}
+                            @endif
+                        </div>
+                        <div class="sidebar-user-info">
+                            <div class="sidebar-user-name">{{ Auth::user()->name }}</div>
+                            <div class="sidebar-user-email">Meu Espaço Pessoal</div>
+                        </div>
+                    </a>
+                    <form method="POST" action="{{ route('logout') }}" style="flex-shrink:0;">
+                        @csrf
+                        <button type="submit" class="sidebar-logout-btn" title="Sair">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+                @endauth
             </div>
+
             <nav class="sidebar-nav">
-                <div class="nav-label">{{ __('app.nav_principal') }}</div>
+                <a href="#" class="nav-item nav-action-create" onclick="openTaskModal(); return false;">
+                    <div class="create-icon-wrap">
+                        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M8 2v12M2 8h12"/>
+                        </svg>
+                    </div>
+                    Nova Tarefa
+                </a>
+                
+                <div class="nav-label" style="margin-top: 8px;">{{ __('app.nav_principal') }}</div>
                 <a href="/dashboard" class="nav-item {{ request()->is('dashboard') ? 'active' : '' }}">
-                    <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <rect x="1" y="1" width="6" height="6" rx="1.5" />
-                        <rect x="9" y="1" width="6" height="6" rx="1.5" />
-                        <rect x="1" y="9" width="6" height="6" rx="1.5" />
-                        <rect x="9" y="9" width="6" height="6" rx="1.5" />
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="7" height="7" x="3" y="3" rx="1"/>
+                        <rect width="7" height="7" x="14" y="3" rx="1"/>
+                        <rect width="7" height="7" x="14" y="14" rx="1"/>
+                        <rect width="7" height="7" x="3" y="14" rx="1"/>
                     </svg>
                     {{ __('app.nav_dashboard') }}
                 </a>
                 <a href="/tasks" class="nav-item {{ request()->is('tasks*') ? 'active' : '' }}">
-                    <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M2 4h12M2 8h8M2 12h10" />
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="5" width="6" height="6" rx="1"/>
+                        <path d="m3 17 2 2 4-4"/>
+                        <path d="M13 6h8"/>
+                        <path d="M13 12h8"/>
+                        <path d="M13 18h8"/>
                     </svg>
                     {{ __('app.nav_tasks') }}
                     @if(($overdueCount ?? 0) > 0)
@@ -2104,38 +2944,60 @@
                     @endif
                 </a>
                 <a href="/categories" class="nav-item {{ request()->is('categories*') ? 'active' : '' }}">
-                    <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path
-                            d="M1.5 4.5h3a1 1 0 011 1v5a1 1 0 01-1 1h-3a1 1 0 01-1-1v-5a1 1 0 011-1zM8 2.5h3a1 1 0 011 1v9a1 1 0 01-1 1H8a1 1 0 01-1-1v-9a1 1 0 011-1z" />
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/>
                     </svg>
                     {{ __('app.nav_categories') }}
                 </a>
                 <a href="/notes" class="nav-item {{ request()->is('notes*') ? 'active' : '' }}">
-                    <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M3 2h7l3 3v9a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" />
-                        <path d="M10 2v3h3M5 7h6M5 10h4" />
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
+                        <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
+                        <path d="M10 9H8"/>
+                        <path d="M16 13H8"/>
+                        <path d="M16 17H8"/>
                     </svg>
                     {{ __('app.nav_notes') }}
                 </a>
                 {{-- ── Atalhos ── --}}
-                <div class="nav-label" style="margin-top:4px" id="shortcuts-label">Atalhos</div>
-                <div id="sidebar-shortcuts-list">
+                <div class="nav-label-header" id="shortcuts-toggle">
+                    <div class="nav-label" id="shortcuts-label">Atalhos</div>
+                    <svg class="collapse-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 6l5 5 5-5" />
+                    </svg>
+                </div>
+                <div id="sidebar-shortcuts-list" class="collapsible-content">
                     <div id="shortcuts-empty" style="display:none;padding:5px 16px 8px;font-size:11.5px;color:var(--muted);line-height:1.5;opacity:.7">
                         Nenhum atalho ainda.<br>
                         <span style="opacity:.7">Abra uma tarefa ou nota e clique em ⭐</span>
                     </div>
                 </div>
                 <div class="nav-label" style="margin-top:4px">{{ __('app.nav_system') }}</div>
+                <a href="{{ route('billing') }}" class="nav-item {{ request()->is('billing*') ? 'active' : '' }}">
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="20" height="14" x="2" y="5" rx="2"/>
+                        <line x1="2" x2="22" y1="10" y2="10"/>
+                    </svg>
+                    @auth
+                        @if(Auth::user()->onPro())
+                            Assinatura <span style="font-size:9px;background:rgba(255,145,77,.15);color:var(--accent);padding:1px 5px;border-radius:4px;font-weight:700;margin-left:2px">PRO</span>
+                        @else
+                            Assinatura
+                        @endif
+                    @else
+                        Assinatura
+                    @endauth
+                </a>
                 <a href="/settings" class="nav-item {{ request()->is('settings') ? 'active' : '' }}">
-                    <svg class="nav-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <circle cx="8" cy="8" r="2.5" />
-                        <path
-                            d="M8 1.5v1M8 13.5v1M1.5 8h1M13.5 8h1M3.2 3.2l.7.7M12.1 12.1l.7.7M12.8 3.2l-.7.7M3.9 12.1l-.7.7" />
+                    <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                        <circle cx="12" cy="12" r="3"/>
                     </svg>
                     {{ __('app.nav_settings') }}
                 </a>
             </nav>
             <div class="sidebar-footer">
+
                 <div class="sidebar-version">
                     <span class="sidebar-version-name">Taskletto</span>
                     <span class="sidebar-version-badge">v{{ config('app.version') }}</span>
@@ -2198,35 +3060,11 @@
                         <path d="M6 3h7v7M13 3L3 13" />
                     </svg>
                 </a>
-
-                <a href="/open-external?url=https://ko-fi.com/lbonavina" class="sidebar-footer-btn sidebar-creator-btn"
-                    title="Me pague um café ☕">
-                    <span class="sfb-icon">☕</span>
-                    <span class="sfb-label">{{ __("app.layout_buy_coffee") }}</span>
-                    <svg style="opacity:.25" width="8" height="8" viewBox="0 0 16 16" fill="none" stroke="currentColor"
-                        stroke-width="2">
-                        <path d="M6 3h7v7M13 3L3 13" />
-                    </svg>
-                </a>
             </div>
         </aside>
 
         {{-- Main content --}}
         <div class="main">
-            <div class="topbar">
-                <h1 class="topbar-title">@yield('page-title', 'Dashboard')</h1>
-                <div class="topbar-actions">@yield('topbar-actions')</div>
-                @if(app()->runningInConsole() === false && class_exists(\Native\Desktop\Facades\Window::class))
-                <button
-                    class="btn-tray-close"
-                    onclick="closeToTray()"
-                    title="Minimizar para bandeja">
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
-                        <path d="M1 1l10 10M11 1L1 11"/>
-                    </svg>
-                </button>
-                @endif
-            </div>
             <div class="page-content">
                 @if(session('success'))
                     <div class="alert alert-success" id="flash-alert">{{ session('success') }}</div>
@@ -2258,7 +3096,7 @@
             if (theme === 'light') { icon.textContent = '☀️'; label.textContent = '{{ __('app.nav_dark_mode') }}'; }
             else { icon.textContent = '🌙'; label.textContent = '{{ __('app.nav_light_mode') }}'; }
         }
-        updateThemeBtn(localStorage.getItem('taskletto-theme') || 'dark');
+        updateThemeBtn(localStorage.getItem('taskletto-theme') || 'light');
 
         // ── Page loader ──────────────────────────────────────────────────────────────
         const loader = document.getElementById('page-loader');
@@ -2308,7 +3146,22 @@
             okBtn.onclick = () => { close(); onConfirm(); };
         };
 
-        // ── Nav link loader ───────────────────────────────────────────────────────────
+        // ── Upgrade Modal Helpers ──────────────────────────────────────────────────
+        window.showUpgradeModal = function(message) {
+            const overlay = document.getElementById('upgrade-overlay');
+            if (!overlay) return;
+            if (message) document.getElementById('upgrade-message').textContent = message;
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        };
+        window.closeUpgradeModal = function() {
+            const overlay = document.getElementById('upgrade-overlay');
+            if (overlay) overlay.classList.remove('open');
+            document.body.style.overflow = '';
+        };
+        document.getElementById('upgrade-overlay')?.addEventListener('click', e => {
+            if (e.target.id === 'upgrade-overlay') closeUpgradeModal();
+        });
         document.querySelectorAll('.nav-item').forEach(link => {
             link.addEventListener('click', function () {
                 loader.style.width = '40%';
@@ -2316,6 +3169,17 @@
                 loaderW = 40;
             });
         });
+
+        // ── Sidebar New Task Global Helper ──────────────────────────────────────────
+        window.openTaskModal = function() {
+            const modal = document.getElementById('modal-new-task');
+            if (modal) {
+                modal.classList.add('open');
+                setTimeout(() => document.getElementById('nt-title')?.focus(), 150);
+            } else {
+                window.location.href = '/tasks?new=1';
+            }
+        };
     </script>
 
     @stack('modals')
@@ -2428,7 +3292,7 @@
             if (!container) return;
 
             // Remove itens antigos (manter o empty placeholder)
-            container.querySelectorAll('.shortcut-item').forEach(el => el.remove());
+            container.querySelectorAll('.shortcut-item, .shortcut-sublabel').forEach(el => el.remove());
 
             if (list.length === 0) {
                 if (emptyEl) emptyEl.style.display = '';
@@ -2438,45 +3302,47 @@
                 if (label) label.style.opacity = '1';
 
                 const currentUrl = window.location.pathname;
+                const groups = [
+                    { type: 'task', label: 'Tarefas', items: list.filter(s => s.type === 'task') },
+                    { type: 'note', label: 'Notas',   items: list.filter(s => s.type === 'note') },
+                ];
 
-                list.forEach(s => {
-                    const a = document.createElement('a');
-                    a.href = s.url;
-                    a.className = 'shortcut-item' + (currentUrl === s.url ? ' active' : '');
-                    a.title = s.label;
+                groups.forEach(group => {
+                    if (group.items.length === 0) return;
 
-                    const iconEl = document.createElement('span');
-                    iconEl.className = 'shortcut-item-icon';
-                    iconEl.textContent = s.emoji || (s.type === 'task' ? '✓' : '📄');
+                    const sublabel = document.createElement('div');
+                    sublabel.className = 'shortcut-sublabel';
+                    sublabel.textContent = group.label;
+                    if (emptyEl) container.insertBefore(sublabel, emptyEl);
+                    else container.appendChild(sublabel);
 
-                    const labelEl = document.createElement('span');
-                    labelEl.className = 'shortcut-item-label';
-                    labelEl.textContent = s.label;
+                    group.items.forEach(s => {
+                        const a = document.createElement('a');
+                        a.href = s.url;
+                        a.className = 'shortcut-item' + (currentUrl === s.url ? ' active' : '');
+                        a.title = s.label;
 
-                    const typeEl = document.createElement('span');
-                    typeEl.className = 'shortcut-item-type';
-                    typeEl.textContent = s.type === 'task' ? 'T' : 'N';
+                        const labelEl = document.createElement('span');
+                        labelEl.className = 'shortcut-item-label';
+                        labelEl.textContent = s.label;
 
-                    const removeBtn = document.createElement('button');
-                    removeBtn.className = 'shortcut-remove';
-                    removeBtn.title = 'Remover atalho';
-                    removeBtn.innerHTML = '×';
-                    removeBtn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        window.Shortcuts.remove(s.url);
-                        // Notifica botões da página atual
-                        document.dispatchEvent(new CustomEvent('shortcut-changed', { detail: { url: s.url, pinned: false } }));
+                        const removeBtn = document.createElement('button');
+                        removeBtn.className = 'shortcut-remove';
+                        removeBtn.title = 'Remover atalho';
+                        removeBtn.innerHTML = '×';
+                        removeBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            window.Shortcuts.remove(s.url);
+                            document.dispatchEvent(new CustomEvent('shortcut-changed', { detail: { url: s.url, pinned: false } }));
+                        });
+
+                        a.appendChild(labelEl);
+                        a.appendChild(removeBtn);
+
+                        if (emptyEl) container.insertBefore(a, emptyEl);
+                        else container.appendChild(a);
                     });
-
-                    a.appendChild(iconEl);
-                    a.appendChild(labelEl);
-                    a.appendChild(typeEl);
-                    a.appendChild(removeBtn);
-
-                    // inserir antes do emptyEl
-                    if (emptyEl) container.insertBefore(a, emptyEl);
-                    else container.appendChild(a);
                 });
             }
 
@@ -2736,7 +3602,6 @@
                     <h2>{{ __('app.nav_shortcuts') }}</h2>
                     <p>{{ __("app.layout_nav_faster") }}</p>
                 </div>
-                <button id="kbd-modal-close" title="{{ __("app.layout_close_esc") }}">✕</button>
             </div>
 
             <div class="kbd-search-wrap">
@@ -2971,6 +3836,41 @@
             window.__nativephp_electron.hideWindow();
         });
     }
+
+    // ── Sidebar Shortcuts Collapse ──────────────────────────────────────────
+    (function() {
+        const toggle = document.getElementById('shortcuts-toggle');
+        const content = document.getElementById('sidebar-shortcuts-list');
+        if (!toggle || !content) return;
+
+        const arrow = toggle.querySelector('.collapse-arrow');
+        let isCollapsed = localStorage.getItem('shortcuts-collapsed') === '1';
+
+        function updateUI(instant) {
+            if (instant) {
+                content.style.transition = 'none';
+                if (arrow) arrow.style.transition = 'none';
+            }
+            
+            content.classList.toggle('collapsed', isCollapsed);
+            if (arrow) arrow.classList.toggle('rotated', isCollapsed);
+
+            if (instant) {
+                requestAnimationFrame(() => {
+                    content.style.transition = '';
+                    if (arrow) arrow.style.transition = '';
+                });
+            }
+        }
+
+        updateUI(true);
+
+        toggle.addEventListener('click', () => {
+            isCollapsed = !isCollapsed;
+            localStorage.setItem('shortcuts-collapsed', isCollapsed ? '1' : '0');
+            updateUI(false);
+        });
+    })();
     </script>
 </body>
 
