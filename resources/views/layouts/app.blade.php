@@ -36,52 +36,48 @@
         }
 
         :root {
+            /* Default: Light theme values */
+            --bg:       #f4f5f9;
+            --surface:  #ffffff;
+            --surface2: #eef0f6;
+            --border:   #e2e4ee;
+            --border-hover: #c8cadb;
+            --accent:   #ff914d;
+            --accent2:  #ff6b1a;
+            --text:     #0e0f1a;
+            --muted:    #636580;
+            --danger:   #dc2626;
+            --success:  #16a34a;
+            --info:     #2563eb;
+            --sidebar-w: 216px;
+            --status-pending:     #2563eb;
+            --status-in_progress: #d97706;
+            --status-completed:   #16a34a;
+            --status-cancelled:   #94a3b8;
+            --priority-low:       #16a34a;
+            --priority-medium:    #2563eb;
+            --priority-high:      #d97706;
+            --priority-urgent:    #dc2626;
+        }
+
+        /* ── Dark theme (Optional override) ── */
+        html[data-theme=dark] {
             --bg: #0c0c0e;
             --surface: #0f0f12;
             --surface2: #131318;
             --border: #1a1a22;
-            --border-hover: var(--border-hover);
-            --accent: #ff914d;
-            --accent2: #ff6b1a;
             --text: #e8e8ec;
             --muted: #7a7a8a;
             --danger: #e05454;
             --success: #4ade80;
             --info: #60a5fa;
-            --sidebar-w: 216px;
             --status-pending: #60a5fa;
             --status-in_progress: #f0a05a;
             --status-completed: #4ade80;
             --status-cancelled: #7a7a8a;
-            --priority-low: #4ade80;
-            --priority-medium: #60a5fa;
-            --priority-high: #f0a05a;
-            --priority-urgent: #e05454;
         }
 
-        /* ── Light theme ── */
-        html[data-theme=light] {
-            /* Page background: warm off-white with very subtle warmth */
-            --bg:       #f4f5f9;
-            /* Cards / surfaces: crisp white */
-            --surface:  #ffffff;
-            /* Inputs, hover states, secondary surfaces */
-            --surface2: #eef0f6;
-            /* Borders: clean, light */
-            --border:   #e2e4ee;
-            --border-hover: #c8cadb;
-            /* Primary text: deep navy-black for warmth */
-            --text:     #0e0f1a;
-            /* Secondary text: balanced slate */
-            --muted:    #636580;
-            --status-pending:     #2563eb;
-            --status-in_progress: #d97706;
-            --status-completed:   #16a34a;
-            --status-cancelled:   #94a3b8;
-            --danger: #dc2626;
-            --success: #16a34a;
-            --info: #2563eb;
-        }
+
 
         html[data-theme=light] select option {
             background: #ffffff;

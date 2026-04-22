@@ -59,6 +59,7 @@
     {{-- GERAL --}}
     <div class="settings-panel active" id="panel-geral">
 
+        @if(config('app.env') !== 'production')
         <div class="card">
             <div class="section-title">⚙️ Sistema</div>
             <div class="action-row">
@@ -72,6 +73,7 @@
                 </button>
             </div>
         </div>
+        @endif
 
         <div class="card">
             <div class="section-title">🌐 {{ __('app.settings_language') }}</div>
